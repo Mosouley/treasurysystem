@@ -1,6 +1,11 @@
+from datetime import timedelta
+from decimal import Decimal
 from django.db import models
 from django.utils import timezone
-from uuid import uuid4
+import uuid
+import random
+
+# import shortuuid
 from django.conf import settings
 from django.urls import reverse
 from treasurysystem.utils import random_string_generator
@@ -95,9 +100,19 @@ class Trade(models.Model):
     ('buy', 'BUY'),
     ('sell', 'SELL'),
     ]
-    trade_id            = models.UUIDField( default=uuid4())
+
+    def generate_unique_trade_id():
+    # Use a random 4-digit number combined with a 3-digit counter
+        # stamp = int(timezone.now(timezone(timedelta(hours=3))).strftime('%y-%m-%d'))
+        counter = int(timezone.now(timezone(timedelta(hours=3)))) 
+        random_part = random.randint(1, 99999)
+        # f'{random_part:04d}{counter:03d}'
+        print(f'{random_part}{counter:05d}')
+        return f'{random_part}{counter:05d}'
+    
+    trade_id            = models.CharField(max_length=100, unique=True, default=slugify(uuid.uuid4()))
     tx_date             = models.DateTimeField(auto_now=True)
-    val_date            = models.DateTimeField( blank=False, null=False, auto_now=True)
+    val_date            = models.DateTimeField( blank=False, null=False, auto_now=False)
     ccy1                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name="currency1")
     ccy2                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name='currency2')
     # ccyPair             = models.CharField(max_length=2, default=1)
@@ -107,37 +122,52 @@ class Trade(models.Model):
     deal_rate           = models.DecimalField(decimal_places=4,max_digits=10)
     fees_rate           = models.DecimalField(decimal_places=4, max_digits=10)
     system_rate         = models.DecimalField(decimal_places=4,max_digits=10)
-    deal_pnl          = models.DecimalField(decimal_places=4, max_digits=10)
+    # deal_pnl          = models.DecimalField(decimal_places=4, max_digits=10)
     tx_comments         = models.CharField(max_length=200, blank=True)
     customer            = models.ForeignKey(Customer, on_delete=models.CASCADE)
     product             = models.ForeignKey(Product, on_delete=models.CASCADE)
     trader              = models.ForeignKey(Dealer, on_delete=models.CASCADE, blank=False,null=False)
     active              = models.BooleanField(default=True)
-    slug                = models.SlugField(max_length=500, unique=True, default=slugify( trade_id))
-    date_created        = models.DateTimeField(blank=True, null=True, auto_created=True)
+    slug                = slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
+    date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
  
+
     
     @property
     def equivalent_lcy(self):
         return self.amount1 * self.deal_rate
     
     @property
-    def gross_pnl(self):
-        return 89000.00
-    @property
-    def net_pnl(self):
-        return 0.00
+    def deal_pnl(self):
+        amount1 = Decimal(self.amount1)
+        deal_rate = Decimal(self.deal_rate)
+        system_rate = Decimal(self.system_rate)
+        amount2 = Decimal(self.amount2)
     
+        return -(amount1 * (deal_rate - system_rate) * amount2)
 
     def __str__(self):
-        return self.trade_id
+        return str(self.trade_id)
 
     def __unicode__(self):
         return self.trade_id
     
     class Meta:
         verbose_name = 'Trade'
+
+    def save(self, *args, **kwargs):
+        # Ensure a unique trade_id is generated
+        # Generate the slug when saving the model
+        if not self.slug:
+            base_slug = slugify(self.trade_id)
+            unique_slug = base_slug
+            counter = 1
+            while Trade.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = unique_slug
+        super().save(*args, **kwargs)
 
     # def __init__(self, *args, **kwargs):
     #     """

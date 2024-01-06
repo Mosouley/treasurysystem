@@ -1,8 +1,6 @@
 from decimal import Decimal
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade
-from django.db import transaction
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +16,6 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Segment
         fields = ['name', 'desc']
-
 
 class CcySerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,24 +41,52 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
 
 class TradeSerializer(serializers.ModelSerializer):
     equivalent_lcy = serializers.SerializerMethodField()
-    gross_pnl = serializers.SerializerMethodField()
-    net_pnl = serializers.SerializerMethodField()
+    deal_pnl = serializers.ReadOnlyField()
+    trade_id = serializers.ReadOnlyField()
+    product = ProductSerializer()
+    trader = DealerSerializer()
+    customer = CustomerSerializer()
 
     class Meta:
         model = Trade
-        # fields = '__all__'
-        fields = ['trade_id', 'tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'ccy_pair', 'buy_sell', 'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate', 'cover_rate', 'tx_comments',  'active', 'slug', 'date_created', 'last_updated', 'equivalent_lcy', 'gross_pnl', 'net_pnl']
+        fields = '__all__'       
+        # fields = [ 'trade_id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell', 'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl', 'tx_comments',  'active', 'slug', 'date_created', 'last_updated']
 
-
+# serializer = TradeSerializer(data={
+#     'tx_date': 'tx_date',
+#     'val_date':'val_date',
+#     'customer':'customer',
+#     'product':'product', 
+#     'trader':'trader', 
+#     'ccy1':'ccy1', 
+#     'ccy2':'ccy2',
+#     'buy_sell':'buy_sell', 
+#     'amount1':'amount1' ,
+#     'amount2':'amount2',
+#     'deal_rate':'deal_rate', 
+#     'fees_rate':'fees_rate', 
+#     'system_rate':'system_rate',
+#     'tx_comments':'txt_comments', 
+#     'active':'active', 
+#     'slug':'slug',
+#     'date_created':'date_created', 
+#     'last_updated':'last_updated',
+#     'equivalent_lcy':'equivalent_lcy', 
+#     'deal_pnl':'deal_pnl'
+# })
+# if serializer.is_valid():
+#     trade_instance = serializer.save()
+# else:
+#     print('printing your error message')
+#     print(serializer.errors)
 
     def get_equivalent_lcy(self, obj):
         return Decimal(obj.amount1) * obj.deal_rate
 
-    def get_gross_pnl(self, obj):
-        return 89000
-
-    def get_net_pnl(self, obj):
-        return 0
+    # def get_deal_pnl(self, obj):
+    #     print(self)
+    #     print(obj)
+    #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
 
         # add transaction.atomic so that if error happened, it will rollback
     # @transaction.atomic

@@ -110,11 +110,11 @@ class Trade(models.Model):
         print(f'{random_part}{counter:05d}')
         return f'{random_part}{counter:05d}'
     
-    trade_id            = models.CharField(max_length=100, unique=True, default=slugify(uuid.uuid4()))
+    trade_id            = models.UUIDField(max_length=36, unique=True, default=uuid.uuid4)
     tx_date             = models.DateTimeField(auto_now=True)
     val_date            = models.DateTimeField( blank=False, null=False, auto_now=False)
-    ccy1                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name="currency1")
-    ccy2                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name='currency2')
+    ccy1                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name="currency1",blank=False,null=False)
+    ccy2                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name='currency2',blank=False,null=False)
     # ccyPair             = models.CharField(max_length=2, default=1)
     buy_sell            = models.CharField(choices=BUYSELL, null=False, blank=False, max_length=100)
     amount1             = models.FloatField()
@@ -124,11 +124,11 @@ class Trade(models.Model):
     system_rate         = models.DecimalField(decimal_places=4,max_digits=10)
     # deal_pnl          = models.DecimalField(decimal_places=4, max_digits=10)
     tx_comments         = models.CharField(max_length=200, blank=True)
-    customer            = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product             = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer            = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=False,null=False)
+    product             = models.ForeignKey(Product, on_delete=models.CASCADE,blank=False,null=False)
     trader              = models.ForeignKey(Dealer, on_delete=models.CASCADE, blank=False,null=False)
     active              = models.BooleanField(default=True)
-    slug                = slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
+    # slug                = slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
     date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
  
@@ -156,18 +156,18 @@ class Trade(models.Model):
     class Meta:
         verbose_name = 'Trade'
 
-    def save(self, *args, **kwargs):
-        # Ensure a unique trade_id is generated
-        # Generate the slug when saving the model
-        if not self.slug:
-            base_slug = slugify(self.trade_id)
-            unique_slug = base_slug
-            counter = 1
-            while Trade.objects.filter(slug=unique_slug).exists():
-                unique_slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = unique_slug
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Ensure a unique trade_id is generated
+    #     # Generate the slug when saving the model
+    #     if not self.slug:
+    #         base_slug = slugify(self.trade_id)
+    #         unique_slug = base_slug
+    #         counter = 1
+    #         while Trade.objects.filter(slug=unique_slug).exists():
+    #             unique_slug = f"{base_slug}-{counter}"
+    #             counter += 1
+    #         self.slug = unique_slug
+    #     super().save(*args, **kwargs)
 
     # def __init__(self, *args, **kwargs):
     #     """
@@ -192,18 +192,18 @@ class Trade(models.Model):
     #     return reverse('trade-detail', kwargs={'slug': self.slug})
 
 
-    def save(self, *args, **kwargs):
-        if self.date_created is None:
-            self.date_created = timezone.localtime(timezone.now())
-        if self.trade_id is None:
-            new_ref = random_string_generator(10)
-            self.trade_id = new_ref.join(str(uuid4()).split('-')[4])
-            print(self.trade_id)
-            self.slug = slugify('{}{}'.format( self.trade_id))
-        if not self.trade_id:
-            self.trade_id = str(uuid4())[:8]
+    # def save(self, *args, **kwargs):
+    #     if self.date_created is None:
+    #         self.date_created = timezone.localtime(timezone.now())
+    #     if self.trade_id is None:
+    #         new_ref = random_string_generator(10)
+    #         self.trade_id = new_ref.join(str(uuid4()).split('-')[4])
+    #         print(self.trade_id)
+    #         self.slug = slugify('{}{}'.format( self.trade_id))
+    #     if not self.trade_id:
+    #         self.trade_id = str(uuid4())[:8]
 
-        self.slug = slugify('{}'.format( self.trade_id))
-        self.last_updated = timezone.localtime(timezone.now())
-        # self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
-        super(Trade, self).save(*args, **kwargs)
+    #     self.slug = slugify('{}'.format( self.trade_id))
+    #     self.last_updated = timezone.localtime(timezone.now())
+    #     # self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
+    #     super(Trade, self).save(*args, **kwargs)

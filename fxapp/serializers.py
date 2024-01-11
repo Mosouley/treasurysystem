@@ -1,16 +1,30 @@
 from decimal import Decimal
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade
+from django.db import IntegrityError
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('__all__')
+        extra_kwargs = {
+            'user': {
+                'validators': [],
+            }
+        }
 
 class DealerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dealer
         fields = ('__all__')
+        extra_kwargs = {
+            'name': {
+                'validators': [],
+            },
+            'user': {
+                'validators': [],
+            }
+        }
 
 class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,12 +35,21 @@ class CcySerializer(serializers.ModelSerializer):
     class Meta:
         model = Ccy
         fields = ['code']
+        extra_kwargs = {
+            'code': {
+                'validators': [],
+            }
+        }
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('__all__')
-
+        extra_kwargs = {
+            'name': {
+                'validators': [],
+            }
+        }
 
 class SystemDailyRatesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,44 +66,86 @@ class TradeSerializer(serializers.ModelSerializer):
     equivalent_lcy = serializers.SerializerMethodField()
     deal_pnl = serializers.ReadOnlyField()
     trade_id = serializers.ReadOnlyField()
-    product = ProductSerializer()
-    trader = DealerSerializer()
-    customer = CustomerSerializer()
-
+    product = ProductSerializer(many=False, )
+    trader = DealerSerializer(many=False, )
+    customer = CustomerSerializer(many=False, )
+    ccy1 = CcySerializer(many=False, )
+    ccy2 = CcySerializer(many=False, )
+    id = serializers.ReadOnlyField()
+    
     class Meta:
         model = Trade
-        fields = '__all__'       
-        # fields = [ 'trade_id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell', 'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl', 'tx_comments',  'active', 'slug', 'date_created', 'last_updated']
+        # fields = '__all__'      
+        fields = [ 'id', 'trade_id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell', 'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl', 'tx_comments',  'active', 'date_created', 'last_updated']
+        # read_only_fields = ('product', 'trader', 'ccy', 'customer',)
+        # depth=1
 
-# serializer = TradeSerializer(data={
-#     'tx_date': 'tx_date',
-#     'val_date':'val_date',
-#     'customer':'customer',
-#     'product':'product', 
-#     'trader':'trader', 
-#     'ccy1':'ccy1', 
-#     'ccy2':'ccy2',
-#     'buy_sell':'buy_sell', 
-#     'amount1':'amount1' ,
-#     'amount2':'amount2',
-#     'deal_rate':'deal_rate', 
-#     'fees_rate':'fees_rate', 
-#     'system_rate':'system_rate',
-#     'tx_comments':'txt_comments', 
-#     'active':'active', 
-#     'slug':'slug',
-#     'date_created':'date_created', 
-#     'last_updated':'last_updated',
-#     'equivalent_lcy':'equivalent_lcy', 
-#     'deal_pnl':'deal_pnl'
-# })
-# if serializer.is_valid():
-#     trade_instance = serializer.save()
-# else:
-#     print('printing your error message')
-#     print(serializer.errors)
+    def create(self, validated_data):
+        print('printing : #################################')
+        print('validated_data')
+        print(validated_data)
+        # Retrieve or create related objects
 
-    def get_equivalent_lcy(self, obj):
+        product_data = validated_data.pop('product')
+        product_name = product_data.pop('name')
+        product_instance = Product.objects.get_or_create(name=product_name)[0]
+        
+        customer_data = validated_data.pop('customer')
+        trader_data = validated_data.pop('trader')
+        ccy1_data = validated_data.pop('ccy1')
+        ccy2_data = validated_data.pop('ccy2', )
+
+        
+        customer_instance, _ = Customer.objects.get_or_create(**customer_data)
+        trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
+        ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
+        ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
+
+        print(trader_instance)
+        # Use existing or newly created instances when creating the Trade
+        trade_instance = Trade.objects.create(
+            product=product_instance,
+            customer=customer_instance,
+            trader=trader_instance,
+            ccy1=ccy1_instance,
+            ccy2=ccy2_instance,
+            **validated_data
+        )
+        return trade_instance
+      
+
+    def update(self, instance, validated_data):
+        print('printing : update')
+        print(validated_data.pop('product', None))
+        # Retrieve or create related objects
+        try:
+            product_data = validated_data.pop('product')
+            product_name = product_data.pop('name')
+            product = Product.objects.get_or_create(name=product_name)[0]
+            instance.product = product
+
+            customer_data = validated_data.pop('customer')
+            trader_data = validated_data.pop('trader')
+            ccy1_data = validated_data.pop('ccy1')
+            ccy2_data = validated_data.pop('ccy2', )
+
+            
+            customer_instance, _ = Customer.objects.get_or_create(**customer_data)
+            trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
+            ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
+            ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
+
+            print(instance)
+            # Use existing or newly created instances when creating the Trade
+       
+            return instance
+        except IntegrityError as e:
+            # Handle uniqueness constraint violation
+            raise serializers.ValidationError(e.args[0])
+
+
+
+    def get_equivalent_lcy(self, obj):  
         return Decimal(obj.amount1) * obj.deal_rate
 
     # def get_deal_pnl(self, obj):

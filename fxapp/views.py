@@ -33,8 +33,7 @@ class CcyViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-
+ 
 class SystemDailyRatesViewSet(viewsets.ModelViewSet):
     queryset = SystemDailyRates.objects.all()
     serializer_class = SystemDailyRatesSerializer
@@ -82,7 +81,7 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
             # instance = filtered_queryset.first()
             
             instance = filtered_queryset[0] if filtered_queryset else None
-            print(instance)
+  
         else:
             # If the lookup value is not provided, fall back to the default behavior (get by ID)
             return super().retrieve(request, *args, **kwargs)
@@ -96,7 +95,55 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
 class TradeViewSet(viewsets.ModelViewSet):
     queryset = Trade.objects.all()
     serializer_class = TradeSerializer
+    print(TradeSerializer())
 
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     # Validate the data
+    #     # Check serializer errors before calling is_valid
+    #     if not serializer.is_valid():
+    #         print(serializer.errors)
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #     # Extract data for related fields
+    #     customer_data = serializer.validated_data.pop('customer', None)
+    #     product_data = serializer.validated_data.pop('product', None)
+    #     trader_data = serializer.validated_data.pop('trader', None)
+
+    #     # Retrieve or create related objects
+    #     customer_instance, _ = Customer.objects.get_or_create(**customer_data)
+    #     product_instance, _ = Product.objects.get_or_create(**product_data)
+    #     trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
+
+    #     # Create the trade instance using the retrieved or created objects
+    #     trade_instance = serializer.save(
+    #         customer=customer_instance,
+    #         product=product_instance,
+    #         trader=trader_instance
+    #     )
+
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # try:
+        #     serializer = self.get_serializer(data=request.data)
+        #     print('Printing the data received')
+        #     print(request.data)
+        #     serializer.is_valid(raise_exception=True)
+        #     self.perform_create(serializer)
+        #     headers = self.get_success_headers(serializer.data)
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # except serializers.ValidationError as e:
+        #     print(f"Validation error: {e}")
+        #     return Response({"error": "Validation error", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # def perform_create(self, serializer):
+    #     customer = self.request.customer
+    #     product = self.request.product
+    #     ccy1 = self.request.ccy1
+    #     ccy2 = self.request.ccy2
+    #     trader = self.request.trader
+    #     print(f'Creating a new transaction : {customer}{product}{ccy1}{ccy2}{trader}')
+    #     return super().perform_create(serializer)
 
 def upload_excel(request):
     if request.method == 'POST':

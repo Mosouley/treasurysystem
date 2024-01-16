@@ -101,6 +101,13 @@ class Trade(models.Model):
     ('sell', 'SELL'),
     ]
 
+    STATUS = [
+        ('verified', 'VERIFIED'),
+        ('cancelled', 'CANCELLED'),
+        ('matured', 'MATURED'),
+        ('amend', 'AMEND'),
+    ]
+
     def generate_unique_trade_id():
     # Use a random 4-digit number combined with a 3-digit counter
         # stamp = int(timezone.now(timezone(timedelta(hours=3))).strftime('%y-%m-%d'))
@@ -122,12 +129,14 @@ class Trade(models.Model):
     deal_rate           = models.DecimalField(decimal_places=4,max_digits=10)
     fees_rate           = models.DecimalField(decimal_places=4, max_digits=10)
     system_rate         = models.DecimalField(decimal_places=4,max_digits=10)
+    ccy1_rate           = models.DecimalField(decimal_places=4,max_digits=10)
+    ccy2_rate           = models.DecimalField(decimal_places=4,max_digits=10)
     # deal_pnl          = models.DecimalField(decimal_places=4, max_digits=10)
     tx_comments         = models.CharField(max_length=200, blank=True)
     customer            = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=False,null=False)
     product             = models.ForeignKey(Product, on_delete=models.CASCADE,blank=False,null=False)
     trader              = models.ForeignKey(Dealer, on_delete=models.CASCADE, blank=False,null=False)
-    active              = models.BooleanField(default=True)
+    status              = models.CharField(choices=STATUS, null=False, blank=False, max_length=100,default='verified')
     # slug                = slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
     date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
@@ -136,16 +145,16 @@ class Trade(models.Model):
     
     @property
     def equivalent_lcy(self):
-        return self.amount1 * self.deal_rate
+        return Decimal(self.amount1) * self.ccy1_rate
     
     @property
     def deal_pnl(self):
         amount1 = Decimal(self.amount1)
         deal_rate = Decimal(self.deal_rate)
         system_rate = Decimal(self.system_rate)
-        amount2 = Decimal(self.amount2)
-    
-        return -(amount1 * (deal_rate - system_rate) * amount2)
+        ccy2_rate = Decimal(self.ccy2_rate)
+     #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
+        return -(amount1 * (deal_rate - system_rate) * ccy2_rate)
 
     def __str__(self):
         return str(self.trade_id)

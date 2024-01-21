@@ -3,6 +3,11 @@ from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade
 from django.db import IntegrityError
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.http import HttpResponse
+import json
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -108,7 +113,13 @@ class TradeSerializer(serializers.ModelSerializer):
             ccy2=ccy2_instance,
             **validated_data
         )
-        
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'update_group', {
+                'type': 'send_update',
+                'message': trade_instance.name,
+            },
+        )
         return trade_instance
       
 

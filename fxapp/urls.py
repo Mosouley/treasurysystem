@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from fxapp import views
 
@@ -12,8 +12,14 @@ router.register(r'daily-rates', views.SystemDailyRatesViewSet)
 router.register(r'trades', views.TradeViewSet)
 router.register(r'dealers', views.DealerViewSet)
 # router.register(r'daily-rates', views.my_endpoint, basename='fxapp')
-
 urlpatterns = [
     # path('daily-rates-loading/', views.my_endpoint, name='daily-rates-loading'),
 ]
+urlpatterns += [
+    # path('daily-rates-loading/', views.my_endpoint, name='daily-rates-loading'),
+    # re_path(r'(?P<path>.*)', views.my_endpoint, name='home')
+]
+
+
+
 urlpatterns += router.urls

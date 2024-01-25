@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$4u@l48c^n9!hqd1%l$=!7(wg+*19uxnn%%*+8b51lz-_twr45'
+# SECRET_KEY = 'django-insecure-$4u@l48c^n9!hqd1%l$=!7(wg+*19uxnn%%*+8b51lz-_twr45'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+DEBUG = bool(os.environ.get("DEBUG", default=0))
+
+# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -86,16 +94,27 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         # 'ENGINE': 'django.db.backends.sqlite3',
+#         # 'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'treasury_system',
+#         'USER': 'postgres',
+#         'PASSWORD': 'papaHaddy@?123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'treasury_system',
-        'USER': 'postgres',
-        'PASSWORD': 'papaHaddy@?123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': os.environ.get('SQL_ENGINE',),
+        'NAME': os.environ.get('SQL_NAME', ),
+        'USER': os.environ.get('SQL_USER',),
+        'PASSWORD': os.environ.get('SQL_PASSWORD',),
+        'HOST': os.environ.get('SQL_HOST', ),
+        'PORT': os.environ.get('SQL_PORT'),
     }
 }
 
@@ -144,10 +163,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # STATICFILES_DIRS = '../frontend/ficc_front/'
 
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_ALLOW_ALL= True
-# CORS_ALLOWED_ORIGINS = [
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8000',
+    'http://localhost:4200',
+)
+
+# ACCESS_CONTROL_ALLOW_ORIGIN = [
 #     'http://localhost:4200',
 # ]
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
@@ -156,6 +180,34 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS'
 ]
+# ALLOWED_HOSTS =[
+#     'localhost:4200',
+#     'localhost'
+# ]
+# CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-requested-with", ] 
+# CORS_ALLOW_HEADERS = [ '*' ] 
 
+## settings.py
+CHANNEL_LAYERS = {
+    'default': {
+        ### Method 1: Via redis lab
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [
+        #       'redis://h:<password>;@<redis Endpoint>:<port>' 
+        #     ],
+        # },
+
+        ### Method 2: Via local Redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #      "hosts": [('127.0.0.1', 6379)],
+        # },
+
+        ### Method 3: Via In-memory channel layer
+        ## Using this method.
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
 
 # PVZKPPNf2FmqHagUcU0JJVG5NIEDuxY0 API KEY APILAYER

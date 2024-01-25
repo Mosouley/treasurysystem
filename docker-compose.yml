@@ -5,22 +5,21 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./treasurysystem/:/treasurysystem/
+      - ./:/treasurysystem
     ports:
       - 8000:8000
     env_file:
-      - ./.env.dev
+      - ./env.dev
+    # depends_on:
+    #   - ficc_db
 
   ficc_db:
     image: postgres:15
     restart: always
-    environment:
-      POSTGRES_USER: example
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: example
+    volumes:
+      - ficc_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./env.dev
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+volumes:
+    ficc_postgres_data:

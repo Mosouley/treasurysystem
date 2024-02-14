@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DEBUG = True
 
 # ALLOWED_HOSTS = []
-
+##### docker set up config elements #################################
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = bool(os.environ.get("DEBUG", default=0))
@@ -39,18 +39,16 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'channels',
-
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'corsheaders', 
     'rest_framework',
-    'corsheaders',
     'fxapp',
     'contacts',
 ]
@@ -105,6 +103,7 @@ TEMPLATES = [
 #         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }
+# }
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
@@ -118,6 +117,10 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -162,16 +165,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # STATICFILES_DIRS = '../frontend/ficc_front/'
 
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://localhost:4200',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8000',
+#     'http://localhost:4200',
+# )
 
 # ACCESS_CONTROL_ALLOW_ORIGIN = [
 #     'http://localhost:4200',
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
@@ -184,8 +187,7 @@ CORS_ALLOW_METHODS = [
 #     'localhost:4200',
 #     'localhost'
 # ]
-# CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-requested-with", ] 
-# CORS_ALLOW_HEADERS = [ '*' ] 
+
 
 ## settings.py
 CHANNEL_LAYERS = {

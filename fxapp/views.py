@@ -96,6 +96,11 @@ class TradeViewSet(viewsets.ModelViewSet):
     queryset = Trade.objects.all()
     serializer_class = TradeSerializer
 
+    def batch_destroy(self, request):
+        ids = request.data.get('ids', [])
+        self.queryset.filter(id__in=ids).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 def upload_excel(request):
     if request.method == 'POST':
         data = request.POST.get('data')

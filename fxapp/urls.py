@@ -1,6 +1,7 @@
 from django.urls import path, include, re_path
 from rest_framework import routers
 from fxapp import views
+from . views import TradeViewSet
 
 
 router = routers.SimpleRouter()
@@ -13,6 +14,7 @@ router.register(r'trades', views.TradeViewSet)
 router.register(r'dealers', views.DealerViewSet)
 # router.register(r'daily-rates', views.my_endpoint, basename='fxapp')
 urlpatterns = [
+    path('batch-destroy/',TradeViewSet.batch_destroy, name='batch_destroy'),
     # path('daily-rates-loading/', views.my_endpoint, name='daily-rates-loading'),
 ]
 urlpatterns += [

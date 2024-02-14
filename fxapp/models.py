@@ -108,14 +108,7 @@ class Trade(models.Model):
         ('amend', 'AMEND'),
     ]
 
-    def generate_unique_trade_id():
-    # Use a random 4-digit number combined with a 3-digit counter
-        # stamp = int(timezone.now(timezone(timedelta(hours=3))).strftime('%y-%m-%d'))
-        counter = int(timezone.now(timezone(timedelta(hours=3)))) 
-        random_part = random.randint(1, 99999)
-        # f'{random_part:04d}{counter:03d}'
-        print(f'{random_part}{counter:05d}')
-        return f'{random_part}{counter:05d}'
+  
     
     trade_id            = models.UUIDField(max_length=36, unique=True, default=uuid.uuid4)
     tx_date             = models.DateTimeField(auto_now=True)
@@ -141,7 +134,14 @@ class Trade(models.Model):
     date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
  
-
+    def generate_unique_trade_id():
+    # Use a random 4-digit number combined with a 3-digit counter
+        # stamp = int(timezone.now(timezone(timedelta(hours=3))).strftime('%y-%m-%d'))
+        counter = int(timezone.now(timezone(timedelta(hours=3)))) 
+        random_part = random.randint(1, 99999)
+        # f'{random_part:04d}{counter:03d}'
+        print(f'{random_part}{counter:05d}')
+        return f'{random_part}{counter:05d}'
     
     @property
     def equivalent_lcy(self):
@@ -164,6 +164,8 @@ class Trade(models.Model):
     
     class Meta:
         verbose_name = 'Trade'
+
+
 
     # def save(self, *args, **kwargs):
     #     # Ensure a unique trade_id is generated

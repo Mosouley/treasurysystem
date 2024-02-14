@@ -16,15 +16,15 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # copy entrypoint.sh
-COPY entrypoint.sh .
-RUN sed -i 's/\r$//g' /treasurysystem/entrypoint.sh
-RUN chmod +x /treasurysystem/entrypoint.sh
+# COPY entrypoint.sh .
+# RUN sed -i 's/\r$//g' /treasurysystem/entrypoint.sh
+# RUN chmod +x /treasurysystem/entrypoint.sh
 # Mounts the application code to the image
 # copy project
 COPY . .
 
 # run entrypoint.sh
-ENTRYPOINT ["/treasurysystem/entrypoint.sh"]
+# ENTRYPOINT ["/treasurysystem/entrypoint.sh"]
 # EXPOSE 8000
 
 # runs the production server

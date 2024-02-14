@@ -1,13 +1,26 @@
 from decimal import Decimal
+from uuid import UUID
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade
 from django.db import IntegrityError
+
+from rest_framework.fields import Field
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.http import HttpResponse
 import json
 
+
+
+class UUIDField(Field):
+    def to_representation(self, value):
+        if value is None:
+            return None
+        if isinstance(value, UUID):
+            return str(value)
+        return value
+    
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -77,7 +90,8 @@ class TradeSerializer(serializers.ModelSerializer):
     ccy1 = CcySerializer(many=False, )
     ccy2 = CcySerializer(many=False, )
     id = serializers.ReadOnlyField()
-
+    trade_id = UUIDField()
+    # page_size = request.query_params.get('pageSize', 10) 
     
     class Meta:
         model = Trade
@@ -89,16 +103,18 @@ class TradeSerializer(serializers.ModelSerializer):
         # depth=1
 
     def create(self, validated_data):
-  
+   
         # Retrieve or create related objects
         product_data = validated_data.pop('product')
+        
         product_name = product_data.pop('name')
         customer_data = validated_data.pop('customer',)
         trader_data = validated_data.pop('trader',)
         ccy1_data = validated_data.pop('ccy1',)
-        ccy2_data = validated_data.pop('ccy2', )
+        ccy2_data = validated_data.pop('ccy2',)
 
         product_instance = Product.objects.get_or_create(name=product_name)[0]
+        
         customer_instance, _ = Customer.objects.get_or_create(**customer_data)
         trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
         ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
@@ -113,13 +129,14 @@ class TradeSerializer(serializers.ModelSerializer):
             ccy2=ccy2_instance,
             **validated_data
         )
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            'update_group', {
-                'type': 'send_update',
-                'message': trade_instance.name,
-            },
-        )
+        # channel_layer = get_channel_layer()
+        # async_to_sync(channel_layer.group_send)(
+        #     'update_group', {
+        #         'type': 'send_update',
+        #         'message': trade_instance.name,
+        #     },
+        # )
+
         return trade_instance
       
 
@@ -141,7 +158,7 @@ class TradeSerializer(serializers.ModelSerializer):
             ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
             ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
 
-            print(instance)
+          
             # Use existing or newly created instances when creating the Trade
        
             return instance
@@ -150,7 +167,12 @@ class TradeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(e.args[0])
 
 
+class TradeCreateSerializer(serializers.ListSerializer):
+    child = TradeSerializer()
 
+    def create(self, validated_data):
+        instances = [Trade(**item) for item in validated_data]
+        return Trade.objects.bulk_create(instances)
     # def get_equivalent_lcy(self, obj):  
     #     return Decimal(obj.amount1) * obj.deal_rate
 

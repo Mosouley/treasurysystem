@@ -48,23 +48,31 @@ class TradeConsumer(AsyncWebsocketConsumer):
         self.close(close_code)
 
     async def receive(self, text_data=None):
+        
         data =  json.loads(text_data)
+        print(data)
+        # trade_data = data.get('data', {})
         trade_data = data.get('data', {})
-        print(trade_data)
+        print('received data' , trade_data)
           # Extract trade data and save to the database asynchronously
         await self.save_trade_to_database(trade_data)
         # no needtosendthe trade data for now
         # json_data = json.dumps(trade_data )
         # print(json_data)
-        # await self.send_trade_update(data)
+        # await self.send_trade_update(json_data)
 
     @database_sync_to_async
     def save_trade_to_database(self, data):
-        trade_data = data.get('trade', {}).get('data', {})
-        print(trade_data)
-        serializer = TradeSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
+        print('Mes donnees ', data)
+        try:
+            # trade_data = data.get('trade', {})
+            serializer = TradeSerializer(data=data)
+            print('Mes donnees transformees ', data)
+            if serializer.is_valid():
+                serializer.save()
+        except Exception as e:
+            print(f"Error saving trade to database: {e}")
+            print(traceback.format_exc())  # Print the traceback
 
     async def send_trade_update(self, event):
         await self.send(text_data=json.dumps({

@@ -103,7 +103,7 @@ class TradeSerializer(serializers.ModelSerializer):
         # depth=1
 
     def create(self, validated_data):
-   
+        print('my validated data ',validated_data)
         # Retrieve or create related objects
         product_data = validated_data.pop('product')
         

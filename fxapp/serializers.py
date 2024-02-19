@@ -83,38 +83,44 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
 class TradeSerializer(serializers.ModelSerializer):
     # equivalent_lcy = serializers.SerializerMethodField()
     deal_pnl = serializers.ReadOnlyField()
-    trade_id = serializers.ReadOnlyField()
+    id = serializers.ReadOnlyField()
     product = ProductSerializer(many=False, )
     trader = DealerSerializer(many=False, )
     customer = CustomerSerializer(many=False, )
     ccy1 = CcySerializer(many=False, )
     ccy2 = CcySerializer(many=False, )
-    id = serializers.ReadOnlyField()
-    trade_id = UUIDField()
+
     # page_size = request.query_params.get('pageSize', 10) 
     
     class Meta:
         model = Trade
         # fields = '__all__'      
-        fields = [ 'id', 'trade_id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell',
+        fields = [  'id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell',
                    'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl',
                    'tx_comments',  'status', 'date_created', 'last_updated','ccy1_rate','ccy2_rate']
         # read_only_fields = ('product', 'trader', 'ccy', 'customer',)
         # depth=1
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Convert UUID fields to strings
+        for field in ['trade_id']:  # Replace with your UUID field names and other_uuid_field'
+            if field in representation:
+                representation[field] = str(representation[field])
+
+        return representation
 
     def create(self, validated_data):
-        print('my validated data ',validated_data)
         # Retrieve or create related objects
         product_data = validated_data.pop('product')
-        
-        product_name = product_data.pop('name')
-        customer_data = validated_data.pop('customer',)
-        trader_data = validated_data.pop('trader',)
-        ccy1_data = validated_data.pop('ccy1',)
-        ccy2_data = validated_data.pop('ccy2',)
 
-        product_instance = Product.objects.get_or_create(name=product_name)[0]
-        
+        product_name = product_data['name']
+
+        customer_data = validated_data.pop('customer')
+        trader_data = validated_data.pop('trader')
+        ccy1_data = validated_data.pop('ccy1')
+        ccy2_data = validated_data.pop('ccy2')
+
+        product_instance, is_created= Product.objects.get_or_create(name=product_name)
         customer_instance, _ = Customer.objects.get_or_create(**customer_data)
         trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
         ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
@@ -129,13 +135,7 @@ class TradeSerializer(serializers.ModelSerializer):
             ccy2=ccy2_instance,
             **validated_data
         )
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     'update_group', {
-        #         'type': 'send_update',
-        #         'message': trade_instance.name,
-        #     },
-        # )
+       
 
         return trade_instance
       

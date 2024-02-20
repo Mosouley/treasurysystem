@@ -119,11 +119,11 @@ class Trade(models.Model):
     buy_sell            = models.CharField(choices=BUYSELL, null=False, blank=False, max_length=100)
     amount1             = models.FloatField()
     amount2             = models.FloatField()
-    deal_rate           = models.DecimalField(decimal_places=4,max_digits=10)
-    fees_rate           = models.DecimalField(decimal_places=4, max_digits=10)
-    system_rate         = models.DecimalField(decimal_places=4,max_digits=10)
-    ccy1_rate           = models.DecimalField(decimal_places=4,max_digits=10)
-    ccy2_rate           = models.DecimalField(decimal_places=4,max_digits=10)
+    deal_rate           = models.DecimalField(decimal_places=4,max_digits=10, default=1)
+    fees_rate           = models.DecimalField(decimal_places=4, max_digits=10,default=1)
+    system_rate         = models.DecimalField(decimal_places=4,max_digits=10,default=1)
+    ccy1_rate           = models.DecimalField(decimal_places=4,max_digits=10,default=1)
+    ccy2_rate           = models.DecimalField(decimal_places=4,max_digits=10,default=1)
     # deal_pnl          = models.DecimalField(decimal_places=4, max_digits=10)
     tx_comments         = models.CharField(max_length=200, blank=True)
     customer            = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=False,null=False)
@@ -134,6 +134,7 @@ class Trade(models.Model):
     date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
  
+    @staticmethod
     def generate_unique_trade_id():
     # Use a random 4-digit number combined with a 3-digit counter
         # stamp = int(timezone.now(timezone(timedelta(hours=3))).strftime('%y-%m-%d'))
@@ -147,17 +148,31 @@ class Trade(models.Model):
     def equivalent_lcy(self):
         return Decimal(self.amount1) * self.ccy1_rate
     
+    # @staticmethod
+    # def calculate_pnl(ccy1_amount, deal_rate, syst_rate, ccy2_rate):
+    #     pnl = -ccy1_amount * (deal_rate - syst_rate) * ccy2_rate
+    #     return pnl
+    
+    @staticmethod
+    def calculate_pnl(trade_instance):
+        amount1 = trade_instance.amount1 if trade_instance.buy_sell == 'buy' else -trade_instance.amount1
+        pnl = -Decimal(amount1) * (trade_instance.deal_rate - trade_instance.system_rate) * trade_instance.ccy2_rate
+        return pnl
+    
     @property
     def deal_pnl(self):
-        amount1 = Decimal(self.amount1)
-        deal_rate = Decimal(self.deal_rate)
-        system_rate = Decimal(self.system_rate)
-        ccy2_rate = Decimal(self.ccy2_rate)
-     #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
-        return -(amount1 * (deal_rate - system_rate) * ccy2_rate)
+        return self.calculate_pnl(self)
+    #     amount1 = Decimal(self.amount1) if self.buy_sell == 'buy' else -Decimal(self.amount1)
+    #     print(amount1)
+    #     deal_rate = Decimal(self.deal_rate)
+    #     system_rate = Decimal(self.system_rate)
+    #     ccy2_rate = Decimal(self.ccy2_rate)
+    #  #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
+    #     # return -(amount1 * (deal_rate - system_rate) * ccy2_rate)
+    #     return self.calculate_pnl(-amount1,deal_rate,system_rate,ccy2_rate)
 
     def __str__(self):
-        return str(self.trade_id)
+        return str(self.trade_id)[0:8]
 
     def __unicode__(self):
         return self.trade_id
@@ -166,7 +181,8 @@ class Trade(models.Model):
         verbose_name = 'Trade'
 
 
-
+  
+    
     # def save(self, *args, **kwargs):
     #     # Ensure a unique trade_id is generated
     #     # Generate the slug when saving the model

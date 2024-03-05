@@ -1,4 +1,5 @@
 
+import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
@@ -21,6 +22,8 @@ class DecimalEncoder(json.JSONEncoder):
    
 class TradeConsumer(AsyncWebsocketConsumer):
     trade_update_group = "fx_tradeflow"
+    TRADE_CHUNK_SIZE = 100  # Adjust chunk size based on data and network conditions
+
     async def connect(self):
         try:
             await self.accept()
@@ -35,7 +38,31 @@ class TradeConsumer(AsyncWebsocketConsumer):
             print(f"Error in connect: {e}")
             traceback.print_exc() # Print the traceback
 
+    async def send_initial_data(self):
+        # Fetch the initial trade data
+        trades = Trade.objects.all().order_by('-id')[:self.TRADE_CHUNK_SIZE]
+        trade_data = TradeSerializer(trades, many=True).data
 
+        # Send the initial chunk
+        await self.send(text_data=json.dumps({
+            'type': 'initial_data',
+            'data': trade_data
+        }))
+
+        # Schedule remaining chunks (if any)
+        remaining_trades = trades.count() - self.TRADE_CHUNK_SIZE
+        if remaining_trades > 0:
+            for i in range(0, remaining_trades, self.TRADE_CHUNK_SIZE):
+                await asyncio.sleep(0.1)  # Add a slight delay between chunks
+                next_chunk = trades[i + self.TRADE_CHUNK_SIZE: i + 2 * self.TRADE_CHUNK_SIZE]
+                next_chunk_data = TradeSerializer(next_chunk, many=True).data
+                await self.send(text_data=json.dumps({
+                    'type': 'data_chunk',
+                    'data': next_chunk_data
+                }))
+                
+# .order_by('last_updated')[:self.TRADE_CHUNK_SIZE]
+                
     @database_sync_to_async
     def all_trades(self):
         trades = Trade.objects.all()
@@ -45,7 +72,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
     
 
     async def trade_updated(self, trade_data):
-
         trades = await self.all_trades()
         await self.send_trade_list(trades)
         # await self.send(text_data=json.dumps({
@@ -59,7 +85,8 @@ class TradeConsumer(AsyncWebsocketConsumer):
             for trade in trades:
                 trade_data.append(trade)
             await self.send(text_data=json.dumps({
-                'trade_list':trade_data
+                'type':'trade_list',
+                'data':trade_data
             }, cls=DecimalEncoder))
         except Exception as e:
             print(f"Error sending trade list: {e}")

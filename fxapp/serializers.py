@@ -73,6 +73,7 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemDailyRates
         fields = ('date', 'last_updated', 'rateLcy', 'ccy', 'ccy_code')
+        
         # print(fields)
 
     # def get_ccy_entity(self):

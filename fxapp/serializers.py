@@ -1,7 +1,7 @@
 from decimal import Decimal
 from uuid import UUID
 from rest_framework import serializers
-from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade
+from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position
 from django.db import IntegrityError
 
 from rest_framework.fields import Field
@@ -174,14 +174,11 @@ class TradeCreateSerializer(serializers.ListSerializer):
     def create(self, validated_data):
         instances = [Trade(**item) for item in validated_data]
         return Trade.objects.bulk_create(instances)
-    # def get_equivalent_lcy(self, obj):  
-    #     return Decimal(obj.amount1) * obj.deal_rate
 
-    # def get_deal_pnl(self, obj):
-    #     print(self)
-    #     print(obj)
-    #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
-
+class PositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = '__all__'
         # add transaction.atomic so that if error happened, it will rollback
     # @transaction.atomic
     # def create(self, validated_data):

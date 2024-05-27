@@ -1,9 +1,12 @@
 from datetime import timedelta
 from decimal import Decimal
 from django.db import models
+from django.dispatch import receiver
 from django.utils import timezone
 import uuid
 import random
+from django.db.models import Sum
+from django.db.models.signals import post_save, post_delete
 
 # import shortuuid
 from django.conf import settings
@@ -96,6 +99,7 @@ class ExcelModel(models.Model):
 
 class Trade(models.Model):
 
+
     BUYSELL = [
     ('buy', 'BUY'),
     ('sell', 'SELL'),
@@ -162,14 +166,6 @@ class Trade(models.Model):
     @property
     def deal_pnl(self):
         return self.calculate_pnl(self)
-    #     amount1 = Decimal(self.amount1) if self.buy_sell == 'buy' else -Decimal(self.amount1)
-    #     print(amount1)
-    #     deal_rate = Decimal(self.deal_rate)
-    #     system_rate = Decimal(self.system_rate)
-    #     ccy2_rate = Decimal(self.ccy2_rate)
-    #  #     return -self.amount1 * (self.deal_rate - self.system_rate) * obj.amount2
-    #     # return -(amount1 * (deal_rate - system_rate) * ccy2_rate)
-    #     return self.calculate_pnl(-amount1,deal_rate,system_rate,ccy2_rate)
 
     def __str__(self):
         return str(self.trade_id)[0:8]
@@ -180,8 +176,27 @@ class Trade(models.Model):
     class Meta:
         verbose_name = 'Trade'
 
+class Position(models.Model):
+    date            = models.DateTimeField( blank=False, null=False, auto_now=False)
+    ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
+    position = models.DecimalField(max_digits=20, decimal_places=4, default=0)
 
-  
+    def __str__(self):
+        return f"{self.ccy.code} - {self.position}"
+    
+
+    # @staticmethod
+    # def calculate_position(ccy_instance, date):
+    #     # Aggregate the sum of amount1 for the given currency and date
+    #     pos_long = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell='buy' ).aggregate(ccy_position=Sum('amount1'))
+    #     pos_short = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell ='sell').aggregate(ccy_position=Sum('amount1'))
+    #     pos_ccy = pos_long['ccy_position'] + pos_short['ccy_position']
+    #     return pos_ccy or 0
+    
+    # @property
+    # def ccy_position(self):
+    #     # Calculate the position for this instance's currency and date
+    #     return self.calculate_position(self.ccy, self.tx_date)
     
     # def save(self, *args, **kwargs):
     #     # Ensure a unique trade_id is generated
@@ -204,15 +219,6 @@ class Trade(models.Model):
     #     self._meta.get_field('trade_id').default = uuid4()
     #     self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
     
-
-    # def update_total(self):
-    #     cart_total     = self.cart.total
-    #     shipping_total = self.shipping_total
-    #     new_total      =  math.fsum([cart_total , shipping_total])
-    #     formatted_total = format(new_total, '.2f')
-    #     self.total     = formatted_total
-    #     self.save()
-    #     return new_total
 
 
     # def get_absolute_url(self):

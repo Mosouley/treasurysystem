@@ -74,12 +74,6 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
         model = SystemDailyRates
         fields = ('date', 'last_updated', 'rateLcy', 'ccy', 'ccy_code')
         
-        # print(fields)
-
-    # def get_ccy_entity(self):
-    #     ccy = SystemDailyRates.objects.get(pk=self.id)
-    #     print(ccy)
-    #     return ccy
 
 class TradeSerializer(serializers.ModelSerializer):
     # equivalent_lcy = serializers.SerializerMethodField()
@@ -176,18 +170,17 @@ class TradeCreateSerializer(serializers.ListSerializer):
         return Trade.objects.bulk_create(instances)
 
 class PositionSerializer(serializers.ModelSerializer):
+    ccy__code = serializers.StringRelatedField(source='ccy.code')
+    total_pos = serializers.FloatField(read_only=True)
+    
     class Meta:
         model = Position
-        fields = '__all__'
-        # add transaction.atomic so that if error happened, it will rollback
-    # @transaction.atomic
-    # def create(self, validated_data):
-    #     trade = Trade.objects.create(**validated_data)
-    #     if "products" in self.initial_data:
-    #         products = self.initial_data.get("products")
-    #         for product in products:
-    #             quantity = product.get("quantity")
-    #             product = Product.objects.get(pk=id)
-    #             Detail(order=order, product=product, quantity=quantity).save()
-    #     order.save()
-    #     return order
+        fields = ['date', 'ccy__code', 'total_pos']
+    
+    def get_total_pos(self, obj):
+        return obj['total_pos']
+    
+class PositionSummarySerializer(serializers.Serializer):
+    date = serializers.DateField()
+    ccy__code = serializers.CharField(max_length=3)
+    total_pos = serializers.FloatField(read_only=True)

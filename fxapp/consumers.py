@@ -104,24 +104,24 @@ class TradeConsumer(AsyncWebsocketConsumer):
             print(f"Error saving trade to database: {e}")
             traceback.print_exc()  # Print the traceback
 
-@receiver(post_save, sender=Trade)
-def broadcast_trades(sender, instance, created, **kwargs):
-    if created:
-        channel_layer = get_channel_layer()
-        trades = Trade.objects.filter(date_created__gte=date.today()).order_by('-date_created')
-        print(trades)
-        trade_serializer = TradeSerializer(trades, many=True)
-        trades_data = trade_serializer.data
-        async_to_sync(channel_layer.group_send)(
-            "fx_tradeflow", 
-            {"type": "send_trades_of_day", 
-             "data": trades_data,
-             }
-        )
+    @receiver(post_save, sender=Trade)
+    def broadcast_trades(sender, instance, created, **kwargs):
+        if created:
+            channel_layer = get_channel_layer()
+            trades = Trade.objects.filter(date_created__gte=date.today()).order_by('-date_created')
+        
+            trade_serializer = TradeSerializer(trades, many=True)
+            trades_data = trade_serializer.data
+            async_to_sync(channel_layer.group_send)(
+                "fx_tradeflow", 
+                {"type": "send_trades_of_day", 
+                "data": trades_data,
+                }
+            )
 
-    async def disconnect(self, close_code):
-        # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
-        self.close(close_code)
+        async def disconnect(self, close_code):
+            # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
+            self.close(close_code)
 
 
                 

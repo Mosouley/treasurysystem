@@ -115,7 +115,7 @@ class Trade(models.Model):
   
     
     trade_id            = models.UUIDField(max_length=36, unique=True, default=uuid.uuid4)
-    tx_date             = models.DateTimeField(auto_now=True)
+    tx_date             = models.DateField(auto_now=True)
     val_date            = models.DateTimeField( blank=False, null=False, auto_now=False)
     ccy1                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name="currency1",blank=False,null=False)
     ccy2                = models.ForeignKey(Ccy, on_delete=models.CASCADE, related_name='currency2',blank=False,null=False)
@@ -177,9 +177,9 @@ class Trade(models.Model):
         verbose_name = 'Trade'
 
 class Position(models.Model):
-    date            = models.DateTimeField( blank=False, null=False, auto_now=False)
+    date            = models.DateField( blank=False, null=False, auto_now=False)
     ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
-    position = models.DecimalField(max_digits=20, decimal_places=4, default=0)
+    position        = models.FloatField()
 
     def __str__(self):
         return f"{self.ccy.code} - {self.position}"

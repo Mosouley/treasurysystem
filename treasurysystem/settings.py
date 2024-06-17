@@ -166,7 +166,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# STATICFILES_DIRS = '../frontend/ficc_front/'
+# STATICFILES_ROOT = (os.path.join(BASE_DIR, 'staticfiles'),)
+
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # CORS_ORIGIN_ALLOW_ALL = True
 # For local dev, localhost was not working but 127. was

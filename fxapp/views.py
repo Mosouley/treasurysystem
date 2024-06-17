@@ -9,12 +9,12 @@ from .serializers import *
 from django.shortcuts import render
 from .models import ExcelModel
 from django.http import JsonResponse
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils.timezone import now
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime,date
 from django.db.models import Sum
+from django.db.models import F
 
 # Create your views here.
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -42,7 +42,7 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
     queryset = SystemDailyRates.objects.all().order_by('-last_updated')
     serializer_class = SystemDailyRatesSerializer
     lookup_field = 'ccy_code' 
-   # http_method_names = ['get', 'post','head']  # to include specific accepted methods
+   # http_method_names = ['get', 'post','head']  # to include specific accepted methods––        
 
     def create(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -108,26 +108,12 @@ class TradeViewSet(viewsets.ModelViewSet):
         # Retrieve the start_date and end_date from query parameters if provided
         start_date_param = self.request.query_params.get('start_date', None)
         end_date_param = self.request.query_params.get('end_date', None)
-        # print(start_date_param)
-        # print(end_date_param)
-        # Parse and validate the date parameters if provided
-        if start_date_param:
+
+        if start_date_param and end_date_param:
             start_date = datetime.fromisoformat(start_date_param)
-            # print( datetime.fromisoformat(start_date_param))
-            # start_date = start_date_param
         if end_date_param:
             end_date = datetime.fromisoformat(end_date_param)
-            # print(datetime.fromisoformat(end_date_param))
-            # end_date = end_date_param
-        # qs = Trade.objects.filter(date_created__range=(start_date, end_date)).values('ccy1__code').annotate(Sum('amount2'))
-        print('Starting ', start_date)
-        print('Ending ', end_date)
-        # for item in qs:
-        #     print(item[0], item[1])
-        # Filter the queryset based on the provided date range
-        queryset = Trade.objects.filter(date_created__range=(start_date, end_date)).order_by('-date_created')
-        print(queryset.count())
-        # print(queryset.values())
+        queryset = Trade.objects.filter(tx_date__range=(start_date, end_date)).order_by('-date_created')
         return queryset
 
     def batch_destroy(self, request):
@@ -183,13 +169,23 @@ def my_endpoint(request):
         return JsonResponse('I don`t know how what is the best', safe=False)
 
 class PositionViewSet(viewsets.ModelViewSet):
-    serializer_class = PositionSerializer
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer     
 
     def get_queryset(self):
-        date_param = self.request.query_params.get('date', None)
-        print('Printing the date in the request ')
-        print(date_param)
-        if date_param is not None:
-            queryset = Position.objects.filter(date=date_param)
+        # print(self.request.query_params)
+        date_param = self.request.query_params.get('date', None)     
+        # using super
+        queryset = super().get_queryset().values('date','ccy__code').annotate(total_pos=Sum('position'))
 
-        return queryset
+        result = Position.objects.values('date','ccy__code').annotate(total_pos=Sum('position'))
+        if date_param is not None:
+            result = queryset.filter(date=date_param)
+
+        return result
+
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = PositionSummarySerializer(queryset, many=True)
+        return Response(serializer.data)

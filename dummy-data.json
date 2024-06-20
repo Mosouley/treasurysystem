@@ -1,0 +1,2934 @@
+[
+    {
+        "date": "2023-05-17T19:30:10.106153Z",
+        "last_updated": null,
+        "rateLcy": 31.6767,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-17T19:30:10.133382Z",
+        "last_updated": null,
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-17T19:30:10.135663Z",
+        "last_updated": null,
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-17T19:30:10.137630Z",
+        "last_updated": null,
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-17T19:30:10.139234Z",
+        "last_updated": null,
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-17T19:30:10.140928Z",
+        "last_updated": null,
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-17T19:30:10.142896Z",
+        "last_updated": null,
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-17T19:30:10.144611Z",
+        "last_updated": null,
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-17T19:30:10.146249Z",
+        "last_updated": null,
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-17T19:30:10.147590Z",
+        "last_updated": null,
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-17T19:30:10.149185Z",
+        "last_updated": null,
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-17T19:30:10.151962Z",
+        "last_updated": null,
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-17T19:30:10.153538Z",
+        "last_updated": null,
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-17T19:30:10.154906Z",
+        "last_updated": null,
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-17T19:30:10.156272Z",
+        "last_updated": null,
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-17T19:30:10.157836Z",
+        "last_updated": null,
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-17T19:30:10.158778Z",
+        "last_updated": null,
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-17T19:30:10.159863Z",
+        "last_updated": null,
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-17T19:30:10.161042Z",
+        "last_updated": null,
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-17T19:30:10.162340Z",
+        "last_updated": null,
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-17T19:49:30.651026Z",
+        "last_updated": "2023-05-17T19:49:30.651144Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-17T19:49:30.662652Z",
+        "last_updated": "2023-05-17T19:49:30.662832Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-17T19:49:30.665046Z",
+        "last_updated": "2023-05-17T19:49:30.665084Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-17T19:49:30.666240Z",
+        "last_updated": "2023-05-17T19:49:30.666262Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-17T19:49:30.667688Z",
+        "last_updated": "2023-05-17T19:49:30.667709Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-17T19:49:30.668873Z",
+        "last_updated": "2023-05-17T19:49:30.668893Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-17T19:49:30.670251Z",
+        "last_updated": "2023-05-17T19:49:30.670300Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-17T19:49:30.672142Z",
+        "last_updated": "2023-05-17T19:49:30.672191Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-17T19:49:30.673568Z",
+        "last_updated": "2023-05-17T19:49:30.673604Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-17T19:49:30.674864Z",
+        "last_updated": "2023-05-17T19:49:30.674895Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-17T19:49:30.676087Z",
+        "last_updated": "2023-05-17T19:49:30.676124Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-17T19:49:30.678121Z",
+        "last_updated": "2023-05-17T19:49:30.678185Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-17T19:49:30.680579Z",
+        "last_updated": "2023-05-17T19:49:30.680624Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-17T19:49:30.681924Z",
+        "last_updated": "2023-05-17T19:49:30.681955Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-17T19:49:30.682870Z",
+        "last_updated": "2023-05-17T19:49:30.682893Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-17T19:49:30.683837Z",
+        "last_updated": "2023-05-17T19:49:30.683859Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-17T19:49:30.684748Z",
+        "last_updated": "2023-05-17T19:49:30.684769Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-17T19:49:30.685630Z",
+        "last_updated": "2023-05-17T19:49:30.685651Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-17T19:49:30.687236Z",
+        "last_updated": "2023-05-17T19:49:30.687288Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-17T19:49:30.689033Z",
+        "last_updated": "2023-05-17T19:49:30.689083Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-17T20:43:14.150124Z",
+        "last_updated": "2023-05-17T20:43:14.150371Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-17T20:43:14.164945Z",
+        "last_updated": "2023-05-17T20:43:14.164994Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-17T20:43:14.167336Z",
+        "last_updated": "2023-05-17T20:43:14.167375Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-17T20:43:14.168490Z",
+        "last_updated": "2023-05-17T20:43:14.168512Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-17T20:43:14.169620Z",
+        "last_updated": "2023-05-17T20:43:14.169642Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-17T20:43:14.170680Z",
+        "last_updated": "2023-05-17T20:43:14.170700Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-17T20:43:14.171769Z",
+        "last_updated": "2023-05-17T20:43:14.171805Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-17T20:43:14.173001Z",
+        "last_updated": "2023-05-17T20:43:14.173029Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-17T20:43:14.174258Z",
+        "last_updated": "2023-05-17T20:43:14.174284Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-17T20:43:14.175433Z",
+        "last_updated": "2023-05-17T20:43:14.175461Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-17T20:43:14.176810Z",
+        "last_updated": "2023-05-17T20:43:14.176843Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-17T20:43:14.178185Z",
+        "last_updated": "2023-05-17T20:43:14.178219Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-17T20:43:14.179502Z",
+        "last_updated": "2023-05-17T20:43:14.179538Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-17T20:43:14.180954Z",
+        "last_updated": "2023-05-17T20:43:14.180991Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-17T20:43:14.182460Z",
+        "last_updated": "2023-05-17T20:43:14.182500Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-17T20:43:14.184755Z",
+        "last_updated": "2023-05-17T20:43:14.184807Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-17T20:43:14.186740Z",
+        "last_updated": "2023-05-17T20:43:14.186788Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-17T20:43:14.187894Z",
+        "last_updated": "2023-05-17T20:43:14.187917Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-17T20:43:14.188922Z",
+        "last_updated": "2023-05-17T20:43:14.188944Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-17T20:43:14.189967Z",
+        "last_updated": "2023-05-17T20:43:14.189991Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:27:28.736752Z",
+        "last_updated": "2023-05-20T06:27:28.736844Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:27:28.750348Z",
+        "last_updated": "2023-05-20T06:27:28.750369Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:27:28.751299Z",
+        "last_updated": "2023-05-20T06:27:28.751313Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:27:28.752173Z",
+        "last_updated": "2023-05-20T06:27:28.752186Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:27:28.753112Z",
+        "last_updated": "2023-05-20T06:27:28.753125Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:27:28.753998Z",
+        "last_updated": "2023-05-20T06:27:28.754013Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:27:28.755285Z",
+        "last_updated": "2023-05-20T06:27:28.755299Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:27:28.756114Z",
+        "last_updated": "2023-05-20T06:27:28.756128Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:27:28.756906Z",
+        "last_updated": "2023-05-20T06:27:28.756920Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:27:28.758279Z",
+        "last_updated": "2023-05-20T06:27:28.758301Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:27:28.759331Z",
+        "last_updated": "2023-05-20T06:27:28.759351Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:27:28.760281Z",
+        "last_updated": "2023-05-20T06:27:28.760295Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:27:28.761347Z",
+        "last_updated": "2023-05-20T06:27:28.761361Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:27:28.762125Z",
+        "last_updated": "2023-05-20T06:27:28.762139Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:27:28.762902Z",
+        "last_updated": "2023-05-20T06:27:28.762915Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:27:28.763711Z",
+        "last_updated": "2023-05-20T06:27:28.763724Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:27:28.764522Z",
+        "last_updated": "2023-05-20T06:27:28.764535Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:27:28.765301Z",
+        "last_updated": "2023-05-20T06:27:28.765314Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:27:28.766108Z",
+        "last_updated": "2023-05-20T06:27:28.766121Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:27:28.766914Z",
+        "last_updated": "2023-05-20T06:27:28.766928Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:36:25.113153Z",
+        "last_updated": "2023-05-20T06:36:25.113203Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:36:25.117480Z",
+        "last_updated": "2023-05-20T06:36:25.117499Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:36:25.119922Z",
+        "last_updated": "2023-05-20T06:36:25.119940Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:36:25.123233Z",
+        "last_updated": "2023-05-20T06:36:25.123274Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:36:25.126996Z",
+        "last_updated": "2023-05-20T06:36:25.127017Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:36:25.129039Z",
+        "last_updated": "2023-05-20T06:36:25.129077Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:36:25.130500Z",
+        "last_updated": "2023-05-20T06:36:25.130517Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:36:25.132181Z",
+        "last_updated": "2023-05-20T06:36:25.132200Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:36:25.134746Z",
+        "last_updated": "2023-05-20T06:36:25.134765Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:36:25.136367Z",
+        "last_updated": "2023-05-20T06:36:25.136432Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:36:25.138039Z",
+        "last_updated": "2023-05-20T06:36:25.138059Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:36:25.141057Z",
+        "last_updated": "2023-05-20T06:36:25.141087Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:36:25.143304Z",
+        "last_updated": "2023-05-20T06:36:25.143321Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:36:25.144381Z",
+        "last_updated": "2023-05-20T06:36:25.144393Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:36:25.145345Z",
+        "last_updated": "2023-05-20T06:36:25.145355Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:36:25.146466Z",
+        "last_updated": "2023-05-20T06:36:25.146500Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:36:25.147982Z",
+        "last_updated": "2023-05-20T06:36:25.148068Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:36:25.149163Z",
+        "last_updated": "2023-05-20T06:36:25.149177Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:36:25.150204Z",
+        "last_updated": "2023-05-20T06:36:25.150215Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:36:25.151081Z",
+        "last_updated": "2023-05-20T06:36:25.151092Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:39:50.822283Z",
+        "last_updated": "2023-05-20T06:39:50.822396Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:39:50.828714Z",
+        "last_updated": "2023-05-20T06:39:50.828757Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:39:50.830976Z",
+        "last_updated": "2023-05-20T06:39:50.831018Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:39:50.832837Z",
+        "last_updated": "2023-05-20T06:39:50.832869Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:39:50.834393Z",
+        "last_updated": "2023-05-20T06:39:50.834423Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:39:50.836019Z",
+        "last_updated": "2023-05-20T06:39:50.836095Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:39:50.837949Z",
+        "last_updated": "2023-05-20T06:39:50.837988Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:39:50.841439Z",
+        "last_updated": "2023-05-20T06:39:50.841494Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:39:50.842962Z",
+        "last_updated": "2023-05-20T06:39:50.842989Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:39:50.844587Z",
+        "last_updated": "2023-05-20T06:39:50.844621Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:39:50.846310Z",
+        "last_updated": "2023-05-20T06:39:50.846348Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:39:50.848544Z",
+        "last_updated": "2023-05-20T06:39:50.848595Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:39:50.850956Z",
+        "last_updated": "2023-05-20T06:39:50.851005Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:39:50.853346Z",
+        "last_updated": "2023-05-20T06:39:50.853377Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:39:50.854815Z",
+        "last_updated": "2023-05-20T06:39:50.854842Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:39:50.856688Z",
+        "last_updated": "2023-05-20T06:39:50.856781Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:39:50.859359Z",
+        "last_updated": "2023-05-20T06:39:50.859413Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:39:50.861098Z",
+        "last_updated": "2023-05-20T06:39:50.861156Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:39:50.863494Z",
+        "last_updated": "2023-05-20T06:39:50.863541Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:39:50.865799Z",
+        "last_updated": "2023-05-20T06:39:50.865846Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:42:43.638096Z",
+        "last_updated": "2023-05-20T06:42:43.638143Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:42:43.643015Z",
+        "last_updated": "2023-05-20T06:42:43.643030Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:42:43.644057Z",
+        "last_updated": "2023-05-20T06:42:43.644067Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:42:43.647275Z",
+        "last_updated": "2023-05-20T06:42:43.647285Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:42:43.648274Z",
+        "last_updated": "2023-05-20T06:42:43.648283Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:42:43.649042Z",
+        "last_updated": "2023-05-20T06:42:43.649052Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:42:43.649979Z",
+        "last_updated": "2023-05-20T06:42:43.649989Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:42:43.650755Z",
+        "last_updated": "2023-05-20T06:42:43.650765Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:42:43.651572Z",
+        "last_updated": "2023-05-20T06:42:43.651582Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:42:43.652460Z",
+        "last_updated": "2023-05-20T06:42:43.652473Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:42:43.653442Z",
+        "last_updated": "2023-05-20T06:42:43.653455Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:42:43.654399Z",
+        "last_updated": "2023-05-20T06:42:43.654414Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:42:43.655659Z",
+        "last_updated": "2023-05-20T06:42:43.655678Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:42:43.657175Z",
+        "last_updated": "2023-05-20T06:42:43.657193Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:42:43.658564Z",
+        "last_updated": "2023-05-20T06:42:43.658577Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:42:43.659608Z",
+        "last_updated": "2023-05-20T06:42:43.659621Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:42:43.660473Z",
+        "last_updated": "2023-05-20T06:42:43.660486Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:42:43.661336Z",
+        "last_updated": "2023-05-20T06:42:43.661349Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:42:43.662198Z",
+        "last_updated": "2023-05-20T06:42:43.662212Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:42:43.662837Z",
+        "last_updated": "2023-05-20T06:42:43.662849Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:45:07.391026Z",
+        "last_updated": "2023-05-20T06:45:07.391072Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:45:07.394821Z",
+        "last_updated": "2023-05-20T06:45:07.394830Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:45:07.395721Z",
+        "last_updated": "2023-05-20T06:45:07.395729Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:45:07.396511Z",
+        "last_updated": "2023-05-20T06:45:07.396518Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:45:07.397289Z",
+        "last_updated": "2023-05-20T06:45:07.397297Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:45:07.398118Z",
+        "last_updated": "2023-05-20T06:45:07.398125Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:45:07.399027Z",
+        "last_updated": "2023-05-20T06:45:07.399035Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:45:07.399703Z",
+        "last_updated": "2023-05-20T06:45:07.399711Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:45:07.400307Z",
+        "last_updated": "2023-05-20T06:45:07.400315Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:45:07.400965Z",
+        "last_updated": "2023-05-20T06:45:07.400972Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:45:07.401606Z",
+        "last_updated": "2023-05-20T06:45:07.401614Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:45:07.402257Z",
+        "last_updated": "2023-05-20T06:45:07.402265Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:45:07.403175Z",
+        "last_updated": "2023-05-20T06:45:07.403183Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:45:07.403884Z",
+        "last_updated": "2023-05-20T06:45:07.403892Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:45:07.404813Z",
+        "last_updated": "2023-05-20T06:45:07.404827Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:45:07.406523Z",
+        "last_updated": "2023-05-20T06:45:07.406548Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:45:07.407647Z",
+        "last_updated": "2023-05-20T06:45:07.407663Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:45:07.408560Z",
+        "last_updated": "2023-05-20T06:45:07.408573Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:45:07.409314Z",
+        "last_updated": "2023-05-20T06:45:07.409326Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:45:07.410047Z",
+        "last_updated": "2023-05-20T06:45:07.410057Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:49:49.724369Z",
+        "last_updated": "2023-05-20T06:49:49.724545Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:49:49.737059Z",
+        "last_updated": "2023-05-20T06:49:49.737119Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:49:49.739304Z",
+        "last_updated": "2023-05-20T06:49:49.739362Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:49:49.741997Z",
+        "last_updated": "2023-05-20T06:49:49.742041Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:49:49.743462Z",
+        "last_updated": "2023-05-20T06:49:49.743486Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:49:49.744873Z",
+        "last_updated": "2023-05-20T06:49:49.744919Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:49:49.746787Z",
+        "last_updated": "2023-05-20T06:49:49.746835Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    },
+    {
+        "date": "2023-05-20T06:49:49.748664Z",
+        "last_updated": "2023-05-20T06:49:49.748709Z",
+        "rateLcy": 14.9725,
+        "ccy": 12,
+        "ccy_code": "GHS"
+    },
+    {
+        "date": "2023-05-20T06:49:49.750468Z",
+        "last_updated": "2023-05-20T06:49:49.750511Z",
+        "rateLcy": 1.5018,
+        "ccy": 13,
+        "ccy_code": "INR"
+    },
+    {
+        "date": "2023-05-20T06:49:49.752850Z",
+        "last_updated": "2023-05-20T06:49:49.752904Z",
+        "rateLcy": 0.8997,
+        "ccy": 14,
+        "ccy_code": "JPY"
+    },
+    {
+        "date": "2023-05-20T06:49:49.755232Z",
+        "last_updated": "2023-05-20T06:49:49.755273Z",
+        "rateLcy": 0.1426,
+        "ccy": 15,
+        "ccy_code": "MWK"
+    },
+    {
+        "date": "2023-05-20T06:49:49.757529Z",
+        "last_updated": "2023-05-20T06:49:49.757581Z",
+        "rateLcy": 0.28,
+        "ccy": 16,
+        "ccy_code": "NGN"
+    },
+    {
+        "date": "2023-05-20T06:49:49.758973Z",
+        "last_updated": "2023-05-20T06:49:49.758996Z",
+        "rateLcy": 0.1142,
+        "ccy": 17,
+        "ccy_code": "RWF"
+    },
+    {
+        "date": "2023-05-20T06:49:49.760265Z",
+        "last_updated": "2023-05-20T06:49:49.760311Z",
+        "rateLcy": 0.05,
+        "ccy": 18,
+        "ccy_code": "TZS"
+    },
+    {
+        "date": "2023-05-20T06:49:49.762165Z",
+        "last_updated": "2023-05-20T06:49:49.762210Z",
+        "rateLcy": 0.0318,
+        "ccy": 19,
+        "ccy_code": "UGX"
+    },
+    {
+        "date": "2023-05-20T06:49:49.764008Z",
+        "last_updated": "2023-05-20T06:49:49.764052Z",
+        "rateLcy": 116.35,
+        "ccy": 1,
+        "ccy_code": "USD"
+    },
+    {
+        "date": "2023-05-20T06:49:49.765899Z",
+        "last_updated": "2023-05-20T06:49:49.765949Z",
+        "rateLcy": 0.1829,
+        "ccy": 20,
+        "ccy_code": "XAF"
+    },
+    {
+        "date": "2023-05-20T06:49:49.767859Z",
+        "last_updated": "2023-05-20T06:49:49.767909Z",
+        "rateLcy": 0.1854,
+        "ccy": 21,
+        "ccy_code": "XOF"
+    },
+    {
+        "date": "2023-05-20T06:49:49.769868Z",
+        "last_updated": "2023-05-20T06:49:49.769917Z",
+        "rateLcy": 7.2997,
+        "ccy": 22,
+        "ccy_code": "ZAR"
+    },
+    {
+        "date": "2023-05-20T06:49:49.771765Z",
+        "last_updated": "2023-05-20T06:49:49.771814Z",
+        "rateLcy": 6.8421,
+        "ccy": 23,
+        "ccy_code": "ZMW"
+    },
+    {
+        "date": "2023-05-20T06:51:31.905136Z",
+        "last_updated": "2023-05-20T06:51:31.905292Z",
+        "rateLcy": 32.56788,
+        "ccy": 6,
+        "ccy_code": "AED"
+    },
+    {
+        "date": "2023-05-20T06:51:31.910798Z",
+        "last_updated": "2023-05-20T06:51:31.910841Z",
+        "rateLcy": 81.7301,
+        "ccy": 7,
+        "ccy_code": "AUD"
+    },
+    {
+        "date": "2023-05-20T06:51:31.912912Z",
+        "last_updated": "2023-05-20T06:51:31.912944Z",
+        "rateLcy": 0.0567,
+        "ccy": 8,
+        "ccy_code": "BIF"
+    },
+    {
+        "date": "2023-05-20T06:51:31.914541Z",
+        "last_updated": "2023-05-20T06:51:31.914569Z",
+        "rateLcy": 90.6435,
+        "ccy": 9,
+        "ccy_code": "CAD"
+    },
+    {
+        "date": "2023-05-20T06:51:31.916026Z",
+        "last_updated": "2023-05-20T06:51:31.916053Z",
+        "rateLcy": 117.1466,
+        "ccy": 10,
+        "ccy_code": "CHF"
+    },
+    {
+        "date": "2023-05-20T06:51:31.918140Z",
+        "last_updated": "2023-05-20T06:51:31.918182Z",
+        "rateLcy": 122.5864,
+        "ccy": 11,
+        "ccy_code": "EUR"
+    },
+    {
+        "date": "2023-05-20T06:51:31.919524Z",
+        "last_updated": "2023-05-20T06:51:31.919542Z",
+        "rateLcy": 145.2514,
+        "ccy": 2,
+        "ccy_code": "GBP"
+    }
+,
+    {
+               "cif": "476000198",
+        "name": "BIDCO KENYA PLC",
+        "email": "bidco@gmail.com",
+        "active": true,
+        "update": "2023-04-06",
+        "timestamp": "2023-04-06T03:05:39.749428Z",
+        "user": 1,
+        "segment": 4
+    },
+    {
+               "cif": "476000199",
+        "name": "ORYX ENERGY LTD",
+        "email": "oryxenergies@oryx.com",
+        "active": true,
+        "update": "2024-01-06",
+        "timestamp": "2024-01-06T16:40:29.980976Z",
+        "user": null,
+        "segment": 5
+    },
+    {
+               "cif": "476000195",
+        "name": "PWANI OIL LIMITED",
+        "email": "pwani@pwanioil.com",
+        "active": true,
+        "update": "2024-01-07",
+        "timestamp": "2024-01-07T11:31:55.683460Z",
+        "user": null,
+        "segment": 4
+    },
+    {
+               "cif": "476000190",
+        "name": "RUBIS ENERGY LTD",
+        "email": "pwani@pwanioil.com",
+        "active": true,
+        "update": "2024-01-07",
+        "timestamp": "2024-01-07T11:32:22.042278Z",
+        "user": null,
+        "segment": 4
+    },
+    {
+               "cif": "476000189",
+        "name": "WALKING CUSTOMER",
+        "email": "walkingcustomer@gmail.com",
+        "active": true,
+        "update": "2024-01-14",
+        "timestamp": "2024-01-14T15:37:40.706669Z",
+        "user": null,
+        "segment": 4
+    },
+    {
+               "cif": "476000189",
+        "name": "WALKING CUSTOMER",
+        "email": "walkingcustomer@gmail.com",
+        "active": true,
+        "update": "2024-01-21",
+        "timestamp": "2024-01-21T11:23:15.017848Z",
+        "user": null,
+        "segment": 4
+    },
+    {
+                "cif": "476000189",
+        "name": "WALKING CUSTOMER",
+        "email": "walkingcustomer@gmail.com",
+        "active": true,
+        "update": "2024-01-23",
+        "timestamp": "2024-01-23T09:39:59.988647Z",
+        "user": null,
+        "segment": 4
+    },
+    {
+        "title": "dealers list"
+    },
+
+    {
+               "desc": "SalesDealer",
+        "name": "Moh",
+        "email": "mo.souley@gmail.com",
+        "active": true,
+        "update": "2024-01-07",
+        "timestamp": "2023-04-08T12:27:51.985967Z",
+        "user": null
+    },
+    {
+               "desc": "SalesDealer",
+        "name": "Kevin",
+        "email": "kevo@gmail.com",
+        "active": true,
+        "update": "2024-01-07",
+        "timestamp": "2024-01-07T17:19:47.507962Z",
+        "user": 1
+    },
+
+
+    {
+        "title": "segments list"
+    },
+    {
+        "name": "CORPORATE",
+        "desc": "Corporate Business  Unit"
+    },
+    {
+        "name": "COMMERCIAL",
+        "desc": "Commercial Business  Unit"
+    },
+    {
+        "name": "CONSUMER",
+        "desc": "Consumer Business  Unit"
+    },
+
+
+    {
+        "title": "currencies list"
+    },
+    {
+        "code": "USD"
+    },
+    {
+        "code": "GBP"
+    },
+    {
+        "code": "KES"
+    },
+    {
+        "code": "AED"
+    },
+    {
+        "code": "AUD"
+    },
+    {
+        "code": "BIF"
+    },
+    {
+        "code": "CAD"
+    },
+    {
+        "code": "CHF"
+    },
+    {
+        "code": "EUR"
+    },
+    {
+        "code": "GHS"
+    },
+    {
+        "code": "INR"
+    },
+    {
+        "code": "JPY"
+    },
+    {
+        "code": "MWK"
+    },
+    {
+        "code": "NGN"
+    },
+    {
+        "code": "RWF"
+    },
+    {
+        "code": "TZS"
+    },
+    {
+        "code": "UGX"
+    },
+    {
+        "code": "XAF"
+    },
+    {
+        "code": "XOF"
+    },
+    {
+        "code": "ZAR"
+    },
+    {
+        "code": "ZMW"
+    },
+    {
+        "code": "CNY"
+    },
+    {
+        "code": "ETB"
+    },
+    {
+        "code": "GNF"
+    },
+    {
+        "code": "MZN"
+    },
+    {
+        "title": "products list"
+    },
+    {
+               "name": "FXSPOT"
+    },
+    {
+               "name": "FXFORWARD"
+    },
+    {
+               "name": "FXSWAP"
+    },
+    {
+               "name": "FXNDF"
+    },
+    {
+        "title": "daily-rates list"
+    },
+
+    {
+        "title": "trades list"
+    },
+    {
+                "trade_id": "aadc5ef5-3722-4c29-85fe-143214289a46",
+        "tx_date": "2024-01-12T21:17:44.333445Z",
+        "val_date": "2024-01-12T21:00:00Z",
+        "customer": {
+                       "cif": "476000190",
+            "name": "RUBIS ENERGY LTD",
+            "email": "pwani@pwanioil.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2024-01-07T11:32:22.042278Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": 250000.0,
+        "amount2": 39800000.0,
+        "deal_rate": "159.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "140.1000",
+        "equivalent_lcy": 35025000.0,
+        "deal_pnl": -4775000.0,
+        "tx_comments": "with status",
+        "status": "verified",
+        "date_created": "2024-01-12T21:17:44.333498Z",
+        "last_updated": "2024-01-12T21:17:44.333501Z",
+        "ccy1_rate": "140.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "897eaad9-9194-4886-9c9b-92c65c9997f2",
+        "tx_date": "2024-01-12T21:24:20.255812Z",
+        "val_date": "2024-01-12T21:00:00Z",
+        "customer": {
+                       "cif": "476000198",
+            "name": "BIDCO KENYA PLC",
+            "email": "bidco@gmail.com",
+            "active": true,
+            "update": "2023-04-06",
+            "timestamp": "2023-04-06T03:05:39.749428Z",
+            "user": 1,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 100000.0,
+        "amount2": 13900000.0,
+        "deal_rate": "139.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "140.1000",
+        "equivalent_lcy": 14010000.0,
+        "deal_pnl": 110000.0,
+        "tx_comments": "second test",
+        "status": "verified",
+        "date_created": "2024-01-12T21:24:20.255862Z",
+        "last_updated": "2024-01-12T21:24:20.255865Z",
+        "ccy1_rate": "140.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "ad9fcaab-6f93-4a67-9e6e-a477cf0681d2",
+        "tx_date": "2024-01-14T15:18:07.197912Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000199",
+            "name": "ORYX ENERGY LTD",
+            "email": "oryxenergies@oryx.com",
+            "active": true,
+            "update": "2024-01-06",
+            "timestamp": "2024-01-06T16:40:29.980976Z",
+            "user": null,
+            "segment": 5
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": 200000.0,
+        "amount2": 31840000.0,
+        "deal_rate": "159.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 31020040.0,
+        "deal_pnl": -820000.0,
+        "tx_comments": "testing the PnL",
+        "status": "verified",
+        "date_created": "2024-01-14T15:18:07.198065Z",
+        "last_updated": "2024-01-14T15:18:07.198080Z",
+        "ccy1_rate": "155.1002",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "846320af-c53d-471e-ad0a-6331d286c3c7",
+        "tx_date": "2024-01-14T15:22:41.776531Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000199",
+            "name": "ORYX ENERGY LTD",
+            "email": "oryxenergies@oryx.com",
+            "active": true,
+            "update": "2024-01-06",
+            "timestamp": "2024-01-06T16:40:29.980976Z",
+            "user": null,
+            "segment": 5
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": 300000.0,
+        "amount2": 47760000.0,
+        "deal_rate": "159.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 46530000.0,
+        "deal_pnl": -1230000.0,
+        "tx_comments": "testing the pnl",
+        "status": "verified",
+        "date_created": "2024-01-14T15:22:41.776696Z",
+        "last_updated": "2024-01-14T15:22:41.776708Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "dde33031-f8a9-4087-a9a0-13b9cb52d32a",
+        "tx_date": "2024-01-14T15:45:34.977838Z",
+        "val_date": "2023-12-21T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 16035.31,
+        "amount2": 2501508.36,
+        "deal_rate": "156.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 2487076.581,
+        "deal_pnl": -14431.779,
+        "tx_comments": "blotter tx",
+        "status": "verified",
+        "date_created": "2024-01-14T15:45:34.977958Z",
+        "last_updated": "2024-01-14T15:45:34.977967Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "7bfa4257-3367-437d-ac80-207de8ab35ad",
+        "tx_date": "2024-01-14T16:07:52.519505Z",
+        "val_date": "2023-12-21T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 200000.0,
+        "amount2": 31140000.0,
+        "deal_rate": "155.7000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 31020000.0,
+        "deal_pnl": -120000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T16:07:52.519639Z",
+        "last_updated": "2024-01-14T16:07:52.519649Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "8814ba11-1436-4081-9436-49f5d42143fb",
+        "tx_date": "2024-01-14T16:44:27.536523Z",
+        "val_date": "2023-12-21T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": 50000.0,
+        "amount2": 7925000.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 7755000.0,
+        "deal_pnl": -170000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T16:44:27.536717Z",
+        "last_updated": "2024-01-14T16:44:27.536733Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "35410f58-e045-46ca-8dce-500dc9d85f57",
+        "tx_date": "2024-01-14T16:46:12.768066Z",
+        "val_date": "2023-12-21T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "USD"
+        },
+        "buy_sell": "sell",
+        "amount1": 157066.6,
+        "amount2": 173165.9265,
+        "deal_rate": "1.1025",
+        "fees_rate": "0.0000",
+        "system_rate": "1.1019",
+        "equivalent_lcy": 26843420.153020002,
+        "deal_pnl": -14616.617796,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T16:46:12.768240Z",
+        "last_updated": "2024-01-14T16:46:12.768252Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "155.1000"
+    },
+    {
+                "trade_id": "1829e6dd-258a-4bb8-87d6-8db92f27711c",
+        "tx_date": "2024-01-14T18:01:35.345476Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -50000.0,
+        "amount2": 7925000.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -7755000.0,
+        "deal_pnl": 170000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T18:01:35.345715Z",
+        "last_updated": "2024-01-14T18:01:35.345730Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "d4be8586-b4a5-4c45-937f-5ad899533388",
+        "tx_date": "2024-01-14T18:03:22.443274Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "USD"
+        },
+        "buy_sell": "sell",
+        "amount1": -157066.6,
+        "amount2": 173165.93,
+        "deal_rate": "1.1025",
+        "fees_rate": "0.0000",
+        "system_rate": "1.1019",
+        "equivalent_lcy": -26843420.153020002,
+        "deal_pnl": 14616.617796,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T18:03:22.443356Z",
+        "last_updated": "2024-01-14T18:03:22.443363Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "155.1000"
+    },
+    {
+                "trade_id": "4cf97d68-1cc1-4483-b067-67f06ba4d88c",
+        "tx_date": "2024-01-14T18:50:14.099557Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -15000.0,
+        "amount2": 2377500.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -2326500.0,
+        "deal_pnl": 51000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T18:50:14.099710Z",
+        "last_updated": "2024-01-14T18:50:14.099722Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "18fa085b-495a-4dd4-9faa-9ffa5100db27",
+        "tx_date": "2024-01-14T18:53:19.305113Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 25000.0,
+        "amount2": 3905000.0,
+        "deal_rate": "156.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 3877500.0,
+        "deal_pnl": -27500.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T18:53:19.305307Z",
+        "last_updated": "2024-01-14T18:53:19.305322Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "65671384-5da3-4168-b24f-97c7cb513cf0",
+        "tx_date": "2024-01-14T18:59:55.154110Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 29000.0,
+        "amount2": 4524000.0,
+        "deal_rate": "156.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 4497900.0,
+        "deal_pnl": -26100.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T18:59:55.154222Z",
+        "last_updated": "2024-01-14T18:59:55.154231Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "1f701ab9-d7b0-4191-bd26-54e85f1eff49",
+        "tx_date": "2024-01-14T19:00:55.300994Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -200000.0,
+        "amount2": 31700000.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -31020000.0,
+        "deal_pnl": 680000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:00:55.301044Z",
+        "last_updated": "2024-01-14T19:00:55.301048Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "7da46387-eebb-4141-95d4-cb6b0166c420",
+        "tx_date": "2024-01-14T19:03:06.951886Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "JPY"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 46009389.67,
+        "amount2": 49000000.0,
+        "deal_rate": "1.0650",
+        "fees_rate": "0.0000",
+        "system_rate": "1.0920",
+        "equivalent_lcy": 50242253.51964,
+        "deal_pnl": 1242253.52109,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:03:06.952005Z",
+        "last_updated": "2024-01-14T19:03:06.952014Z",
+        "ccy1_rate": "1.0920",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "9d94a9a2-1847-4d3e-9aee-7544719d1992",
+        "tx_date": "2024-01-14T19:08:59.118448Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -10000.0,
+        "amount2": 1640000.0,
+        "deal_rate": "164.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "170.9047",
+        "equivalent_lcy": -1709047.0,
+        "deal_pnl": -69047.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:08:59.118581Z",
+        "last_updated": "2024-01-14T19:08:59.118591Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "b6532c27-0560-4374-a2fd-977405935b4c",
+        "tx_date": "2024-01-14T19:11:46.771297Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "USD"
+        },
+        "buy_sell": "sell",
+        "amount1": -17337.15,
+        "amount2": 18585.42,
+        "deal_rate": "1.0720",
+        "fees_rate": "0.0000",
+        "system_rate": "1.1019",
+        "equivalent_lcy": -2963000.4196050004,
+        "deal_pnl": -80400.8597535,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:11:46.771431Z",
+        "last_updated": "2024-01-14T19:11:46.771441Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "155.1000"
+    },
+    {
+                "trade_id": "fbdd32f2-21c1-42ef-b01c-6a403553fbee",
+        "tx_date": "2024-01-14T19:23:07.456691Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 470261.44,
+        "amount2": 71950000.32,
+        "deal_rate": "153.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 72937549.344,
+        "deal_pnl": 987549.024,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:23:07.456857Z",
+        "last_updated": "2024-01-14T19:23:07.456867Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "6d11d414-a3d1-4e12-b681-b9ad47d3e2cc",
+        "tx_date": "2024-01-14T19:25:08.210356Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -13551.5,
+        "amount2": 2147912.75,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -2101837.65,
+        "deal_pnl": 46075.1,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:25:08.210487Z",
+        "last_updated": "2024-01-14T19:25:08.210497Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "5737e206-2262-480c-bda9-105644175688",
+        "tx_date": "2024-01-14T19:26:06.123602Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -3000000.0,
+        "amount2": 475500000.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -465300000.0,
+        "deal_pnl": 10200000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:26:06.123738Z",
+        "last_updated": "2024-01-14T19:26:06.123747Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "ff5d0a5d-335a-45bc-9619-0f735af61287",
+        "tx_date": "2024-01-14T19:28:21.229920Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -1000000.0,
+        "amount2": 175200000.0,
+        "deal_rate": "175.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "170.9047",
+        "equivalent_lcy": -170904700.0,
+        "deal_pnl": 4295300.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:28:21.230041Z",
+        "last_updated": "2024-01-14T19:28:21.230051Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "e214d026-1951-4dd6-963c-83b0e66c34b8",
+        "tx_date": "2024-01-14T19:30:20.438877Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 3470588.24,
+        "amount2": 531000000.72,
+        "deal_rate": "153.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 538288236.024,
+        "deal_pnl": 7288235.3040000005,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:30:20.438993Z",
+        "last_updated": "2024-01-14T19:30:20.439002Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "232b38ca-42f6-42e2-868e-d2752c8a71bd",
+        "tx_date": "2024-01-14T19:33:03.243572Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 588235.29,
+        "amount2": 89999999.37,
+        "deal_rate": "153.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 91235293.479,
+        "deal_pnl": 1235294.1090000002,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:33:03.243623Z",
+        "last_updated": "2024-01-14T19:33:03.243627Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "c5306dbe-605d-492e-b5a2-3a363866f7e3",
+        "tx_date": "2024-01-14T19:35:29.160845Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -13322.65,
+        "amount2": 2111640.02,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -2066343.015,
+        "deal_pnl": 45297.01,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:35:29.160975Z",
+        "last_updated": "2024-01-14T19:35:29.160985Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "6621c2d0-efd7-420b-adba-542dcc0730c1",
+        "tx_date": "2024-01-14T19:38:12.622324Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -233617.81,
+        "amount2": 37028422.88,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -36234122.331,
+        "deal_pnl": 794300.554,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:38:12.622443Z",
+        "last_updated": "2024-01-14T19:38:12.622453Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "0afdfb65-ad90-4c9e-bd74-9864f4c3191b",
+        "tx_date": "2024-01-14T19:40:07.661523Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "buy",
+        "amount1": 15000.0,
+        "amount2": 2298750.0,
+        "deal_rate": "153.2500",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": 2326500.0,
+        "deal_pnl": 27750.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:40:07.661684Z",
+        "last_updated": "2024-01-14T19:40:07.661693Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "07b5e9ac-fc1c-464a-8119-cd194096b9da",
+        "tx_date": "2024-01-14T19:41:08.903091Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -50000.0,
+        "amount2": 7925000.0,
+        "deal_rate": "158.5000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -7755000.0,
+        "deal_pnl": 170000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:41:08.903218Z",
+        "last_updated": "2024-01-14T19:41:08.903227Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "3c81077c-edc8-4e7a-a95d-faa59004f316",
+        "tx_date": "2024-01-14T19:42:18.736984Z",
+        "val_date": "2024-01-13T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "EUR"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -20000.0,
+        "amount2": 3496000.0,
+        "deal_rate": "174.8000",
+        "fees_rate": "0.0000",
+        "system_rate": "170.9047",
+        "equivalent_lcy": -3418094.0,
+        "deal_pnl": 77906.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-14T19:42:18.737107Z",
+        "last_updated": "2024-01-14T19:42:18.737117Z",
+        "ccy1_rate": "170.9047",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "b9780350-ba75-4aba-9fed-3812f546b36b",
+        "tx_date": "2024-01-16T20:59:08.264068Z",
+        "val_date": "2024-01-15T21:00:00Z",
+        "customer": {
+                       "cif": "476000189",
+            "name": "WALKING CUSTOMER",
+            "email": "walkingcustomer@gmail.com",
+            "active": true,
+            "update": "2024-01-14",
+            "timestamp": "2024-01-14T15:37:40.706669Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -50000.0,
+        "amount2": 7950000.0,
+        "deal_rate": "159.0000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -7755000.0,
+        "deal_pnl": 195000.0,
+        "tx_comments": "server sent",
+        "status": "verified",
+        "date_created": "2024-01-16T20:59:08.264202Z",
+        "last_updated": "2024-01-16T20:59:08.264212Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    },
+    {
+                "trade_id": "ac426d63-b26a-4ef0-8d56-b80e69934f0b",
+        "tx_date": "2024-01-17T21:09:16.535640Z",
+        "val_date": "2024-01-17T21:00:00Z",
+        "customer": {
+                       "cif": "476000190",
+            "name": "RUBIS ENERGY LTD",
+            "email": "pwani@pwanioil.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2024-01-07T11:32:22.042278Z",
+            "user": null,
+            "segment": 4
+        },
+        "product": {
+                       "name": "FXSPOT"
+        },
+        "trader": {
+                       "desc": "SalesDealer",
+            "name": "Moh",
+            "email": "mo.souley@gmail.com",
+            "active": true,
+            "update": "2024-01-07",
+            "timestamp": "2023-04-08T12:27:51.985967Z",
+            "user": null
+        },
+        "ccy1": {
+            "code": "USD"
+        },
+        "ccy2": {
+            "code": "KES"
+        },
+        "buy_sell": "sell",
+        "amount1": -100000.0,
+        "amount2": 15920000.0,
+        "deal_rate": "159.2000",
+        "fees_rate": "0.0000",
+        "system_rate": "155.1000",
+        "equivalent_lcy": -15510000.0,
+        "deal_pnl": 410000.0,
+        "tx_comments": "",
+        "status": "verified",
+        "date_created": "2024-01-17T21:09:16.535769Z",
+        "last_updated": "2024-01-17T21:09:16.535778Z",
+        "ccy1_rate": "155.1000",
+        "ccy2_rate": "1.0000"
+    }
+
+]

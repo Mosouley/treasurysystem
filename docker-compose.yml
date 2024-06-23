@@ -6,12 +6,12 @@ services:
     build: 
       context: ./frontend/ficc_front
     ports:
-      - 4200:4200
+      - 4700:4200
     depends_on:
       - ficc-backend
     volumes:
       - ./frontend/ficc_front:/ficc_front/app
-      - /app/node_modules
+      - /ficc_front/app/node_modules
     command: npm start
 
       #django backend

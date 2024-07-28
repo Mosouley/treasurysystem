@@ -3,6 +3,9 @@
 # pull official base image
 FROM python:3
 
+# Create a non-privileged user
+RUN adduser --system --group celeryuser
+
 # set work directory
 WORKDIR /treasurysystem
 
@@ -15,18 +18,15 @@ RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy entrypoint.sh
-# COPY entrypoint.sh .
-# RUN sed -i 's/\r$//g' /treasurysystem/entrypoint.sh
-# RUN chmod +x /treasurysystem/entrypoint.sh
-# Mounts the application code to the image
-# copy project
-COPY . .
+# COPY . .
+# Copy project
+COPY . /treasurysystem/
 
-# run entrypoint.sh
-# ENTRYPOINT ["/treasurysystem/entrypoint.sh"]
-# EXPOSE 8000
+# Set permissions
+RUN chown -R celeryuser:celeryuser /treasurysystem
 
-# runs the production server
-# ENTRYPOINT ["python", "treasurysystem/manage.py"]
-# CMD ["runserver", "0.0.0.0:8000"]
+# Set the non-privileged user to run subsequent commands
+USER celeryuser
+
+# Default command to run (can be overridden in docker-compose)
+CMD ["celery", "-A", "treasurysystem", "worker", "-l", "info"]

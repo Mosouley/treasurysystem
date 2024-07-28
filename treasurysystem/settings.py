@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+from celery import Celery
+from celery.schedules import crontab
+import treasurysystem.tasks
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -200,6 +202,11 @@ CORS_ALLOW_METHODS = [
 # ]
 
 
+# Connect Celery to Redis
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+
 ## settings.py
 CHANNEL_LAYERS = {
     'default': {
@@ -211,16 +218,22 @@ CHANNEL_LAYERS = {
         #     ],
         # },
 
-        ### Method 2: Via local Redis
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #      "hosts": [('127.0.0.1', 6379)],
-        # },
+        ## Method 2: Via local Redis
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+             "hosts": [('127.0.0.1', 6379)],
+        },
 
         ### Method 3: Via In-memory channel layer
         ## Using this method.
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 
 # PVZKPPNf2FmqHagUcU0JJVG5NIEDuxY0 API KEY APILAYER
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "treasurysystem.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}

@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . /treasurysystem/
 
+# Create static directory if it doesn't exist
+RUN mkdir -p /treasurysystem/static
 # Set permissions
 RUN chown -R celeryuser:celeryuser /treasurysystem
 
@@ -30,3 +32,6 @@ USER celeryuser
 
 # Default command to run (can be overridden in docker-compose)
 CMD ["celery", "-A", "treasurysystem", "worker", "-l", "info"]
+# Run migrations and start server
+# CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+

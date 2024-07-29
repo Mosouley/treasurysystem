@@ -236,6 +236,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "treasurysystem.tasks.sample_task",
         "schedule": crontab(minute="*/5"),
     },
+    "send_email_report": {
+        "task": "treasurysystem.tasks.send_email_report",
+        "schedule": crontab(minute="*/5"),
+    },
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

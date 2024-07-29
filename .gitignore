@@ -1,2 +1,21 @@
 # created by virtualenv automatically
 backend/
+# Python
+*.pyc
+__pycache__/
+
+# Environment
+.env
+env.dev
+
+# Django
+db.sqlite3
+/static/
+media/
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.*
+
+# Other
+*.log

@@ -7,23 +7,25 @@ from django.utils.timezone import make_aware
 from fxapp.models import Trade
 
 
-today = timezone.now()
-tomorrow = today + timedelta(30)
+today = timezone.now() - timedelta(60)
+tomorrow = today + timedelta(1)
 today_start = make_aware(datetime.combine(today, time()))
 today_end = make_aware(datetime.combine(tomorrow, time()))
 
 
 class Command(BaseCommand):
     help = "Send Today's Trades Report to Admins"
+    
 
     def handle(self, *args, **options):
-        trades = Trade.objects.filter(date_created__range=(today_start, today_end))
+        self.stdout.write(f"Today for me is {today_start}")
+        trades = Trade.objects.filter(tx_date__gte=today_start)
 
         if trades:
             message = ""
 
             for trade in trades:
-                message += f"{trade} \n"
+                message += f" { trade.buy_sell } - {trade.ccy1 } - {trade.ccy2 } - { trade.amount1 } - { trade.amount2 } \n"
 
             subject = (
                 f"Trade Report for {today_start.strftime('%Y-%m-%d')} "

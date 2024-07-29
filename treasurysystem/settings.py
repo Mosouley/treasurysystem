@@ -234,7 +234,7 @@ CHANNEL_LAYERS = {
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "treasurysystem.tasks.sample_task",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute="*/5"),
     },
 }
 

@@ -4,13 +4,13 @@ services:
 #Angular front-end
   # ficc-front:
   #   build: 
-  #     context: ./frontend/ficc_front
+  #     context: ./frontend/
   #   ports:
   #     - 4700:4200
   #   depends_on:
   #     - ficc-backend
   #   volumes:
-  #     - ./frontend/ficc_front:/ficc_front/app
+  #     - ./frontend/:/ficc_front/app
   #     - /ficc_front/app/node_modules
   #   command: npm start
 

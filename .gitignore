@@ -16,9 +16,11 @@ media/
 # Celery
 celerybeat-schedule
 celerybeat-schedule.*
+data_only.sql
+backup_ficc.sql
 
 # Other
 *.log
 
 # frontend
-/web/nodes_modules
+/web/nodes_modules/

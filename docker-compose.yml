@@ -2,19 +2,17 @@
 
 services:
 #Angular front-end
-  # ficc-front:
-  #   build: 
-  #     context: ./frontend/
-  #   ports:
-  #     - 4700:4200
-  #   depends_on:
-  #     - ficc-backend
-  #   volumes:
-  #     - ./frontend/:/ficc_front/app
-  #     - /ficc_front/app/node_modules
-  #   command: npm start
-
-
+  ficc-front:
+    build: 
+      context: ./web/
+    ports:
+      - 4200:4200
+    depends_on:
+      - ficc-backend
+    volumes:
+      - ./web/:/web
+      - /web/node_modules
+    command: npm start
 
       #django backend
   ficc-backend:

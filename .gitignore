@@ -22,9 +22,6 @@ backup_ficc.sql
 # Other
 *.log
 
-# frontend
-<<<<<<< HEAD
-/web/nodes_modules
 
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
@@ -55,5 +52,5 @@ data_only.sql
 .DS_Store
 Thumbs.db
 =======
-/web/nodes_modules/
->>>>>>> 051ad41b6b8aff754dda9d5cd7388a86b720d93b
+/web/node_modules/
+

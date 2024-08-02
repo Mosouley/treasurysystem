@@ -1,5 +1,5 @@
 # Use a Node.js base image
-FROM node:14
+FROM node:latest
 
 # Set working directory
 WORKDIR /web

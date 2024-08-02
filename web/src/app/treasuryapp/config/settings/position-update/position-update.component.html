@@ -1,0 +1,26 @@
+<mat-card class="flex flex-row gap-2 p-2 m-2 mx-auto bg-[#6867be]  border-2 place-items-end place-content-between">
+  <form *ngIf="positionForm" [formGroup]="positionForm"  >
+    <div class="flex flex-col justify-between space-x-1 border-b-2  pb-1 bg-white text-xs font-medium h-fit p-1 rounded-sm" >
+      <label class="border-r-2 space-x-1 w-fit p-1 justify-between"> Update Position For the Period </label>
+  
+      <mat-form-field  class="w-40 max-h-24 m-0 text-xs font-medium ">
+        <mat-label>Start Date</mat-label>
+        <input matInput readonly [matDatepicker]="start_date" formControlName="start_date" placeholder="Start date">
+        <mat-datepicker-toggle matSuffix  [for]="start_date"></mat-datepicker-toggle>
+        <mat-datepicker #start_date></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field  class="w-40 max-h-24 m-0 text-xs font-medium ">
+        <mat-label>End Date</mat-label>
+        <input matInput readonly [matDatepicker]="end_date" formControlName="end_date" placeholder="End date">
+        <mat-datepicker-toggle matSuffix  [for]="end_date"></mat-datepicker-toggle>
+        <mat-datepicker #end_date></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
+  <button mat-raised-button class="btn btn-success " [disabled]="!positionForm.valid" (click)="updatePosition()">
+    Update
+  </button>
+
+</mat-card>
+

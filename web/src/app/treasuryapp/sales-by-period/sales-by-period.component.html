@@ -1,0 +1,23 @@
+
+<section class="p-3">
+  <div class="flex items-center justify-center p-2 space-y-4 flex-row w-fit">
+  <app-filter  (selectedPeriod)="onReportingPeriodChange($event)" ></app-filter>
+  </div>
+</section>
+<div
+class="justify-center p-2 m-4 mx-auto space-x-4 overflow-scroll border border-gray-200 rounded-lg shadow bg-gray-500 ">
+
+<div class="p-4  bg-white border border-gray-200 rounded shadow-lg">
+
+  <ng-container class="w-full space-x-4 overflow-scroll text-sm text-left">
+    <app-report
+    [receivedData]="reportingData"
+    [modelEntity]="model"
+    [report_name]="reportName"
+    [hasPaginator]="false"
+    [isLoading]="isLoading"
+    ></app-report>
+  </ng-container>
+
+</div>
+</div>

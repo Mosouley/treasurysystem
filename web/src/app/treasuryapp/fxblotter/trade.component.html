@@ -1,0 +1,156 @@
+
+<mat-dialog-content class="bg-white border-white border-opacity-25 rounded-lg shadow-md bg-opacity-10 backdrop-filter backdrop-blur-md h-fit">
+  <form [formGroup]="tradeForm" (ngSubmit)="onSubmit()" >
+    <div class="flex flex-row justify-between space-x-2 " >
+      <mat-form-field fxFlex="45%" >
+        <mat-select formControlName="customer" placeholder="Customer">
+          <mat-option *ngFor="let customer of customers" [value]="customer.name">{{ customer.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field >
+        <mat-label>Trade Id</mat-label>
+        <input matInput readonly  formControlName="trade_id" >
+      </mat-form-field>
+      <mat-form-field fxFlex="45%">
+        <mat-select formControlName="product" placeholder="Product">
+          <mat-option *ngFor="let product of products" [value]="product.name">{{ product.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <div class="flex flex-row justify-between " >
+      <mat-form-field >
+        <mat-label>Value Date</mat-label>
+        <input matInput readonly [matDatepicker]="value_date" formControlName="value_date" placeholder="Value date">
+        <mat-datepicker-toggle matSuffix  [for]="value_date"></mat-datepicker-toggle>
+        <mat-datepicker #value_date></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field >
+        <mat-label>Booking date</mat-label>
+        <input matInput readonly  formControlName="booking_date" >
+      </mat-form-field>
+      <mat-form-field >
+        <mat-label>Trade Date</mat-label>
+        <input matInput readonly [matDatepicker]="deal_date" formControlName="deal_date" placeholder="Deal date">
+        <mat-datepicker-toggle matSuffix  [for]="deal_date"></mat-datepicker-toggle>
+        <mat-datepicker #deal_date></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+    <div class="flex flex-row justify-between space-x-2" >
+
+      <mat-form-field fxFlex="30%">
+        <mat-label for="ccy1">Ccy1</mat-label>
+        <mat-select formControlName="ccy1">
+          <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="30%">
+        <mat-label for="ccy2">Ccy2</mat-label>
+        <mat-select formControlName="ccy2">
+          <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="30%">
+        <mat-label for="ccy_pair">CcyPair</mat-label>
+        <mat-select formControlName="ccy_pair">
+          <mat-option *ngFor="let val of ccyPair" [value]="val.viewValue">{{ val.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="buy_sell">Buy/Sell</mat-label>
+        <mat-select formControlName="buy_sell">
+          <mat-option *ngFor="let buySell of buySells" [value]="buySell.value">{{ buySell.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+
+    <div class="flex flex-row justify-between space-x-2" >
+      <mat-form-field>
+        <mat-label>Deal Rate</mat-label>
+        <input matInput formControlName="deal_rate" id="deal_rate">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Amount 1</mat-label>
+        <input matInput formControlName="amount1" >
+        <!-- [ngModelOptions]="{standalone: true}" -->
+        <!-- Use the number pipe to format the input -->
+        <mat-hint><strong>{{ amount1Formatted }}</strong></mat-hint>
+        <!-- [value]="tradeForm.get('amount1')?.value  -->
+        <!-- <input matInput formControlName="amount1" type="number" |number:'.2-2' >
+        (keydown)="validate($event)"-->
+
+        <mat-error *ngIf="tradeForm.get('amount1')!.invalid">
+          <div *ngIf="tradeForm.get('amount1')!.errors!['required']">This field is required.</div>
+          <div *ngIf="tradeForm.get('amount1')!.errors">Invalid number format.</div>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Amount 2</mat-label>
+        <input matInput formControlName="amount2">
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-label>Fees Rate</mat-label>
+        <input matInput formControlName="fees_rate">
+      </mat-form-field>
+    </div>
+    <div class="flex flex-row justify-between space-x-1" >
+      <mat-form-field>
+        <mat-label>System Rate</mat-label>
+        <input matInput formControlName="system_rate">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Cover Rate</mat-label>
+        <input matInput formControlName="cover_rate">
+      </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Transaction Comments</mat-label>
+      <textarea matInput formControlName="tx_comments"></textarea>
+    </mat-form-field>
+
+    </div>
+
+
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- <button mat-button [ngClass]="{'bg-red-500': color === 'red', 'bg-blue-500': color === 'blue'}">
+    Button
+  </button> -->
+  <!-- <button mat-button [ngClass]="{'opacity-50 cursor-not-allowed': disabled, 'shadow-outline': focused}" (focus)="focused = true" (blur)="focused = false">
+    New
+  </button> -->
+
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="onSubmit()" color="primary" [disabled]="tradeForm.invalid"  >Submit</button>
+</mat-dialog-actions>
+<!-- [ngClass]="{'bg-red-500': color === 'red', 'bg-blue-500': color === 'blue'}" -->
+<!-- </div> -->
+<!--  <td [ngClass]="{
+        'orange-color': trade['status'] === 'Pending',
+        'green-color': trade['status'] === 'Completed',
+        'red-color': trade['status'] === 'Cancelled',
+        'blue-color': trade['status'] === 'In Progress',
+        'gray-color': trade['status'] === 'In Validation'}">
+        <i [ngClass]="trade['status'] === 'Completed' ? ['pi pi-check-circle', 'green-arrow']: ''"></i>
+        {{ trade.status }}
+      </td> -->
+
+      <!--   <td>
+        <i [ngClass]="trade.notional <= 500000
+              ? ['pi pi-arrow-up', 'green-arrow']
+              : ['pi pi-arrow-down', 'red-arrow']
+          "></i>
+        {{ trade.notional }}
+      </td> -->

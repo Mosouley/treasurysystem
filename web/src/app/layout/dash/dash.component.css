@@ -1,0 +1,26 @@
+
+            /* Additional styles for the banner */
+.banner {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Initial position off the screen */
+  width: 100%;
+  height: 50px;
+  background-color: #3490dc; /* Set your preferred background color */
+  color: #ffffff; /* Set your preferred text color */
+  transition: right 0.3s ease-in-out;
+}
+
+.banner.show {
+  right: 0; /* Display the banner from the right */
+}
+
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.animate-spin-slow {
+    animation: spin 5s linear infinite;
+}

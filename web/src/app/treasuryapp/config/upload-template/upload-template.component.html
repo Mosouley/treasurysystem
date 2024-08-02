@@ -1,0 +1,23 @@
+<mat-card style="justify-items: self-end">
+  <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+  <button [disabled] ="importError && dataModelList.length > 0" (click)="uploadData()">Load...</button>
+
+  </mat-card>
+  <mat-card>
+    <table class="minimalistBlack" *ngIf="dataModelList && dataModelList.length > 0">
+    <thead >
+      <tr>
+        <th *ngFor="let m of dataModelList">{{m.columnReference}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let record of records;let i = index;">
+        <td *ngFor="let dataModel of dataModelList">
+          {{record[dataModel.columnName]}}
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+  </mat-card>

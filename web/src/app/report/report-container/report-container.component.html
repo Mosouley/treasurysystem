@@ -1,0 +1,57 @@
+<mat-accordion class="example-headers-align ">
+  <mat-expansion-panel [expanded]="step() === 0" (opened)="setStep(0)" hideToggle class="bg-teal-200 border-2 hover:border-lime-500">
+    <mat-expansion-panel-header>
+      <mat-panel-title> FX Position by Ccy</mat-panel-title>
+      <mat-panel-description>
+        View your live FX Position
+        <mat-icon>account_circle</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+   <app-position-ccy></app-position-ccy>
+    <mat-action-row>
+      <button mat-button (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step() === 1" (opened)="setStep(1)" hideToggle class="bg-teal-200 border-2 hover:border-yellow-500">
+    <mat-expansion-panel-header>
+      <mat-panel-title> PnL Summary </mat-panel-title>
+      <mat-panel-description>
+        Check your Revenue achievement
+        <mat-icon>map</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <mat-label>Country</mat-label>
+      <input matInput />
+    </mat-form-field>
+
+    <mat-action-row>
+      <button mat-button (click)="prevStep()">Previous</button>
+      <button mat-button (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step() === 2" (opened)="setStep(2)" hideToggle class="bg-teal-200 border-2 hover:border-cyan-400">
+    <mat-expansion-panel-header>
+      <mat-panel-title> FX Limits and Compliance </mat-panel-title>
+      <mat-panel-description>
+        Check your live limits
+        <mat-icon>date_range</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" (focus)="picker.open()" readonly />
+    </mat-form-field>
+    <mat-datepicker #picker></mat-datepicker>
+
+    <mat-action-row>
+      <button mat-button (click)="prevStep()">Previous</button>
+      <button mat-button (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

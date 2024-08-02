@@ -1,0 +1,21 @@
+<div class="justify-center p-2 ">
+  <select (change)="selectModel($event)" class="border-2 border-blue-300">
+    <option></option>
+    <option *ngFor="let elmt of models; let index i" value={{elmt.model}}>{{ elmt.model }}</option>
+  </select>
+
+  <!-- <app-generic [formConfig]="formElement" ></app-generic> -->
+  <form *ngIf="form" [formGroup]="form"  class="flex bg-white border-blue p-2 mx-auto rounded-sm shadow-md">
+    <div *ngFor="let field of formElement"  >
+      <label class="block text-sm font-medium text-gray-700 p-2">{{ field.name }}</label>
+      <input [formControlName]="field.name" [type]="field.type"
+      class="appearance-none border pl-12 border-gray-100 shadow-sm focus:shadow-md focus:placeholder-gray-600  transition  rounded-md w-full py-3 text-gray-600 leading-tight focus:outline-none focus:ring-gray-600 focus:shadow-outline"
+      id="field.name"[type]="field.type" placeholder={{field.name}}  />
+
+    </div>
+    <button type="submit" [disabled]="!form.valid" class="form-input border-b-2
+    bg-[#f6f4f4]" >Submit</button>
+  </form>
+  
+</div>
+<!--       <input [formControlName]="field.name" [type]="field.type"> -->

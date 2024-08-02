@@ -1,0 +1,44 @@
+<mat-card class="flex flex-row gap-2 p-2 m-2 mx-auto bg-[#6867be]  border-2 place-items-end place-content-between">
+  <mat-card
+    class="flex justify-between w-full gap-0 p-1 space-x-1 space-y-1 text-sm font-normal border place-content-between bg-gradient-to-br from-sky-100 to-[#6867be]">
+
+    <div class="flex items-end justify-between w-full p-1 space-x-1 bg-white border-2 place-content-end">
+      <div class="w-fit border border-red-200">
+        <div class="flex-col justify-between p-2 m-2 bg-gray-100">
+          <span >Select Period: &nbsp;</span>
+          <select   (change)="getPeriod($event)" >
+
+            <option *ngFor="let period of reportPeriod" value={{period.id}}  class="max-w-full" name="periodIndex">{{period.name}}</option>
+          </select>
+        </div>
+      </div>
+      <ng-container *ngIf="setRange"
+        class="flex flex-col items-center p-2 border-red-200 rounded-sm w-fit bg-neutral-800 h-fit flex-wrap">
+        <form [formGroup]="dateForm">
+          <div class="flex flex-row items-center justify-center p-0 space-x-2 border-2 border-red-100">
+            <mat-form-field class="justify-center ">
+              <mat-label>Start Date</mat-label>
+              <input matInput readonly [matDatepicker]="start_date" placeholder="start date"
+                formControlName="start_date">
+              <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+              <mat-datepicker #start_date class="w-10 h-10 bg-slate-200"></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="justify-center ">
+              <mat-label>End Date</mat-label>
+              <input matInput readonly [matDatepicker]="end_date" placeholder="end date" formControlName="end_date">
+              <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+              <mat-datepicker #end_date class="w-10 h-10 bg-slate-400"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+
+      </ng-container>
+    </div>
+
+  </mat-card>
+  <button mat-raised-button class="btn btn-success "(click)="enableReport()" [disabled]="!setRange" [hidden]="!setRange">
+    Fetch
+  </button>
+
+</mat-card>

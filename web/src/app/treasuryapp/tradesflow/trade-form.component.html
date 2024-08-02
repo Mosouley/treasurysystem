@@ -1,0 +1,127 @@
+<mat-dialog-content class="bg-white border-white border-opacity-25 rounded-lg shadow-md bg-opacity-10 backdrop-filter backdrop-blur-md h-fit">
+
+  <form [formGroup]="tradeForm" (ngSubmit)="submitTradeForm()" >
+    <div class="flex flex-row justify-between space-x-1 border-b-2  pb-1 bg-blue-50 text-xs font-medium h-fit p-1" >
+      <label class="border-r-2 justify-center space-x-1 w-fit p-1"> {{currentDate}}</label>
+      <input class="border-r-2 justify-center space-x-1 w-fit p-1 text-center" matInput readonly  formControlName="trade_id" >
+      <label class="border-r-2 justify-center space-x-1 w-fit p-1">Trade Status:</label>
+
+    </div>
+    <div class="flex flex-row justify-between " >
+      <mat-form-field class="w-44 max-h-24 text-xs font-medium ">
+        <mat-select formControlName="product" placeholder="Product">
+          <mat-option *ngFor="let product of products" [value]="product">{{ product.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="w-44 max-h-24 m-0 text-xs font-medium ">
+        <mat-label for="buy_sell">Buy/Sell</mat-label>
+        <mat-select formControlName="buy_sell" class="focus-within:border-l-red-600 focus-within:shadow-sm">
+          <mat-option *ngFor="let buySell of buySells" [value]="buySell.value">{{ buySell.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div>
+        <label for="customer" class="block text-sm font-medium text-gray-700">Customer</label>
+        <mat-form-field appearance="outline">
+          <input matInput
+                 placeholder="Type or select a customer"
+                 formControlName="customer"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCustomer">
+            <mat-option *ngFor="let customer of customers" [value]="customer">
+              {{ customer.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div *ngIf="shouldShowError('customer')" class="text-red-500 text-xs mt-1">Customer is required</div>
+      </div>
+
+    </div>
+
+    <div class="flex flex-row justify-between " >
+      <mat-form-field class="w-40 max-h-24 m-0 text-xs font-medium">
+        <mat-label for="ccy1">Ccy1</mat-label>
+        <mat-select formControlName="ccy1">
+          <mat-option *ngFor="let currency of currencies" [value]="currency">{{ currency.code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="w-40 max-h-24 m-0 text-xs font-medium">
+        <mat-label for="ccy2">Ccy2</mat-label>
+        <mat-select formControlName="ccy2">
+          <mat-option *ngFor="let currency of up_currencies" [value]="currency">{{ currency.code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="w-40 max-h-24 m-0 text-xs font-medium">
+        <mat-label for="ccy_pair">CcyPair</mat-label>
+        <mat-select formControlName="ccy_pair">
+          <mat-option *ngFor="let val of ccyPair" [value]="val.value">{{ val.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field  class="w-40 max-h-24 m-0 text-xs font-medium ">
+        <mat-label>Value Date</mat-label>
+        <input matInput readonly [matDatepicker]="val_date" formControlName="val_date" placeholder="Value date">
+        <mat-datepicker-toggle matSuffix  [for]="val_date"></mat-datepicker-toggle>
+        <mat-datepicker #val_date></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="w-40  max-h-24 m-0 text-xs font-medium">
+        <mat-label>Trade Date</mat-label>
+        <input matInput readonly [matDatepicker]="tx_date" formControlName="tx_date" placeholder="Deal date">
+        <mat-datepicker-toggle matSuffix  [for]="tx_date"></mat-datepicker-toggle>
+        <mat-datepicker #tx_date></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+
+
+
+    <div class="flex flex-row justify-between  " >
+      <div class="w-full md:w-1/4 px-2 mb-4 ">
+        <label for="amount1" class="block text-sm font-medium text-gray-700">Traded Amount</label>
+        <input  id="amount1" formControlName="amount1" class="form-input border-b-2
+        bg-[#f6f4f4]" placeholder="Traded Amount"
+       >
+        <div *ngIf="shouldShowError('amount1')" class="text-red-500 text-xs mt-1">CCY1 Amount is required</div>
+      </div>
+      <div class="w-full md:w-1/4 px-2 mb-4 ">
+        <label for="deal_rate" class="block text-sm font-medium text-gray-700">Deal Rate</label>
+        <input  id="deal_rate" formControlName="deal_rate"
+
+        class="form-input border-b-2 bg-[#f6f4f4]" placeholder="Deal Rate">
+        <div *ngIf="shouldShowError('deal_rate')" class="text-red-500 text-xs mt-1">Deal Rate is required</div>
+      </div>
+
+      <div class="w-full md:w-1/4 px-2 mb-4 ">
+        <label for="amount2" class="block text-sm font-medium text-gray-700">Other Amt </label>
+        <input  id="amount2" formControlName="amount2"
+
+
+        class="form-input border-b-2 bg-[#f6f4f4]" placeholder="Other Amt" readonly>
+        <!-- <div *ngIf="shouldShowError('deal_rate')" class="text-red-500 text-xs mt-1">Deal Rate is required</div> -->
+      </div>
+      <div class="w-full md:w-1/4 px-2 mb-4 ">
+        <label for="system_rate" class="block text-sm font-medium text-gray-700">Syst. Rate</label>
+        <input type="number" id="system_rate" formControlName="system_rate" class="form-input border-b-2 bg-[#f6f4f4]" placeholder="Indicative SPOT" >
+        <!-- <div *ngIf="shouldShowError('system_rate')" class="text-red-500 text-xs mt-1">system_rate</div> -->
+      </div>
+
+    </div>
+    <div class="flex flex-row justify-end" >
+
+    <mat-form-field >
+      <mat-label>Comments</mat-label>
+      <textarea matInput formControlName="tx_comments"></textarea>
+    </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="bg-slate-400">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="submitTradeForm()" color="primary" [disabled]="tradeForm.invalid"  >New(F6)</button>
+</mat-dialog-actions>
+
+
+
+
+

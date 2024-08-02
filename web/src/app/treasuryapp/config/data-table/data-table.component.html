@@ -1,0 +1,171 @@
+<table mat-table [dataSource]="dataSource">
+  <ng-container *ngFor="let header of displayedColumns; let i = index" [matColumnDef]="header">
+    <th mat-header-cell *matHeaderCellDef>{{ header }}</th>
+    <td mat-cell *matCellDef="let element">{{ element[i] }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<!-- <section class="p-3">
+  <div
+    class="justify-center p-2 m-4 mx-auto space-x-4 overflow-x-auto border border-gray-200 rounded-lg shadow bg-gray-50 ">
+    <div class="flex flex-wrap items-center justify-between p-2 space-y-4 flex-column sm:flex-row sm:space-y-0">
+      <select
+      [(ngModel)]="showNumber" name="showNumber" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 ">
+        <option value="5">Show 5</option>
+        <option value="10">Show 10</option>
+        <option value="20">Show 20</option>
+        <option value="50">Show 50</option>
+        <option value="100">Show 100</option>
+
+      </select>
+      <select
+        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 ">
+
+        <option value="1" class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300"> <svg
+            class="w-3 h-3 text-gray-500 dark:text-gray-400 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+          </svg> Last 30 days</option>
+        <option value="1" class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300"> <svg
+            class="w-3 h-3 text-gray-500 dark:text-gray-400 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+          </svg>Last day</option>
+        <option value="1" class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300"> <svg
+            class="w-3 h-3 text-gray-500 dark:text-gray-400 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+          </svg>Last 30 days</option>
+        <option value="1" class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300"> <svg
+            class="w-3 h-3 text-gray-500 dark:text-gray-400 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+          </svg>This year</option>
+      </select>
+      <button class="flex justify-end w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-[#1fa774] rounded-lg items- shrink-0 sm:w-auto gap-x-2 hover:bg-[#5f419b] "
+        (click)="tradeCapture()"
+      >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+
+          <span>Trade</span>
+      </button>
+
+      <button class="relative">
+        <input title="Search Bar" aria-label="search bar" role="search"
+          class="w-4 py-2 pl-4 pr-8 placeholder-transparent transition-all duration-300 ease-in-out bg-transparent rounded-md cursor-pointer focus:border-black focus:cursor-text focus:w-64 focus:placeholder-gray-500 text-default-primary "
+          type="text" placeholder="Search here" />
+
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="absolute top-0 right-0 flex items-center w-6 h-full pr-3 scale-110 pointer-events-none text-sellar-primary">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+
+      </button>
+
+
+    </div>
+
+    <table class="w-full space-x-4 overflow-scroll text-sm text-left ">
+
+      <caption class="justify-center py-2 text-sm font-bold text-start text-[#4946d7] ">FX Transactions Flows</caption>
+
+      <thead class="flex-col items-center justify-center p-1 border-b  ">
+        <tr
+          class="border-b   rounded-lg bg-[#6867be] text-white text-xs">
+          <th scope="col" class="p-1">Customer</th>
+          <th scope="col" class="p-1">Product</th>
+          <th scope="col" class="p-1">TradeId</th>
+          <th scope="col" class="p-1">ValDate</th>
+          <th scope="col" class="p-1">TxDate</th>
+          <th scope="col" class="p-1">Ccy1</th>
+          <th scope="col" class="p-1">Ccy2</th>
+          <th scope="col" class="p-1">Buy/Sell</th>
+          <th scope="col" class="p-1">Ccy1_Amount</th>
+          <th scope="col" class="p-1">Ccy2_Amount</th>
+          <th scope="col" class="p-1">DealRate</th>
+          <th scope="col" class="p-1">ReevalRate</th>
+          <th scope="col" class="p-1">Other Fees</th>
+          <th scope="col" class="p-1 text-center">PnL'000</th>
+          <th scope="col" class="p-1">Dealer</th>
+          <th scope="col" class="p-1">Status</th>
+          <th scope="col-span-3" class="p-1 min-w-fit">Action</th>
+          <th scope="col" class="p-1 min-w-fit">Update_On</th>
+
+        </tr>
+      </thead>
+      <tbody class="text-xs font-medium ">
+        <tr class="odd:bg-white even:bg-gray-100  hover:border-[#6867be] hover:border-2" *ngFor="let trade of trades.slice(0,showNumber)">
+          <td class="p-1 whitespace-nowrap">{{trade?.customer?.name}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.product?.name}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.id}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.val_date| date:'shortDate'}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.tx_date| date:'shortDate'}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.ccy1?.code}}</td>
+          <td class="p-1 whitespace-nowrap">{{trade?.ccy2?.code}}</td>
+          <td class="p-1 whitespace-nowrap text-center">{{trade?.buy_sell}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.amount1| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.amount2| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.deal_rate| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.system_rate| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.fees_rate| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.deal_pnl| currency:'':'':'1.2-2'}}</td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.trader?.name}}</td>
+
+          <td class="p-1 whitespace-nowrap">
+            <span class="px-2 bg-green-400 rounded-md text-gray-50">{{trade?.status}}</span>
+          </td>
+          <td class="p-1 whitespace-nowrap">
+            <a href="#" class="mr-2 hover:text-gray-100">
+              <i class="text-base material-icons-outlined text-green-600">visibility</i>
+            </a>
+            <a href="#" class="mx-2 hover:text-gray-100">
+              <i class="text-base material-icons-outlined text-yellow-600">edit</i>
+            </a>
+            <a href="#" class="ml-2 hover:text-gray-100">
+              <i class="text-base material-icons-round text-red-600">delete_outline</i>
+            </a>
+          </td>
+          <td class="p-1 whitespace-nowrap text-end">{{trade?.last_updated|date:'h:mm a'}}</td>
+
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="flex items-center justify-center mt-4 space-x-1 text-xs">
+    <ul class="flex space-x-2">
+      <li>
+        <a class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-200"><<</a>
+      </li>
+      <li>
+        <a class="px-3 py-1 text-blue-500 border border-gray-300 rounded-lg hover:bg-blue-100">1</a>
+      </li>
+      <li>
+        <a class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-200">2</a>
+      </li>
+      <li>
+        <a class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-200">3</a>
+      </li>
+      <li>
+        <span class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg">...</span>
+      </li>
+      <li>
+        <a class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-200">10</a>
+      </li>
+      <li>
+        <a class="px-3 py-1 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-200">>></a>
+      </li>
+    </ul>
+  </div>
+
+</section> -->

@@ -1,0 +1,13 @@
+html {
+  --mat-stepper-header-height: 72px;
+  --mat-stepper-container-text-font: Roboto, sans-serif;
+  --mat-stepper-header-label-text-font: Roboto, sans-serif;
+  --mat-stepper-header-label-text-size: 14px;
+  --mat-stepper-header-label-text-weight: 400;
+  --mat-stepper-header-error-state-label-text-size: 16px;
+  --mat-stepper-header-selected-state-label-text-size: 16px;
+  --mat-stepper-header-selected-state-label-text-weight: 400;
+  --mat-sort-arrow-color: #757575;
+  --mat-toolbar-container-background-color: blue;
+  --mat-toolbar-container-text-color: rgba(0, 0, 0, 0.87);
+}

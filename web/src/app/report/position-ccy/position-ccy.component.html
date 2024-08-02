@@ -1,0 +1,34 @@
+<div
+class="flex flex-row justify-center  p-4 m-4 mx-auto space-x-4 overflow-auto bg-gray-100 border border-gray-200 rounded-lg shadow-md ">
+<!-- <button mat-raised-button class="btn btn-success "  (click)="fetchPositions()">
+  Update
+</button> -->
+<table class="w-full space-x-4  text-sm text-left border-collapse overflow-scroll">
+  <thead class="w-full min-w-fit text-sm text-center  divide-y divide-gray-200 border-2 content-center p-2 justify-center mx-auto border-b rounded-lg bg-[#6867be] text-white text-x">
+    <tr>
+      <th>Currencies</th>
+      <th *ngFor="let model of reportingData">{{model['ccy__code']}}</th>
+    </tr>
+  </thead>
+  <tbody class="border-2 border-gray-100 divide-y divide-gray-100">
+    <tr class="hover:bg-gray-50">
+      <td>Opening POS.</td>
+      <td *ngFor="let model of reportingData">-</td>
+    </tr>
+    <tr class="hover:bg-gray-50">
+      <td>Intra-day</td>
+      <td *ngFor="let model of reportingData">-</td>
+    </tr>
+    <tr class="hover:bg-gray-50">
+      <td>Closing POS.</td>
+      <td *ngFor="let model of reportingData">{{model['total_pos']/1000|number}}</td>
+      
+    </tr>
+    <tr class="hover:bg-gray-50">
+      <td>USD Clos. POS.</td>
+      <td *ngFor="let model of reportingData">{{model['total_pos']/1000|number}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+

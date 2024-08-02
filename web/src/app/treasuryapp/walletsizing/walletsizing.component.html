@@ -1,0 +1,22 @@
+<div
+class="justify-center p-2 m-4 mx-auto space-x-4 overflow-x-auto border border-gray-200 rounded-lg shadow bg-gray-50 ">
+<mat-table [dataSource]="dataSource" matSort class="w-10/12 min-w-full table-auto">
+  <ng-container matColumnDef="position">
+    <mat-header-cell *matHeaderCellDef > No. </mat-header-cell>
+    <mat-cell *matCellDef="let element" class="py-4 px-6 table-row bg-red-300"> {{element.position}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+    <mat-cell *matCellDef="let element" class="py-4 px-6 bg-red-300"> {{element.name}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="weight">
+    <mat-header-cell *matHeaderCellDef> Weight </mat-header-cell>
+    <mat-cell *matCellDef="let element" class="py-4 px-6 bg-red-300"> {{element.weight}} </mat-cell>
+  </ng-container>
+
+
+  <mat-header-row *matHeaderRowDef="displayedColumns" class="border-b border-2 border-[#6867be] rounded-lg bg-[#6867be] text-white text-sm mx-auto"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;" class="odd:bg-white even:bg-gray-100  hover:border-[#6867be] hover:border-2"></mat-row>
+</mat-table>
+
+</div>

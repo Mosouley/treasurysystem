@@ -1,0 +1,79 @@
+<mat-accordion class="hover:bg-[#b1e3ea] border-green-500">
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)" >
+    <mat-expansion-panel-header>
+      <!-- <mat-panel-title > Treasury FX Dashboard</mat-panel-title> -->
+      <mat-panel-description class="mt-1 ">
+        Treasury FX Dashboard
+        <p class="mt-2 text-sm text-neutral-500">
+          Manage your positions,revenues and risk metrics
+        </p>
+      </mat-panel-description>
+     
+    </mat-expansion-panel-header>
+  
+    <app-report-container></app-report-container>
+  </mat-expansion-panel>
+
+</mat-accordion>
+<!-- <section class="p-2 pt-1 mb-4 bg-white shadow-xl">
+  <div class="flex flex-col items-center">
+    <h2 class="mt-1 font-extrabold tracking-tight text-[#4946d7] text-xl">
+      Treasury FX Dashboard
+    </h2>
+    <p class="mt-2 text-sm text-neutral-500">
+      Manage your positions,revenues and risk metrics
+    </p>
+  </div>
+class="p-0.5 mb-0 bg-green-300 shadow-sm font-extrabold tracking-tight border-indigo-500 "
+</section> -->
+
+
+
+<section class="p-3">
+  <div class="flex flex-wrap items-center justify-between p-2 space-y-4 flex-column sm:flex-row sm:space-y-0">
+
+    <button class="flex justify-end w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-[#6867be] rounded-lg items- shrink-0 sm:w-auto gap-x-2 hover:bg-[#5f419b] "
+      (click)="tradeCapture()"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+
+        <span>Trade</span>
+    </button>
+
+    <button class="relative">
+      <input title="Search Bar" aria-label="search bar" role="search"
+        class="w-4 py-2 pl-4 pr-8 placeholder-transparent transition-all duration-300 ease-in-out bg-transparent rounded-md cursor-pointer focus:border-black focus:cursor-text focus:w-64 focus:placeholder-gray-500 text-default-primary "
+        type="text" placeholder="Search here" />
+
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="absolute top-0 right-0 flex items-center w-6 h-full pr-3 scale-110 pointer-events-none text-sellar-primary">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+
+    </button>
+
+
+  </div>
+
+
+  <div
+    class="justify-center p-2 m-4 mx-auto space-x-4 overflow-scroll border border-gray-200 rounded-lg shadow bg-gray-500 ">
+
+    <div class="p-4  bg-white border border-gray-200 rounded shadow-lg">
+
+      <ng-container class="w-full space-x-4 overflow-scroll text-sm text-left">
+        <app-report
+        [modelEntity]="model"
+        [receivedData]="reportingData"
+        [report_name]="reportName"
+        [hasPaginator]="true"
+        ></app-report>
+      </ng-container>
+
+    </div>
+    </div>
+  </section>
+

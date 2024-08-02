@@ -1,0 +1,50 @@
+<div class="hidden space-x-1 place-items-start group sm:flex " *ngFor="let link of links">
+  <div class="relative inline-block text-center pr-2
+  cursor-pointer  items-center p-1  text-sm transition-colors rounded-t-sm mr-0  align-center
+    pb-1 text-primary-100 after:transition-transform after:duration-500 after:ease-out after:absolute after:bottom-0 after:left-0 after:block after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-blue-600 after:content-[''] after:group-hover:origin-bottom-left after:group-hover:scale-x-100
+  ">
+    <button class="flex items-center text-red-500 dropdown-menu-button hover:text-blue-500">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        stroke="currentColor" class="w-6 h-6 text-sellar-primary">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+      </svg>
+
+
+      <span *ngIf="link.children && link.children.length >0" class="ml-auto hover:text-blue-500"
+       >
+
+        <svg
+          class="w-5 h-5 ml-1 -mr-1 font-semibold transition-transform transform scale-75 text-sellar-primary group-hover:rotate-180"
+          [ngClass]="{ 'rotate-180': link.action}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+          fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+            clip-rule="evenodd" />
+        </svg>
+
+      </span>
+    </button>
+    <div
+      class="absolute z-50 invisible py-0 pr-2 mt-0 -ml-20 shadow-lg group-hover:visible group-focus-within:block min-w-max rounded-xl h-fit">
+
+      <div
+        class="invisible transition-all duration-300 origin-top-right transform scale-95 -translate-y-2 opacity-0 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
+        <div
+          class="absolute left-0 mt-2 origin-top-right bg-red-200 border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-44"
+          role="menu">
+          <div class="px-4 py-3">
+            <p class="text-sm leading-5">Signed in as</p>
+            <p class="text-sm font-medium leading-5 text-gray-900 truncate">....</p>
+          </div>
+
+          <div class="py-1" *ngFor="let m of link.children" >
+            <a
+              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 focus-visible:outline-1 focus-visible:outline-blue-500"
+              role="menuitem"  >{{m.name}} </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

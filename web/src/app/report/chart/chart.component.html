@@ -1,0 +1,18 @@
+<!-- <plotly-plot
+  [data]="graph1.data"
+  [layout]="graph1.layout"
+  [useResizeHandler]="false"></plotly-plot> -->
+
+<!-- <plotly-plot
+  [data]="graph2.data"
+  [layout]="graph2.layout"
+  [useResizeHandler]="true">
+</plotly-plot> -->
+<div class="bg-yellow-200 h-20 overflow-scroll">
+
+  <li *ngFor="let row of liveData$">
+    {{row[0]?.ccy2}}
+
+  </li>
+
+</div>

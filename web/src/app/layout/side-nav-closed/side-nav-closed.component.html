@@ -1,0 +1,7 @@
+<mat-nav-list class="h-screen px-2 mx-auto space-y-2 overflow-y-scroll bg-[#6867be]  shadow-2xl">
+  <div class="h-36 "></div>
+  <a *ngFor="let item of routes" mat-list-item [routerLinkActive]="'active-link'" [routerLink]="['/', item.url]">
+    <mat-icon color="white" class="sidenav-icon ">{{ item.icon}}</mat-icon>
+  </a>
+</mat-nav-list>
+

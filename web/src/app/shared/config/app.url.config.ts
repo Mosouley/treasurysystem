@@ -1,6 +1,6 @@
 
-const BASE = 'http://127.0.0.1:' ; //  'http://localhost';
-const WS_BASE = 'ws://127.0.0.1:' ; //  'http://localhost';
+const BASE = 'http://ficc-backend:' ; //  'http://localhost';
+const WS_BASE = 'ws://ficc-backend:' ; //  'http://localhost';
 const PORT = '8000' ; //  8089;
 export const RECONNECT_INTERVAL = 20
 // admin/

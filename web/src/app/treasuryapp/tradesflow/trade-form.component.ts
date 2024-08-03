@@ -82,11 +82,10 @@ export class TradeFormComponent implements OnInit {
     private cdRef: ChangeDetectorRef
   ) {}
   ngOnInit() {
-    this.currencies = this.receiveData['currencies']['results']; //
-    // console.info(this.receiveData.currencies.results);
+    this.currencies = this.receiveData?.currencies?.results ?? [];
+  this.products = this.receiveData?.products?.results ?? [];
+  this.customers = this.receiveData?.customers?.results ?? [];
 
-    this.products = this.receiveData['products']['results'];
-    this.customers = this.receiveData['customers']['results'];
     // console.log(Date.now());
 
     this.initializeForm();

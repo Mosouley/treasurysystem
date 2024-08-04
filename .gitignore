@@ -51,6 +51,6 @@ data_only.sql
 # System files
 .DS_Store
 Thumbs.db
-=======
+# =======
 /web/node_modules/
 /web/.angular

@@ -143,12 +143,11 @@ export class FilterComponent implements OnInit{
 
     if (this.periodIndex > 0 && this.periodIndex !== 6) {
       this.isEnable = true;
-      console.log(this.periodIndex );
+
     } else {
       if (this.dateForm.valid) {
         this.isEnable = true;
-        console.log(this.dateForm);
-        
+  
       } else {
         this.isEnable = false;
 

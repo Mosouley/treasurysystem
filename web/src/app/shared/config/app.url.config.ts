@@ -1,13 +1,9 @@
 
-const BASE = 'http://ficc-backend:' ; //  'http://localhost';
-const WS_BASE = 'ws://ficc-backend:' ; //  'http://localhost';
+const BASE = 'http://localhost:';  //  'http://localhost'; 'http://ficc-backend:' 
+const WS_BASE = 'ws://localhost:'; //'ws://ficc-backend:' ; //  'http://localhost';
 const PORT = '8000' ; //  8089;
 export const RECONNECT_INTERVAL = 20
-// admin/
-// api/contacts/
-// api/fx/ ^customers/$ [name='customer-list']
-// api/fx/ ^customers/(?P<pk>[^/.]+)/$ [name='customer-detail']
-// api/fx/ ^segments/$ [name='segment-list']
+
 
 const PATH = BASE + PORT + '/api/fx';
 

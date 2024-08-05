@@ -178,17 +178,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
     "http://localhost:4200",
       "http://localhost:4700",
-      "https://silver-yodel-97p6pjggqpwfxp99.github.dev",
   
 ]
-# CORS_ORIGIN_WHITELIST = (
-#     'http://localhost:8000',
-#     'http://localhost:4200',
-# )
-
-# ACCESS_CONTROL_ALLOW_ORIGIN = [
-#     'http://localhost:4200',
-# ]
 
 CORS_ALLOW_METHODS = [
     'GET',

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, ReplaySubject, retry } from "rxjs";
+import { delayWhen, Observable, ReplaySubject, retry} from "rxjs";
 import { WebSocketSubject } from "rxjs/webSocket";
 import { webSocketMessage } from "../../model/webSocketMessage";
 
@@ -21,11 +21,11 @@ export class WebsocketService {
       )
       .subscribe({
         next: () => this.status.next(true),
-        error: (e: any) => {
-          console.error('WebSocket reconnection error:', e)
-          this.status.next(false)},
-          complete:() => console.log('complete')
-
+        error: (err: any) => {
+          console.error('WebSocket reconnection error:', err.message || err)
+          this.status.next(false)
+        },
+          complete:() => console.log('Websocket connection complete')
     })
   }
   return  this.socket$

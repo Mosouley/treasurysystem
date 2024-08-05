@@ -39,4 +39,5 @@ virtualenv==20.10.0
 zope.interface==6.1
 zstandard==0.21.0
 celery>=5
-redis==3.5.3
+redis>=4.2.0
+channels_redis==4.0

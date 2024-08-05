@@ -64,18 +64,15 @@ export class PositionCcyComponent implements OnInit {
       });
 
     })
-    console.log(this.reportingData );
+
     this.reportingData.forEach(model => {
-      console.log(model['ccy__code']);
-      
+      console.log(model['ccy__code']);      
     })
     
   }
 
   linkedHeaders(){
     this.model = this.currencies.map(ccy => {
-      console.log(ccy);
-
       return new DataModel(ccy.code, ccy.code, 'number', false, [], '`number:`1.2-2`')
     })
 

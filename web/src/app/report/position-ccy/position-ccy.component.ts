@@ -66,7 +66,7 @@ export class PositionCcyComponent implements OnInit {
     })
 
     this.reportingData.forEach(model => {
-      console.log(model['ccy__code']);      
+      console.log( model['ccy__code']);      
     })
     
   }

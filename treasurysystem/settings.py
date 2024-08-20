@@ -177,7 +177,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
     "http://localhost:4200",
-      "http://localhost:4700",
   
 ]
 
@@ -227,11 +226,11 @@ CHANNEL_LAYERS = {
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "treasurysystem.tasks.sample_task",
-        "schedule": crontab(minute="*/5"),
+        "schedule": crontab(minute="*/20"),
     },
     "send_email_report": {
         "task": "treasurysystem.tasks.send_email_report",
-        "schedule": crontab(minute="*/5"),
+        "schedule": crontab(minute="*/20"),
     },
 }
 

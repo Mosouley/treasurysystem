@@ -18,6 +18,8 @@ celerybeat-schedule
 celerybeat-schedule.*
 data_only.sql
 backup_ficc.sql
+dummy-data.json
+products.json
 
 # Other
 *.log
@@ -51,6 +53,6 @@ data_only.sql
 # System files
 .DS_Store
 Thumbs.db
-# =======
+=======
 /web/node_modules/
-/web/.angular
+# /web/.angular

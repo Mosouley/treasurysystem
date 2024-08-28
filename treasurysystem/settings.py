@@ -211,14 +211,14 @@ CHANNEL_LAYERS = {
         # },
 
         ## Method 2: Via local Redis
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-             "hosts": [('127.0.0.1', 6379)],
-        },
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #      "hosts": [('127.0.0.1', 6379)],
+        # },
 
-        ### Method 3: Via In-memory channel layer
-        ## Using this method.
-        # "BACKEND": "channels.layers.InMemoryChannelLayer"
+        ## Method 3: Via In-memory channel layer
+        # Using this method.
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 

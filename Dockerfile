@@ -1,7 +1,7 @@
 # Dockerfile
 
 # pull official base image
-FROM python:3.11-slim
+FROM python:3.12.5-alpine 
 
 # Create a non-privileged user
 RUN adduser --system --group celeryuser
@@ -45,8 +45,8 @@ RUN adduser --system --group celeryuser && \
 WORKDIR /treasurysystem
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install dependencies (leveraging Docker cache)
 COPY requirements.txt .

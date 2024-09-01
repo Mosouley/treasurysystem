@@ -1,21 +1,5 @@
-# version: '3.8'
 
 services:
-#Angular front-end
-  # ficc-front:
-  #   build: 
-  #     context: ./web/
-  #   ports:
-  #     - 4200:4200
-  #   depends_on:
-  #     - ficc-backend
-  #   volumes:
-  #     - ./web/:/web
-  #     - /web/node_modules
-  #   command: ng serve --host 0.0.0.0 --port 4200
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true 
-
       #django backend
   ficc-backend:
     build: 

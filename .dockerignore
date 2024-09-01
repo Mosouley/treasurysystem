@@ -1,0 +1,30 @@
+# Ignore all git files
+.git
+.gitignore
+
+# Ignore node_modules
+node_modules/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+.venv/
+
+# Ignore environment files
+.env
+treasuryvenv/
+env.dev
+
+# Ignore other local files
+.vscode/
+.DS_Store
+
+# Ignore Docker-specific files that should not be part of the context
+Dockerfile
+docker-compose.yml
+data_only.sql
+dummy-data.json

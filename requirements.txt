@@ -21,13 +21,16 @@ ipython-genutils==0.2.0
 packaging==24.1
 pipdeptree==2.23.0
 platformdirs==2.6.2
+podman-compose==1.2.0
 psycopg2-binary==2.9.9
 pyasn1==0.5.1
 pyasn1-modules==0.3.0
 pybase62==1.0.0
 pycparser==2.21
 pyOpenSSL==24.0.0
+python-dotenv==1.0.1
 pytz==2022.7.1
+PyYAML==6.0.2
 service-identity==24.1.0
 shortuuid==1.0.11
 six==1.16.0
@@ -38,6 +41,3 @@ typing_extensions==4.12.2
 virtualenv==20.10.0
 zope.interface==6.1
 zstandard==0.21.0
-celery>=5
-redis>=4.2.0
-channels_redis==4.0

@@ -20,7 +20,7 @@ User = settings.AUTH_USER_MODEL
 
 
 class Segment(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True, blank=False)
     desc = models.CharField(max_length=100)
 
     def __str__(self):
@@ -30,9 +30,9 @@ class Segment(models.Model):
         verbose_name = 'Segment'
 
 class Customer(models.Model):
-    cif = models.CharField(max_length=100)
-    name = models.CharField(max_length=200)
-    user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
+    cif = models.CharField(max_length=100,unique=True, blank=False)
+    name = models.CharField(max_length=200,unique=True, blank=False)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     segment = models.ForeignKey(Segment, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
@@ -47,8 +47,8 @@ class Customer(models.Model):
 
 
 class Dealer(models.Model):
-    desc = models.CharField(max_length=100)
-    name = models.CharField(max_length=200, unique=True)
+    full_name = models.CharField(max_length=100)
+    profile = models.CharField(max_length=200, unique=True)
     user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     active = models.BooleanField(default=True)
@@ -56,7 +56,7 @@ class Dealer(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.profile
     
     class Meta:
         verbose_name = 'Trader'
@@ -90,6 +90,7 @@ class SystemDailyRates(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(default='Product description')
 
     def __str__(self):
         return self.name

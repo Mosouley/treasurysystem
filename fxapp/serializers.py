@@ -22,6 +22,8 @@ class UUIDField(Field):
         return value
     
 class CustomerSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username', read_only=True)  # Retrieve username instead of user id
+    segment = serializers.CharField(source='segment.name', read_only=True)  # Retrieve segment name instead of segment id
     class Meta:
         model = Customer
         fields = ('__all__')

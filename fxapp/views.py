@@ -1,30 +1,214 @@
 
 import json
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from .models import *
 from .serializers import *
-from django.shortcuts import render
 from .models import ExcelModel
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db import models, transaction
 from django.utils.timezone import now
-from datetime import timedelta, datetime,date
+from datetime import timedelta, datetime
 from django.db.models import Sum
-from django.db.models import F
+from django.core.exceptions import ValidationError
+from collections import defaultdict
+from typing import List, Dict, Tuple, Any, Optional
 
-# Create your views here.
-class CustomerViewSet(viewsets.ModelViewSet):
+class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
+        lookup_field = 'id'
+        exclude_fields = ['id']
+        include_fields = None
+        field_mappings = {}
+        nested_create = True
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields_mapping = self.get_fields_mapping()
+
+        def get_fields_mapping(self) -> Dict[str, Dict]:
+            """Generate field mappings based on model fields and custom mappings."""
+            model = self.serializer_class.Meta.model
+            fields = model._meta.get_fields()
+            mapping = {
+                field.name: self.map_field(field)
+                for field in fields if self.should_process_field(field.name)
+            }
+  
+            return mapping
+
+        def should_process_field(self, field_name: str) -> bool:
+            """Check if the field should be processed based on include/exclude lists."""
+            return field_name not in self.exclude_fields and (
+                self.include_fields is None or field_name in self.include_fields
+            )
+
+        def map_field(self, field: models.Field) -> Dict[str, Any]:
+            """Map a field to its corresponding type and lookup."""
+            if field.name in self.field_mappings:
+                return self.field_mappings[field.name]
+            if isinstance(field, (models.ForeignKey, models.ManyToManyField)):
+                return self.map_related_field(field)
+            return {'type': 'regular', 'field': field.name}
+
+        def map_related_field(self, field: models.Field) -> Dict[str, Any]:
+            """Map related fields (ForeignKey, ManyToMany) with lookup and type."""
+            related_model = field.related_model
+            lookup_fields = getattr(self, 'lookup_fields', {}).get(field.name, ['id'])
+            return {
+                'type': 'foreign_key' if isinstance(field, models.ForeignKey) else 'many_to_many',
+                'model': related_model,
+                'lookup_fields': lookup_fields
+            }
+
+        @transaction.atomic
+        def create(self, request, *args, **kwargs):
+            """Handle bulk creation with nested objects."""
+            
+            data = request.data if isinstance(request.data, list) else [request.data]
+            serialized_data, errors = self.serialize_data(data)
+            
+            if errors:
+                return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+            return self.perform_bulk_create(serialized_data)
+
+        def serialize_data(self, data: List[Dict]) -> Tuple[List[Dict], List[str]]:
+            """Process and serialize incoming data."""
+            serialized_data = []
+            errors = []
+            for index, row in enumerate(data):
+                try:
+                    processed_data = self.process_row(row)
+                    serialized_data.append(processed_data)
+                except Exception as e:
+                    errors.append(f"Error processing row {index}: {str(e)}")
+            return serialized_data, errors
+
+        def process_row(self, row: Dict) -> Dict[str, Any]:
+            """Process an individual data row into a valid model instance."""
+            if not isinstance(row, dict):
+                raise ValueError("Row data must be a dictionary")
+
+            regular_data, m2m_data = self.process_fields(row)
+            return {'regular_data': regular_data, 'm2m_data': m2m_data}
+
+        def process_fields(self, row_data: Dict) -> Tuple[Dict, Dict]:
+            """Convert row data into the format required by the model."""
+            processed_data = {}
+            m2m_data = defaultdict(list)
+
+            for field, mapping in self.fields_mapping.items():
+                value = row_data.get(field)
+                # print(' the field is ', field, ' and mapping -', mapping)
+                if mapping['type'] == 'regular':
+              
+                    processed_data[field] = value
+                elif mapping['type'] == 'foreign_key':
+              
+                    processed_data[field] = self.get_or_create_related_object(mapping, value)
+                elif mapping['type'] == 'many_to_many':
+               
+                    m2m_data[field] = self.handle_many_to_many_field(mapping, value)
+
+            return processed_data, m2m_data
+
+        def get_or_create_related_object(self, mapping: Dict[str, Any], value: Any) -> models.Model:
+            """Handle ForeignKey field value resolution."""
+            related_model = mapping['model']
+            lookup_fields = mapping['lookup_fields']
+           
+            if isinstance(value, dict):
+                # Handle nested ForeignKey creation
+                lookup_field, lookup_value = list(value.items())[0]
+                return self.fetch_or_create_object(related_model, lookup_field, lookup_value)
+            else:
+                # Assume value is the ID or single lookup field
+                for lookup_field in lookup_fields:
+                    try:
+                        return related_model.objects.get_or_create(**{lookup_field: value})[0]
+                    except related_model.DoesNotExist:
+                        continue
+                raise ValueError(f"{related_model.__name__} object not found with provided lookup fields.")
+
+        def handle_many_to_many_field(self, mapping: Dict[str, Any], values: List[Any]) -> List[models.Model]:
+            """Process ManyToMany field data."""
+            related_objs = []
+
+            for value in values:
+                related_obj = self.get_or_create_related_object(mapping, value)
+                related_objs.append(related_obj)
+            return related_objs
+
+        def fetch_or_create_object(self, model: models.Model, field: str, value: Any) -> models.Model:
+            """Fetch or create an object based on the lookup field."""
+            obj, created = model.objects.get_or_create(**{field: value})
+            return obj
+        
+        # def check_for_duplicates(self, data: Dict) -> bool:
+        #     """Check if an object with unique fields already exists."""
+        #     model = self.serializer_class.Meta.model
+        #     unique_fields = ['cif', 'name']  # Adjust this for the unique fields of your model
+        #     filter_kwargs = {field: data[field] for field in unique_fields if field in data}
+
+        #     return model.objects.filter(**filter_kwargs).exists()
+
+        def perform_bulk_create(self, serialized_data: List[Dict]) -> Response:
+            """Perform bulk creation of instances."""
+            model = self.serializer_class.Meta.model
+            instances = []
+            m2m_data = defaultdict(list)
+            errors =[]
+        
+            for index, item in enumerate(serialized_data) :
+                regular_data = item['regular_data']
+                instance = model(**regular_data)
+                # print('Index is -', index , 'Item is --', item)
+                try:
+                    instance.full_clean()
+                    instances.append(instance)
+
+                except ValidationError as e:
+                    errors.append(f"Validation error for row {index}: {str(e)}")
+                    continue
+
+                for field, values in item['m2m_data'].items():
+                    m2m_data[field].append((instance, values))
+
+            # Perform bulk creation only if there are valid instances
+            if instances:
+                created_instances = model.objects.bulk_create(instances)
+                self.handle_m2m_fields(m2m_data)
+
+                serializer = self.get_serializer(created_instances, many=True)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            if errors:
+                return Response({"errors": errors}, status=status.HTTP_417_EXPECTATION_FAILED)
+            # If no errors and no instances, return an empty response (unlikely scenario)
+            return Response({"errors": "No valid data to create instances."}, status=status.HTTP_400_BAD_REQUEST)
+
+        def handle_m2m_fields(self, m2m_data: defaultdict) -> None:
+            """Set ManyToMany field values for created instances."""
+            for field, instance_values in m2m_data.items():
+                for instance, values in instance_values:
+                    getattr(instance, field).set(values)
+
+class CustomerViewSet(AutoMappingBulkCreateViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    lookup_fields = {
+        'user': ['username', 'id'],  # Lookup by username first, then id for the User model
+        'segment': ['name', 'id'],   # Lookup by name first, then id for the Segment model
+    }
 
-class DealerViewSet(viewsets.ModelViewSet):
+class DealerViewSet(AutoMappingBulkCreateViewSet):
     queryset = Dealer.objects.all()
     serializer_class = DealerSerializer
-
+    lookup_fields = {
+        'user': ['username', 'id'],  # Lookup by username first, then id for the User modells
+        
+    }
 class SegmentViewSet(viewsets.ModelViewSet):
     queryset = Segment.objects.all()
     serializer_class = SegmentSerializer
@@ -34,7 +218,10 @@ class CcyViewSet(viewsets.ModelViewSet):
     serializer_class = CcySerializer
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+# class ProductViewSet(viewsets.ModelViewSet):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+class ProductViewSet(AutoMappingBulkCreateViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
  
@@ -45,19 +232,40 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
    # http_method_names = ['get', 'post','head']  # to include specific accepted methods––        
 
     def create(self, request, *args, **kwargs):
-        if isinstance(request.data, list):
-            serialized_data = []
-            for row in request.data:
-                ccy, _ = Ccy.objects.get_or_create(code=row[0])
+        data = request.data
+        if not isinstance(data, list):
+            data = [data]
+        serialized_data = []
+        errors =[]
+            # serialized_data = []
+        for row in data:
+            try:
+                if isinstance(row, list):
+                    if len(row) < 2:
+                        raise ValueError('Each row must contain at least currency code and rate')
+                    ccy_code, rate = row [0], row [1]
+                elif isinstance(row, dict):
+                    # Handle dict input
+                    ccy_code = row.get('ccy_code')
+                    rate = row.get('rateLcy')
+                    if not ccy_code or rate is None:
+                        raise ValueError("Missing ccy_code or rateLcy")
+                else:
+                    raise ValueError("Unsupported data format")
+                ccy, _ = Ccy.objects.get_or_create(code=ccy_code)
                 serialized_data.append({
                     'ccy': ccy.id,
-                    'rateLcy': row[1]
+                    'rateLcy': rate
                 })
+            
+            except Exception as e:
+                errors.append(f"Errorprocessing row {row}: {str(e)}")
             serializer = self.get_serializer(data=serialized_data, many=True)
             
-        else:
-            serializer = self.get_serializer(data=request.data)
-        
+        if errors:
+            return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=serialized_data, many=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
@@ -74,16 +282,6 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
             filtered_queryset = [
                 obj for obj in queryset.order_by('-date', '-last_updated') if getattr(obj, self.lookup_field) == lookup_value
             ]
-            # filtered_queryset = queryset.filter(
-            #     Q(date=lookup_value) | Q(last_updated=lookup_value)
-            # ).order_by('-date', '-last_updated')
-           
-            # instance = max(filtered_queryset, key=lambda obj: obj.date)
-            # filtered_queryset = queryset.filter(
-            #     Q(date=lookup_value) | Q(last_updated=lookup_value)
-            # ).order_by('-date', '-last_updated')
-            # instance = filtered_queryset.first()
-            
             instance = filtered_queryset[0] if filtered_queryset else None
   
         else:
@@ -146,20 +344,7 @@ def my_endpoint(request):
                 )
                 my_model.save()       
       
-        # # extract the table data from the JSON data
-        #     table_data.insert(data[i])
 
-        #     print(table_data)
-        # create or update model instances for each row in the table data
-        # for row in table_data:
-        #     instance, created = SystemDailyRates.objects.update_or_create(
-        #         id=row['id'],
-        #         defaults={
-        #             'rateLcy': row['rates'],
-        #             'ccy': row['currency'],
-        #             # ... add other columns as needed
-        #         }
-        #     )
         
         # return a JSON response indicating success
             return JsonResponse({'status': 'success'}, safe = False)

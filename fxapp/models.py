@@ -146,7 +146,6 @@ class Trade(models.Model):
         counter = int(timezone.now(timezone(timedelta(hours=3)))) 
         random_part = random.randint(1, 99999)
         # f'{random_part:04d}{counter:03d}'
-        print(f'{random_part}{counter:05d}')
         return f'{random_part}{counter:05d}'
     
     @property

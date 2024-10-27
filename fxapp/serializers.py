@@ -1,9 +1,10 @@
 from decimal import Decimal
+import decimal
 from uuid import UUID
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position
 from django.db import IntegrityError
-
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.fields import Field
 
 from channels.layers import get_channel_layer
@@ -30,7 +31,9 @@ class CustomerSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {
                 'validators': [],
-            }
+            },
+            'cif': {'validators': []},  # Remove unique validation
+            'name': {'validators': []},
         }
 
 class DealerSerializer(serializers.ModelSerializer):
@@ -43,7 +46,8 @@ class DealerSerializer(serializers.ModelSerializer):
             },
             'user': {
                 'validators': [],
-            }
+            },
+            'profile': {'validators': []},
         }
 
 class SegmentSerializer(serializers.ModelSerializer):
@@ -99,27 +103,52 @@ class TradeSerializer(serializers.ModelSerializer):
         # depth=1
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        uuid_fields = ['trade_id',]  # Replace with your actual UUID fields
         # Convert UUID fields to strings
-        for field in ['trade_id']:  # Replace with your UUID field names and other_uuid_field'
+        for field in uuid_fields :  # Replace with your UUID field names and other_uuid_field'
             if field in representation:
                 representation[field] = str(representation[field])
+
+        # Convert Decimal fields to strings or floats
+        decimal_fields = ['amount1', 'amount2', 'deal_rate', 'fees_rate', 
+                          'system_rate', 'ccy1_rate', 'ccy2_rate', 'deal_pnl','equivalent_lcy']
+        
+        for field in decimal_fields:
+            if field in representation and isinstance(representation[field], decimal.Decimal):
+                representation[field] = float(representation[field]) 
+
 
         return representation
 
     def create(self, validated_data):
         # Retrieve or create related objects
-        product_data = validated_data.pop('product')
+        product_data = validated_data.pop('product', None)
 
         product_name = product_data['name']
 
-        customer_data = validated_data.pop('customer')
-        trader_data = validated_data.pop('trader')
-        ccy1_data = validated_data.pop('ccy1')
-        ccy2_data = validated_data.pop('ccy2')
+        customer_data = validated_data.pop('customer', None)
+        trader_data = validated_data.pop('trader', None)
+        ccy1_data = validated_data.pop('ccy1', None)
+        ccy2_data = validated_data.pop('ccy2', None)
 
-        product_instance, is_created= Product.objects.get_or_create(name=product_name)
-        customer_instance, _ = Customer.objects.get_or_create(**customer_data)
-        trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
+        # Handle missing related data
+        if not (product_data and customer_data and trader_data and ccy1_data and ccy2_data):
+            raise serializers.ValidationError("Missing required nested fields for related objects.")
+
+        # Retrieve or create related instances
+        product_instance, _= Product.objects.get_or_create(name=product_name)
+        # Retrieve customer instance by unique identifier (e.g., 'cif') and create if not found
+        # Check if a Customer with the same 'cif' exists, otherwise create
+        customer_instance = Customer.objects.filter(cif=customer_data['cif']).first()
+        # if not customer_instance:
+        #     customer_instance = Customer.objects.create(**customer_data)
+        
+        # Check if a Trader with the same 'profile' exists, otherwise create
+        trader_instance = Dealer.objects.filter(profile=trader_data['profile']).first()
+        # if not trader_instance:
+        #     trader_instance = Dealer.objects.create(**trader_data)
+        
+
         ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
         ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
 
@@ -136,40 +165,6 @@ class TradeSerializer(serializers.ModelSerializer):
 
         return trade_instance
       
-
-    def update(self, instance, validated_data):
-        try:
-            product_data = validated_data.pop('product')
-            product_name = product_data.pop('name')
-            product = Product.objects.get_or_create(name=product_name)[0]
-            instance.product = product
-
-            customer_data = validated_data.pop('customer')
-            trader_data = validated_data.pop('trader')
-            ccy1_data = validated_data.pop('ccy1')
-            ccy2_data = validated_data.pop('ccy2', )
-
-            
-            customer_instance, _ = Customer.objects.get_or_create(**customer_data)
-            trader_instance, _ = Dealer.objects.get_or_create(**trader_data)
-            ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
-            ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
-
-          
-            # Use existing or newly created instances when creating the Trade
-       
-            return instance
-        except IntegrityError as e:
-            # Handle uniqueness constraint violation
-            raise serializers.ValidationError(e.args[0])
-
-
-class TradeCreateSerializer(serializers.ListSerializer):
-    child = TradeSerializer()
-
-    def create(self, validated_data):
-        instances = [Trade(**item) for item in validated_data]
-        return Trade.objects.bulk_create(instances)
 
 class PositionSerializer(serializers.ModelSerializer):
     ccy__code = serializers.StringRelatedField(source='ccy.code')

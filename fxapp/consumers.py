@@ -1,9 +1,8 @@
 
-import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Trade
 from .serializers import TradeSerializer
@@ -12,7 +11,6 @@ import traceback
 import decimal
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.utils import timezone
 from datetime import date
 
 class DecimalEncoder(json.JSONEncoder):
@@ -27,7 +25,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
             await self.accept()
-            
             # trades = await self.all_trades_day()
             await self.send_trade_list()
             await self.channel_layer.group_add(self.trade_update_group, self.channel_name)
@@ -65,7 +62,7 @@ class TradeConsumer(AsyncWebsocketConsumer):
                 'data':trade_data
             }, cls=DecimalEncoder))
         except Exception as e:
-            print(f"Error sending trade list: {e}")
+            # print(f"Error sending trade list: {e}")
             print(traceback.format_exc())  # Print the traceback
 
     # @database_sync_to_async
@@ -93,7 +90,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_trade_to_database(self, data):
-        # print(data)
         try:
             serializer = TradeSerializer(data=data)
             if serializer.is_valid():
@@ -119,9 +115,9 @@ class TradeConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-        async def disconnect(self, close_code):
-            # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
-            self.close(close_code)
+    async def disconnect(self, close_code):
+        # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
+        self.close(close_code)
 
 
                 

@@ -189,10 +189,10 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS'
 ]
-# ALLOWED_HOSTS =[
-#     'localhost:4200',
-#     'localhost'
-# ]
+ALLOWED_HOSTS =[
+    'localhost',
+    '127.0.0.1'
+]
 
 
 # Connect Celery to Redis
@@ -211,15 +211,15 @@ CHANNEL_LAYERS = {
         #     ],
         # },
 
-        ## Method 2: Via local Redis
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #      "hosts": [('127.0.0.1', 6379)],
-        # },
+        # Method 2: Via local Redis
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+             "hosts": [('redis', 6379)],
+        },
 
         ## Method 3: Via In-memory channel layer
         # Using this method.
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 

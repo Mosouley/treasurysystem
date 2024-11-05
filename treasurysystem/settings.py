@@ -227,13 +227,18 @@ CHANNEL_LAYERS = {
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "treasurysystem.tasks.sample_task",
-        "schedule": crontab(minute="*/20"),
+        "schedule": crontab(minute="*/5"),
     },
     "send_email_report": {
         "task": "treasurysystem.tasks.send_email_report",
-        "schedule": crontab(minute="*/20"),
+        "schedule": crontab(minute="*/5"),
     },
+    # 'send-position-updates-every-5-minutes': {  
+    #     'task': 'your_app.tasks.send_position_updates',  
+    #     'schedule': crontab(minute='*/5'),  # Every 5 minutes  
+    # }, 
 }
+
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@email.com"

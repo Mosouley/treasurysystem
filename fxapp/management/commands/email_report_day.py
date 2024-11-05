@@ -4,7 +4,9 @@ from django.core.mail import mail_admins
 from django.core.management import BaseCommand
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from fxapp.models import Trade
+from fxapp.models import Trade, Position
+from datetime import timedelta, datetime
+from django.db.models import Sum
 
 
 today = timezone.now() - timedelta(60)
@@ -19,13 +21,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(f"Today for me is {today_start}")
+        
+        mon_query = Position.objects.all().values('date','ccy__code').annotate(total_pos=Sum('position'))
+
+        stat  = mon_query.filter(date=today)
+        self.stdout.write(f"statistiques {stat}")
         trades = Trade.objects.filter(tx_date__gte=today_start)
 
         if trades:
             message = ""
 
-            for trade in trades:
-                message += f" { trade.buy_sell } - {trade.ccy1 } - {trade.ccy2 } - { trade.amount1 } - { trade.amount2 } \n"
+            # for trade in trades:
+                # message += f" { trade.buy_sell } - {trade.ccy1 } - {trade.ccy2 } - { trade.amount1 } - { trade.amount2 } \n"
+            message += f" { mon_query}  \n"
 
             subject = (
                 f"Trade Report for {today_start.strftime('%Y-%m-%d')} "

@@ -41,7 +41,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
         trades_data = trade_serializer.data
         return trades_data
   
-
     async def trade_updated(self, trade_data):
         trades = await self.all_trades()
         await self.send_trade_list(trades)
@@ -65,19 +64,20 @@ class TradeConsumer(AsyncWebsocketConsumer):
             # print(f"Error sending trade list: {e}")
             print(traceback.format_exc())  # Print the traceback
 
-    # @database_sync_to_async
-    # def broadcast_trade_update(self, trade_data):
-    #     """Send trade update to the group."""
-    #     channel_layer = get_channel_layer()
-    #     async_to_sync(channel_layer.group_send)(
-    #         self.trade_update_group, {"type": "send_trade_list", "data": trade_data}
-    #     )
     async def send_trades_of_day(self, event):
         # Fetch the trades data of the day
         trades = await self.all_trades_day()
         await self.send(text_data=json.dumps({
             'type': 'all_trades_day',
             'data': trades
+        }, cls=DecimalEncoder))
+    
+    async def send_new_trades(self, event):
+        # Fetch the new trades data
+        new_trades = event['data']
+        await self.send(text_data=json.dumps({
+            'type': 'new_trades',
+            'data': new_trades
         }, cls=DecimalEncoder))
     
 
@@ -104,21 +104,28 @@ class TradeConsumer(AsyncWebsocketConsumer):
     def broadcast_trades(sender, instance, created, **kwargs):
         if created:
             channel_layer = get_channel_layer()
-            trades = Trade.objects.filter(date_created__gte=date.today()).order_by('-date_created')
-        
-            trade_serializer = TradeSerializer(trades, many=True)
+            trade_serializer = TradeSerializer(instance)
             trades_data = trade_serializer.data
             async_to_sync(channel_layer.group_send)(
                 "fx_tradeflow", 
-                {"type": "send_trades_of_day", 
+                {"type": "send_new_trades", 
                 "data": trades_data,
                 }
             )
 
     async def disconnect(self, close_code):
-        # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
         self.close(close_code)
 
 
-                
+class PositionConsumer(AsyncWebsocketConsumer):  
+    async def connect(self):  
+        await self.channel_layer.group_add("position_updates", self.channel_name)  
+        await self.accept()  
+
+    async def disconnect(self, close_code):  
+        await self.channel_layer.group_discard("position_updates", self.channel_name)  
+
+    async def send_position_updates(self, event):  
+        message = event['message']  
+        await self.send(text_data=json.dumps(message))                
       

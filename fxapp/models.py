@@ -152,11 +152,6 @@ class Trade(models.Model):
     def equivalent_lcy(self):
         return Decimal(self.amount1) * self.ccy1_rate
     
-    # @staticmethod
-    # def calculate_pnl(ccy1_amount, deal_rate, syst_rate, ccy2_rate):
-    #     pnl = -ccy1_amount * (deal_rate - syst_rate) * ccy2_rate
-    #     return pnl
-    
     @staticmethod
     def calculate_pnl(trade_instance):
         amount1 = trade_instance.amount1 if trade_instance.buy_sell == 'buy' else -trade_instance.amount1
@@ -177,21 +172,43 @@ class Trade(models.Model):
         verbose_name = 'Trade'
 
 class Position(models.Model):
-    date            = models.DateField( blank=False, null=False, auto_now=False)
-    ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
-    position        = models.FloatField()
+    date                = models.DateField( blank=False, null=False, auto_now=False)
+    ccy                 = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
+    intraday_pos        = models.FloatField()
+
+
+    # _calculated_net_open_pos = None  # Internal property to cache the calculated value
 
     def __str__(self):
         return f"{self.ccy.code} - {self.position}"
     
+    @staticmethod
+    def get_open_pos(self):
+        """
+        Retrieves the most recent `net_open_pos` from before the current Position's date.
+        """
+        open_pos = Position.objects.filter(
+            date__lt=self.date,
+            ccy=self.ccy
+        ).order_by('-date').values('intraday_position').first()
+        return open_pos['open_pos'] if open_pos else 0
 
-    # @staticmethod
-    # def calculate_position(ccy_instance, date):
-    #     # Aggregate the sum of amount1 for the given currency and date
-    #     pos_long = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell='buy' ).aggregate(ccy_position=Sum('amount1'))
-    #     pos_short = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell ='sell').aggregate(ccy_position=Sum('amount1'))
-    #     pos_ccy = pos_long['ccy_position'] + pos_short['ccy_position']
-    #     return pos_ccy or 0
+    @property
+    def open_pos(self):
+        """
+        Property that calculates the aggregate net_open_pos for the current Position instance.
+        """
+        return self.get_open_pos(self)
+    
+    @property
+    def close_pos(self):
+        """
+        Property that calculates the aggregate net_open_pos for the current Position instance.
+        """
+        return float(self.open_position) + float(self.intraday_position)
+    
+
+
     
     # @property
     # def ccy_position(self):

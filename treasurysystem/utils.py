@@ -1,5 +1,7 @@
 import random
 import string
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 from django.utils.text import slugify
 
@@ -33,3 +35,24 @@ def unique_slug_generator(instance, new_slug=None):
         new_slug = f'{slug}{random_string_generator(size=4)}'
         return unique_slug_generator(instance, new_slug=new_slug)
     return slug
+
+def broadcast_data(group_name, event_type, data):
+    """
+    Sends data to a specified WebSocket channel group.
+    
+    Args:
+        group_name (str): The name of the channel group.
+        event_type (str): The type of event to send (matches consumer method).
+        data (dict): The data payload to broadcast.
+    """
+    channel_layer = get_channel_layer()
+    if channel_layer:
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            {
+                'type': event_type,
+                'data': data
+            }
+        )
+    else:
+        print("Error: Channel layer not found.")

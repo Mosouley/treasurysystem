@@ -4,5 +4,5 @@ from .consumers import TradeConsumer,PositionConsumer
 
 websocket_urlpatterns = [
     path('ws/api/fx/trade_update/', TradeConsumer.as_asgi()),
-    re_path(r'ws/api/fx/positions/$', PositionConsumer.as_asgi()),
+    path('ws/api/fx/positions/', PositionConsumer.as_asgi()),
 ]

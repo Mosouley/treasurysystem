@@ -122,10 +122,16 @@ class PositionConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add("position_updates", self.channel_name)  
         await self.accept()  
 
+
+    async def send_position_updates(self, event): 
+        message = event['data']  
+        # await self.send(text_data=json.dumps(message))  
+        await self.send(text_data=json.dumps({
+            'type': 'position_updates',
+            'data': message
+        }, cls=DecimalEncoder))      
+
     async def disconnect(self, close_code):  
         await self.channel_layer.group_discard("position_updates", self.channel_name)  
-
-    async def send_position_updates(self, event):  
-        message = event['message']  
-        await self.send(text_data=json.dumps(message))                
+        
       

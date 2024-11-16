@@ -1,16 +1,9 @@
-from decimal import Decimal
 import decimal
 from uuid import UUID
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position
-from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.fields import Field
 
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-from django.http import HttpResponse
-import json
 
 
 
@@ -116,8 +109,6 @@ class TradeSerializer(serializers.ModelSerializer):
         for field in decimal_fields:
             if field in representation and isinstance(representation[field], decimal.Decimal):
                 representation[field] = float(representation[field]) 
-
-
         return representation
 
     def create(self, validated_data):
@@ -162,22 +153,34 @@ class TradeSerializer(serializers.ModelSerializer):
             **validated_data
         )
        
-
         return trade_instance
       
 
 class PositionSerializer(serializers.ModelSerializer):
-    ccy__code = serializers.StringRelatedField(source='ccy.code')
-    total_pos = serializers.FloatField(read_only=True)
-    
-    class Meta:
-        model = Position
-        fields = ['date', 'ccy__code', 'total_pos']
-    
-    def get_total_pos(self, obj):
-        return obj['total_pos']
-    
-class PositionSummarySerializer(serializers.Serializer):
+    # ccy__code = serializers.StringRelatedField(source='ccy.code')
     date = serializers.DateField()
     ccy__code = serializers.CharField(max_length=3)
     total_pos = serializers.FloatField(read_only=True)
+    open_pos = serializers.ReadOnlyField()
+    close_pos = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Position
+        fields = ['date', 'ccy__code','intraday_pos', 'total_pos', 'open_pos', 'close_pos']  # Include all relevant fields
+
+# date = serializers.DateField()
+    # ccy__code = serializers.CharField(max_length=3)
+    
+# class PositionSummarySerializer(serializers.Serializer):
+#     date = serializers.DateField()
+#     ccy__code = serializers.CharField(max_length=3)
+#     total_pos = serializers.FloatField(read_only=True)
+#     open_pos = serializers.ReadOnlyField()
+#     intraday_pos = serializers.ReadOnlyField()
+#     close_pos = serializers.ReadOnlyField()
+    
+#     class Meta:
+#         model = Position
+#         fields = ['date', 'ccy__code','intraday_pos', 'total_pos', 'open_pos', 'close_pos']  # Include all relevant fields
+   
+    

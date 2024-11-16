@@ -13,6 +13,7 @@ router.register(r'daily-rates', views.SystemDailyRatesViewSet,)
 router.register(r'trades', views.TradeViewSet, basename='trade')
 router.register(r'dealers', views.DealerViewSet, basename='dealer')
 router.register(r'positions', views.PositionViewSet, basename='position')
+# router.register(r'positions-summary', PositionSummaryViewSet, basename='position-summary')
 # router.register(r'daily-rates', views.my_endpoint, basename='fxapp')
 urlpatterns = [
     path('batch-destroy/',TradeViewSet.batch_destroy, name='batch_destroy'),

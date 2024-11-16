@@ -20,12 +20,11 @@ class Command(BaseCommand):
     
 
     def handle(self, *args, **options):
-        self.stdout.write(f"Today for me is {today_start}")
-        
-        mon_query = Position.objects.all().values('date','ccy__code').annotate(total_pos=Sum('position'))
+
+        mon_query = Position.objects.all().values('date','ccy__code').annotate(total_pos=Sum('intraday_pos'))
 
         stat  = mon_query.filter(date=today)
-        self.stdout.write(f"statistiques {stat}")
+
         trades = Trade.objects.filter(tx_date__gte=today_start)
 
         if trades:

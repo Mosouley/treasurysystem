@@ -13,7 +13,7 @@ from datetime import timedelta, datetime
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
 from collections import defaultdict
-from typing import List, Dict, Tuple, Any, Optional
+from typing import List, Dict, Tuple, Any
 
 class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
         lookup_field = 'id'
@@ -217,10 +217,6 @@ class CcyViewSet(viewsets.ModelViewSet):
     queryset = Ccy.objects.all()
     serializer_class = CcySerializer
 
-
-# class ProductViewSet(viewsets.ModelViewSet):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
 class ProductViewSet(AutoMappingBulkCreateViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -293,7 +289,6 @@ class SystemDailyRatesViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     
-
 class TradeViewSet(viewsets.ModelViewSet):
     # queryset = Trade.objects.all()
     serializer_class = TradeSerializer
@@ -343,9 +338,7 @@ def my_endpoint(request):
                      rateLcy=row[1]
                 )
                 my_model.save()       
-      
-
-        
+    
         # return a JSON response indicating success
             return JsonResponse({'status': 'success'}, safe = False)
     else:
@@ -358,19 +351,86 @@ class PositionViewSet(viewsets.ModelViewSet):
     serializer_class = PositionSerializer     
 
     def get_queryset(self):
-        # print(self.request.query_params)
-        date_param = self.request.query_params.get('date', None)     
-        # using super
-        queryset = super().get_queryset().values('date','ccy__code').annotate(total_pos=Sum('position'))
+        date_param = self.request.query_params.get('date', None)
+        ccy_param = self.request.query_params.get('ccy__code', None)
 
-        result = Position.objects.values('date','ccy__code').annotate(total_pos=Sum('position'))
+        queryset = super().get_queryset().values('date','ccy__code','intraday_pos',).annotate(total_pos=Sum('intraday_pos'))
+
+        result = Position.objects.values('date','ccy__code','intraday_pos', ).annotate(total_pos=Sum('intraday_pos'))
+
         if date_param is not None:
             result = queryset.filter(date=date_param)
-
+        
+        if ccy_param:
+            result = result.filter(ccy__code=ccy_param)
         return result
 
-    
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        serializer = PositionSummarySerializer(queryset, many=True)
+        if not queryset.exists():
+            return Response({"detail": "No records found for the given date"}, status=404)
+        serializer = PositionSerializer(queryset, many=True)
         return Response(serializer.data)
+        
+
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     if not queryset.exists():
+    #         return Response({"detail": "No records found for the given date"}, status=404)
+        
+    #     # Use `PositionSerializer` for serialization to include calculated fields.
+    #     serializer = PositionSerializer(queryset, many=True)
+    #     return Response(serializer.data)
+    
+
+
+@csrf_exempt
+def import_excel_data(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            fields, relationships = extract_fields_and_relationships(data)
+            create_model_with_relationships('ImportedModel', fields, relationships)
+            run_migrations()
+            return JsonResponse({'status': 'success', 'message': 'Model created successfully.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+def extract_fields_and_relationships(data):
+    # Analyze data structure and map field types
+    fields = {}
+    relationships = {}
+    for key in data[0].keys():  # Assume the first row represents the structure
+        if key.endswith('_fk'):  # ForeignKey convention
+            relationships[key] = 'RelatedModel'  # Replace with actual related model name
+            fields[key] = 'ForeignKey'
+        elif key.endswith('_m2m'):  # ManyToManyField convention
+            relationships[key] = 'RelatedModel'
+            fields[key] = 'ManyToManyField'
+        else:
+            fields[key] = 'CharField'
+    return fields, relationships
+
+def create_model_with_relationships(name, fields, relationships):
+    class Meta:
+        app_label = 'my_app'
+
+    attrs = {
+        '__module__': 'my_app.models',
+        'Meta': Meta,
+    }
+    for field_name, field_type in fields.items():
+        if field_type == 'ForeignKey':
+            related_model = relationships.get(field_name)
+            attrs[field_name] = models.ForeignKey(
+                related_model, on_delete=models.CASCADE, null=True, blank=True
+            )
+        elif field_type == 'ManyToManyField':
+            related_model = relationships.get(field_name)
+            attrs[field_name] = models.ManyToManyField(related_model, blank=True)
+        else:
+            attrs[field_name] = models.CharField(max_length=255)
+
+    new_model = type(name, (models.Model,), attrs)
+    models.Model.add_to_class(name, new_model)
+    return new_model

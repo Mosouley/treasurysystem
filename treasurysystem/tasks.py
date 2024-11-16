@@ -7,11 +7,6 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def sample_task():
-    logger.info("The sample task just ran. My EOD is ongoing",)
-
-
-@shared_task
 def send_email_report():
     call_command("email_report_day", )
 

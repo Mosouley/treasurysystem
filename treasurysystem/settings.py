@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ##### docker set up config elements #################################
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: '
@@ -203,40 +203,26 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 ## settings.py
 CHANNEL_LAYERS = {
     'default': {
-        ### Method 1: Via redis lab
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #     "hosts": [
-        #       'redis://h:<password>;@<redis Endpoint>:<port>' 
-        #     ],
-        # },
-
+  
         # Method 2: Via local Redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
              "hosts": [('redis', 6379)],
         },
-
-        ## Method 3: Via In-memory channel layer
-        # Using this method.
-        # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 
 # PVZKPPNf2FmqHagUcU0JJVG5NIEDuxY0 API KEY APILAYER
 CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "treasurysystem.tasks.sample_task",
-        "schedule": crontab(minute="*/5"),
-    },
+ 
     "send_email_report": {
         "task": "treasurysystem.tasks.send_email_report",
-        "schedule": crontab(minute="*/5"),
+        "schedule": crontab(minute="*/10"),
     },
-    # 'send-position-updates-every-5-minutes': {  
-    #     'task': 'your_app.tasks.send_position_updates',  
-    #     'schedule': crontab(minute='*/5'),  # Every 5 minutes  
-    # }, 
+    'send_positions': {  
+        'task': 'treasurysystem.tasks.send_position_updates',  
+        'schedule': crontab(minute='*/1'),  # Every 5 minutes  
+    }, 
 }
 
 

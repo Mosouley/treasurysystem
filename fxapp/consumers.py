@@ -133,7 +133,7 @@ class PositionConsumer(AsyncWebsocketConsumer):
 
     async def send_position_updates(self, event): 
         message = event['data']  
-        # await self.send(text_data=json.dumps(message))  
+        
         await self.send(text_data=json.dumps({
             'type': 'position_updates',
             'data': message

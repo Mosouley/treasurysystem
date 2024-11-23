@@ -75,76 +75,78 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
         
 
 class TradeSerializer(serializers.ModelSerializer):
-    # equivalent_lcy = serializers.SerializerMethodField()
-    deal_pnl = serializers.ReadOnlyField()
-    id = serializers.ReadOnlyField()
-    product = ProductSerializer(many=False, )
-    trader = DealerSerializer(many=False, )
-    customer = CustomerSerializer(many=False, )
-    ccy1 = CcySerializer(many=False, )
-    ccy2 = CcySerializer(many=False, )
+    try:
+        # equivalent_lcy = serializers.SerializerMethodField()
+        deal_pnl = serializers.ReadOnlyField()
+        id = serializers.ReadOnlyField()
+        product = ProductSerializer(many=False, )
+        trader = DealerSerializer(many=False, )
+        customer = CustomerSerializer(many=False, )
+        ccy1 = CcySerializer(many=False, )
+        ccy2 = CcySerializer(many=False, )
 
-    # page_size = request.query_params.get('pageSize', 10) 
-    
-    class Meta:
-        model = Trade
-        # fields = '__all__'      
-        fields = [  'id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell',
-                   'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl',
-                   'tx_comments',  'status', 'date_created', 'last_updated','ccy1_rate','ccy2_rate']
-        # read_only_fields = ('product', 'trader', 'ccy', 'customer',)
-        # depth=1
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        uuid_fields = ['trade_id',]  # Replace with your actual UUID fields
-        # Convert UUID fields to strings
-        for field in uuid_fields :  # Replace with your UUID field names and other_uuid_field'
-            if field in representation:
-                representation[field] = str(representation[field])
-
-        # Convert Decimal fields to strings or floats
-        decimal_fields = ['amount1', 'amount2', 'deal_rate', 'fees_rate', 
-                          'system_rate', 'ccy1_rate', 'ccy2_rate', 'deal_pnl','equivalent_lcy']
+        # page_size = request.query_params.get('pageSize', 10) 
         
-        for field in decimal_fields:
-            if field in representation and isinstance(representation[field], decimal.Decimal):
-                representation[field] = float(representation[field]) 
-        return representation
+        class Meta:
+            model = Trade
+            # fields = '__all__'      
+            fields = [  'id','tx_date', 'val_date', 'customer', 'product', 'trader', 'ccy1', 'ccy2', 'buy_sell',
+                    'amount1', 'amount2', 'deal_rate', 'fees_rate', 'system_rate','equivalent_lcy', 'deal_pnl',
+                    'tx_comments',  'status', 'date_created', 'last_updated','ccy1_rate','ccy2_rate']
+            # read_only_fields = ('product', 'trader', 'ccy', 'customer',)
+            # depth=1
+        def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            uuid_fields = ['trade_id',]  # Replace with your actual UUID fields
+            # Convert UUID fields to strings
+            for field in uuid_fields :  # Replace with your UUID field names and other_uuid_field'
+                if field in representation:
+                    representation[field] = str(representation[field])
 
-    def create(self, validated_data):
-        # Retrieve or create related objects
-        product_data = validated_data.pop('product', None)
+            # Convert Decimal fields to strings or floats
+            decimal_fields = ['amount1', 'amount2', 'deal_rate', 'fees_rate', 
+                            'system_rate', 'ccy1_rate', 'ccy2_rate', 'deal_pnl','equivalent_lcy']
+            
+            for field in decimal_fields:
+                if field in representation and isinstance(representation[field], decimal.Decimal):
+                    representation[field] = float(representation[field]) 
+            return representation
 
-        product_name = product_data['name']
+        def create(self, validated_data):
+            # Retrieve or create related objects
+            product_data = validated_data.pop('product', None)
 
-        customer_data = validated_data.pop('customer', None)
-        trader_data = validated_data.pop('trader', None)
-        ccy1_data = validated_data.pop('ccy1', None)
-        ccy2_data = validated_data.pop('ccy2', None)
+            product_name = product_data['name']
 
-        # Handle missing related data
-        if not (product_data and customer_data and trader_data and ccy1_data and ccy2_data):
-            raise serializers.ValidationError("Missing required nested fields for related objects.")
+            customer_data = validated_data.pop('customer', None)
+            trader_data = validated_data.pop('trader', None)
+            ccy1_data = validated_data.pop('ccy1', None)
+            ccy2_data = validated_data.pop('ccy2', None)
 
-        # Retrieve or create related instances
-        product_instance, _= Product.objects.get_or_create(name=product_name)
-        # Retrieve customer instance by unique identifier (e.g., 'cif') and create if not found
-        # Check if a Customer with the same 'cif' exists, otherwise create
-        customer_instance = Customer.objects.filter(cif=customer_data['cif']).first()
-        # if not customer_instance:
-        #     customer_instance = Customer.objects.create(**customer_data)
-        
-        # Check if a Trader with the same 'profile' exists, otherwise create
-        trader_instance = Dealer.objects.filter(profile=trader_data['profile']).first()
-        # if not trader_instance:
-        #     trader_instance = Dealer.objects.create(**trader_data)
-        
+                # Handle missing related data
+            
+            if not (product_data and customer_data and trader_data and ccy1_data and ccy2_data):
+                raise serializers.ValidationError("Missing required nested fields for related objects.")
 
-        ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
-        ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
+            # Retrieve or create related instances
+            product_instance, _= Product.objects.get_or_create(name=product_name)
+            # Retrieve customer instance by unique identifier (e.g., 'cif') and create if not found
+            # Check if a Customer with the same 'cif' exists, otherwise create
+            customer_instance = Customer.objects.filter(cif=customer_data['cif']).first()
+            # if not customer_instance:
+            #     customer_instance = Customer.objects.create(**customer_data)
+            
+            # Check if a Trader with the same 'profile' exists, otherwise create
+            trader_instance = Dealer.objects.filter(profile=trader_data['profile']).first()
+            # if not trader_instance:
+            #     trader_instance = Dealer.objects.create(**trader_data)
+            
 
-        # Use existing or newly created instances when creating the Trade
-        trade_instance = Trade.objects.create(
+            ccy1_instance, _ = Ccy.objects.get_or_create(**ccy1_data)
+            ccy2_instance, _ = Ccy.objects.get_or_create(**ccy2_data)
+
+            # Use existing or newly created instances when creating the Trade
+            trade_instance = Trade.objects.create(
             product=product_instance,
             customer=customer_instance,
             trader=trader_instance,
@@ -152,36 +154,25 @@ class TradeSerializer(serializers.ModelSerializer):
             ccy2=ccy2_instance,
             **validated_data
         )
-       
-        return trade_instance
+        
+            return trade_instance
+    except Exception as e:
+            raise serializers.ValidationError(f"An error occurred: {str(e)}")
       
 
 class PositionSerializer(serializers.ModelSerializer):
-    # ccy__code = serializers.StringRelatedField(source='ccy.code')
-    date = serializers.DateField()
-    ccy__code = serializers.CharField(max_length=3)
-    intraday_pos = serializers.ReadOnlyField()
-    total_pos = serializers.FloatField(read_only=True)
-    open_pos = serializers.ReadOnlyField()
-    close_pos = serializers.ReadOnlyField()
+    ccy__code = serializers.StringRelatedField(source='ccy.code')
+    open_pos = serializers.SerializerMethodField()
+    close_pos = serializers.SerializerMethodField()
 
     class Meta:
         model = Position
-        fields = ['date', 'ccy__code','intraday_pos', 'total_pos', 'open_pos', 'close_pos']  # Include all relevant fields
+        fields = ['date', 'ccy__code', 'intraday_pos', 'open_pos', 'close_pos']
 
-# date = serializers.DateField()
-    # ccy__code = serializers.CharField(max_length=3)
-    
-# class PositionSummarySerializer(serializers.Serializer):
-#     date = serializers.DateField()
-#     ccy__code = serializers.CharField(max_length=3)
-#     total_pos = serializers.FloatField(read_only=True)
-#     open_pos = serializers.ReadOnlyField()
-#     intraday_pos = serializers.ReadOnlyField()
-#     close_pos = serializers.ReadOnlyField()
-    
-#     class Meta:
-#         model = Position
-#         fields = ['date', 'ccy__code','intraday_pos', 'total_pos', 'open_pos', 'close_pos']  # Include all relevant fields
-   
-    
+    def get_open_pos(self, obj):
+        # Access the open_pos property on the Position instance
+        return obj.open_pos
+
+    def get_close_pos(self, obj):
+        # Access the close_pos property on the Position instance
+        return obj.close_pos

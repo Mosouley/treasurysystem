@@ -113,8 +113,6 @@ class Trade(models.Model):
         ('amend', 'AMEND'),
     ]
 
-  
-    
     trade_id            = models.UUIDField(max_length=36, unique=True, default=uuid.uuid4)
     tx_date             = models.DateField(auto_now=True)
     val_date            = models.DateTimeField( blank=False, null=False, auto_now=False)
@@ -180,67 +178,32 @@ class Position(models.Model):
     # _calculated_net_open_pos = None  # Internal property to cache the calculated value
 
     def __str__(self):
-        return f"{self.ccy.code} - {self.position}"
+        return f"{self.ccy.code} - {self.intraday_pos}"
     
-    @staticmethod
     def get_open_pos(self):
         """
         Retrieves the most recent `net_open_pos` from before the current Position's date.
         """
-        open_pos = Position.objects.filter(
+        prev_pos = Position.objects.filter(
             date__lt=self.date,
             ccy=self.ccy
-        ).order_by('-date').values('intraday_position').first()
-        return open_pos['open_pos'] if open_pos else 0
+        ).order_by('-date').first()
+        return prev_pos.intraday_pos if prev_pos else 0
 
     @property
     def open_pos(self):
         """
         Property that calculates the aggregate net_open_pos for the current Position instance.
         """
-        return self.get_open_pos(self)
+        return self.get_open_pos()
     
     @property
     def close_pos(self):
         """
         Property that calculates the aggregate net_open_pos for the current Position instance.
         """
-        return float(self.open_position) + float(self.intraday_position)
+        return float(self.open_pos) + float(self.intraday_pos)
     
-
-
-    
-    # @property
-    # def ccy_position(self):
-    #     # Calculate the position for this instance's currency and date
-    #     return self.calculate_position(self.ccy, self.tx_date)
-    
-    # def save(self, *args, **kwargs):
-    #     # Ensure a unique trade_id is generated
-    #     # Generate the slug when saving the model
-    #     if not self.slug:
-    #         base_slug = slugify(self.trade_id)
-    #         unique_slug = base_slug
-    #         counter = 1
-    #         while Trade.objects.filter(slug=unique_slug).exists():
-    #             unique_slug = f"{base_slug}-{counter}"
-    #             counter += 1
-    #         self.slug = unique_slug
-    #     super().save(*args, **kwargs)
-
-    # def __init__(self, *args, **kwargs):
-    #     """
-    #     Override the __init__ method to set the choices for the ccy_pair field when initializing the model.
-    #     """
-    #     super(Trade, self).__init__(*args, **kwargs)
-    #     self._meta.get_field('trade_id').default = uuid4()
-    #     self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
-    
-
-
-    # def get_absolute_url(self):
-    #     return reverse('trade-detail', kwargs={'slug': self.slug})
-
 
     # def save(self, *args, **kwargs):
     #     if self.date_created is None:

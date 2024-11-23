@@ -17,7 +17,7 @@ def update_position_on_save(sender, instance, **kwargs):
     ccy2 = instance.ccy2
     amount1 = instance.amount1 if instance.buy_sell == 'buy' else -instance.amount1
     amount2 = instance.amount2 if instance.buy_sell == 'sell' else -instance.amount2
-    # print('la date', date, 'la devise ', ccy.code, 'pos ', amount)
+
 
     #Function to update position
     def update_position(date, ccy, amount):

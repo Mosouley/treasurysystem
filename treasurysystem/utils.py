@@ -14,9 +14,6 @@ from django.utils.text import slugify
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits ):
     return ''.join(random.choice(chars) for _ in range(size))
 
-# print(random_string_generator())
-# print('---vvv^^^^----')
-# print(random_string_generator(size=50))
 def unique_order_id_generator(instance):
     order_new_id = random_string_generator() #can put upper here
     Klass = instance.__class__
@@ -51,7 +48,7 @@ def broadcast_data(group_name, event_type, data):
         data (dict): The data payload to broadcast.
     """
     channel_layer = get_channel_layer()
-    print('va dormir ', channel_layer, data)
+
     if channel_layer:
         async_to_sync(channel_layer.group_send)(
             group_name,
@@ -67,7 +64,7 @@ def get_positions():
     from fxapp.models import Position
     from fxapp.serializers import PositionSerializer
     today = timezone.now().date()
-    queryset = Position.objects.values('date', 'ccy__code','intraday_pos').annotate(total_pos=Sum('intraday_pos')).filter(date=today)
+    queryset = Position.objects.filter(date=today)
     serializer = PositionSerializer(queryset, many=True)
     data = serializer.data
     return data

@@ -354,34 +354,30 @@ class PositionViewSet(viewsets.ModelViewSet):
         date_param = self.request.query_params.get('date', None)
         ccy_param = self.request.query_params.get('ccy__code', None)
 
-        queryset = super().get_queryset().values('date','ccy__code','intraday_pos').annotate(total_pos=Sum('intraday_pos'))
+        # queryset = super().get_queryset().values('date','ccy__code','intraday_pos').annotate(total_pos=Sum('intraday_pos'))
 
-        result = Position.objects.values('date','ccy__code','intraday_pos' ).annotate(total_pos=Sum('intraday_pos'))
+        # Annotate the queryset with total_pos without using .values()
+        queryset = (
+            super()
+            .get_queryset()
+        )
 
+        # Apply filters
         if date_param is not None:
-            result = queryset.filter(date=date_param)
+            queryset = queryset.filter(date=date_param)
         
         if ccy_param:
-            result = result.filter(ccy__code=ccy_param)
-        return result
+            queryset = queryset.filter(ccy__code=ccy_param)
+
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+
         if not queryset.exists():
             return Response({"detail": "No records found for the given date"}, status=404)
         serializer = PositionSerializer(queryset, many=True)
         return Response(serializer.data)
-        
-
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     if not queryset.exists():
-    #         return Response({"detail": "No records found for the given date"}, status=404)
-        
-    #     # Use `PositionSerializer` for serialization to include calculated fields.
-    #     serializer = PositionSerializer(queryset, many=True)
-    #     return Response(serializer.data)
-    
 
 
 @csrf_exempt

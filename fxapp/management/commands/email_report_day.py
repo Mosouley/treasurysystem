@@ -21,9 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        mon_query = Position.objects.all().values('date','ccy__code').annotate(total_pos=Sum('intraday_pos'))
-
-        stat  = mon_query.filter(date=today)
+        mon_query = Position.objects.all()
 
         trades = Trade.objects.filter(tx_date__gte=today_start)
 

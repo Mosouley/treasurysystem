@@ -160,6 +160,7 @@ class PositionSerializer(serializers.ModelSerializer):
     # ccy__code = serializers.StringRelatedField(source='ccy.code')
     date = serializers.DateField()
     ccy__code = serializers.CharField(max_length=3)
+    intraday_pos = serializers.ReadOnlyField()
     total_pos = serializers.FloatField(read_only=True)
     open_pos = serializers.ReadOnlyField()
     close_pos = serializers.ReadOnlyField()

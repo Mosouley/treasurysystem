@@ -354,9 +354,9 @@ class PositionViewSet(viewsets.ModelViewSet):
         date_param = self.request.query_params.get('date', None)
         ccy_param = self.request.query_params.get('ccy__code', None)
 
-        queryset = super().get_queryset().values('date','ccy__code','intraday_pos',).annotate(total_pos=Sum('intraday_pos'))
+        queryset = super().get_queryset().values('date','ccy__code','intraday_pos').annotate(total_pos=Sum('intraday_pos'))
 
-        result = Position.objects.values('date','ccy__code','intraday_pos', ).annotate(total_pos=Sum('intraday_pos'))
+        result = Position.objects.values('date','ccy__code','intraday_pos' ).annotate(total_pos=Sum('intraday_pos'))
 
         if date_param is not None:
             result = queryset.filter(date=date_param)

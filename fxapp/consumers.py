@@ -12,6 +12,7 @@ import decimal
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from datetime import date
+from treasurysystem.utils import get_positions, broadcast_data
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -112,6 +113,13 @@ class TradeConsumer(AsyncWebsocketConsumer):
                 "data": trades_data,
                 }
             )
+
+            # update position as well
+            data = get_positions()
+           
+            broadcast_data('position_updates','send_position_updates',data)
+
+
 
     async def disconnect(self, close_code):
         self.close(close_code)

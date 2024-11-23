@@ -2,8 +2,13 @@ import random
 import string
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.utils import timezone
+
+from django.db.models import Sum
 
 from django.utils.text import slugify
+
+
 
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits ):
@@ -46,6 +51,7 @@ def broadcast_data(group_name, event_type, data):
         data (dict): The data payload to broadcast.
     """
     channel_layer = get_channel_layer()
+    print('va dormir ', channel_layer, data)
     if channel_layer:
         async_to_sync(channel_layer.group_send)(
             group_name,
@@ -56,3 +62,12 @@ def broadcast_data(group_name, event_type, data):
         )
     else:
         print("Error: Channel layer not found.")
+
+def get_positions():
+    from fxapp.models import Position
+    from fxapp.serializers import PositionSerializer
+    today = timezone.now().date()
+    queryset = Position.objects.values('date', 'ccy__code','intraday_pos').annotate(total_pos=Sum('intraday_pos')).filter(date=today)
+    serializer = PositionSerializer(queryset, many=True)
+    data = serializer.data
+    return data

@@ -17,7 +17,7 @@ venv/
 # Ignore environment files
 .env
 treasuryvenv/
-env.dev
+
 
 # Ignore other local files
 .vscode/

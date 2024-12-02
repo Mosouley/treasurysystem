@@ -29,8 +29,13 @@ services:
     restart: always
     volumes:
       - ficc_postgres_data:/var/lib/postgresql/data
+
     env_file:
       - ./env.dev
+    # healthcheck:
+    # test: ["CMD-SHELL", "pg_isready -U postgres"]
+    # interval: 10s
+    # retries: 5
     pod: *pod-name
 
       # Redis Celery config

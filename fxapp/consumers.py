@@ -98,7 +98,7 @@ class TradeConsumer(AsyncWebsocketConsumer):
             else:
                 print( serializer.errors)
         except Exception as e:
-            print(f"Error saving trade to database: {e}")
+            # print(f"Error saving trade to database: {e}")
             traceback.print_exc()  # Print the traceback
 
     @receiver(post_save, sender=Trade)
@@ -115,11 +115,9 @@ class TradeConsumer(AsyncWebsocketConsumer):
             )
 
             # update position as well
-            data = get_positions()
+            data =  get_positions()
            
             broadcast_data('position_updates','send_position_updates',data)
-
-
 
     async def disconnect(self, close_code):
         self.close(close_code)
@@ -127,9 +125,17 @@ class TradeConsumer(AsyncWebsocketConsumer):
 
 class PositionConsumer(AsyncWebsocketConsumer):  
     async def connect(self):  
-        await self.channel_layer.group_add("position_updates", self.channel_name)  
+        
         await self.accept()  
 
+        await self.channel_layer.group_add("position_updates", self.channel_name)  
+        # update position as well
+         # Fetch positions asynchronously and send to the client
+        data = await get_positions()  # Async-safe call
+        await self.send(text_data=json.dumps({
+            'type': 'position_updates',
+            'data': data
+        }))
 
     async def send_position_updates(self, event): 
         message = event['data']  

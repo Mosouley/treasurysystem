@@ -3,10 +3,12 @@ import string
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils import timezone
-
+from asgiref.sync import sync_to_async
 from django.db.models import Sum
 
 from django.utils.text import slugify
+
+
 
 
 
@@ -38,6 +40,7 @@ def unique_slug_generator(instance, new_slug=None):
         return unique_slug_generator(instance, new_slug=new_slug)
     return slug
 
+
 def broadcast_data(group_name, event_type, data):
     """
     Sends data to a specified WebSocket channel group.
@@ -48,7 +51,7 @@ def broadcast_data(group_name, event_type, data):
         data (dict): The data payload to broadcast.
     """
     channel_layer = get_channel_layer()
-
+    print('my layers ... ',data)
     if channel_layer:
         async_to_sync(channel_layer.group_send)(
             group_name,
@@ -60,6 +63,7 @@ def broadcast_data(group_name, event_type, data):
     else:
         print("Error: Channel layer not found.")
 
+@sync_to_async
 def get_positions():
     from fxapp.models import Position
     from fxapp.serializers import PositionSerializer
@@ -68,3 +72,27 @@ def get_positions():
     serializer = PositionSerializer(queryset, many=True)
     data = serializer.data
     return data
+
+def get_pivot():
+    from django.db.models import F
+    from fxapp.models import SystemDailyRates
+    # Query all rates
+    rates = SystemDailyRates.objects.all()
+
+    # Transform rates into a pivot table structure
+    from collections import defaultdict
+
+    pivot_table = defaultdict(dict)  # {ccy_code: {date: rate}}
+
+    for rate in rates:
+        pivot_table[rate.ccy.code][rate.date] = rate.exchange_rate
+
+    # Convert to a simple table-like format for display
+    table = []
+    dates = sorted({rate.date for rate in rates})  # Sorted unique dates
+
+    for ccy_code, rates in pivot_table.items():
+        row = {'Currency': ccy_code}
+        for date in dates:
+            row[str(date)] = rates.get(date, None)  # Fill missing rates with None
+        table.append(row)

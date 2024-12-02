@@ -1,18 +1,12 @@
 from datetime import timedelta
 from decimal import Decimal
 from django.db import models
-from django.dispatch import receiver
 from django.utils import timezone
 import uuid
 import random
-from django.db.models import Sum
-from django.db.models.signals import post_save, post_delete
-
+from django.core.validators import MinValueValidator
 # import shortuuid
 from django.conf import settings
-from django.urls import reverse
-from treasurysystem.utils import random_string_generator
-from django.utils.text import slugify
 # Creating models for the treasury fxapp
 
 
@@ -20,7 +14,7 @@ User = settings.AUTH_USER_MODEL
 
 
 class Segment(models.Model):
-    name = models.CharField(max_length=100, unique=True, blank=False)
+    name = models.CharField(max_length=20, unique=True, blank=False)
     desc = models.CharField(max_length=100)
 
     def __str__(self):
@@ -30,7 +24,7 @@ class Segment(models.Model):
         verbose_name = 'Segment'
 
 class Customer(models.Model):
-    cif = models.CharField(max_length=100,unique=True, blank=False)
+    cif = models.CharField(max_length=20,unique=True, blank=False)
     name = models.CharField(max_length=200,unique=True, blank=False)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
@@ -48,7 +42,7 @@ class Customer(models.Model):
 
 class Dealer(models.Model):
     full_name = models.CharField(max_length=100)
-    profile = models.CharField(max_length=200, unique=True)
+    profile = models.CharField(max_length=100, unique=True)
     user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     active = models.BooleanField(default=True)
@@ -62,19 +56,22 @@ class Dealer(models.Model):
         verbose_name = 'Trader'
 
 class Ccy(models.Model):
-    code = models.CharField(max_length=20, unique=True)
+    code = models.CharField(max_length=3, unique=True)
 
     class Meta:
-        verbose_name = 'Ccy'
-        verbose_name_plural = "Ccy"
+        verbose_name = 'Currency'
+        verbose_name_plural = "Currencies"
 
     def __str__(self):
         return self.code
 
 class SystemDailyRates(models.Model):
-    date            = models.DateTimeField(auto_now=True, blank=False)
+    date            = models.DateTimeField(default=timezone.now)
     ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE, blank=False)
-    rateLcy         = models.FloatField(default=1.00)
+    exchange_rate         = models.DecimalField(
+        max_digits=10, decimal_places=4, default=1.00, 
+        validators=[MinValueValidator(0.0)]
+    )
     last_updated    = models.DateTimeField(blank=True, null=True, auto_now=True)
 
     @property
@@ -82,14 +79,17 @@ class SystemDailyRates(models.Model):
         return self.ccy.code 
 
     class Meta:
-        verbose_name_plural = 'SystemRates'
+        verbose_name_plural = 'Reevaluation Rates'
+        # constraints = [
+        #     models.UniqueConstraint(fields=['date', 'ccy'], name='unique_rate_per_currency_per_date')
+        # ]
 
     def __str__(self):
-        return self.ccy.code 
+        return f"{self.ccy.code} - {self.date}: {self.exchange_rate}"
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=20, unique=True)
     description = models.TextField(default='Product description')
 
     def __str__(self):
@@ -204,19 +204,3 @@ class Position(models.Model):
         """
         return float(self.open_pos) + float(self.intraday_pos)
     
-
-    # def save(self, *args, **kwargs):
-    #     if self.date_created is None:
-    #         self.date_created = timezone.localtime(timezone.now())
-    #     if self.trade_id is None:
-    #         new_ref = random_string_generator(10)
-    #         self.trade_id = new_ref.join(str(uuid4()).split('-')[4])
-    #         print(self.trade_id)
-    #         self.slug = slugify('{}{}'.format( self.trade_id))
-    #     if not self.trade_id:
-    #         self.trade_id = str(uuid4())[:8]
-
-    #     self.slug = slugify('{}'.format( self.trade_id))
-    #     self.last_updated = timezone.localtime(timezone.now())
-    #     # self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
-    #     super(Trade, self).save(*args, **kwargs)

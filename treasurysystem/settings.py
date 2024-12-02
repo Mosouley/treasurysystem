@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'fxapp',
     'contacts',
+    'money_market'
 ]
 
 ASGI_APPLICATION = 'treasurysystem.asgi.application'
@@ -109,6 +110,15 @@ TEMPLATES = [
 #         'PORT': '5432',
 #     }
 # }
+
+print("Environment Variables:")
+print(f"POSTGRES_ENGINE: {os.environ.get('POSTGRES_ENGINE')}")
+print(f"POSTGRES_NAME: {os.environ.get('POSTGRES_NAME')}")
+print(f"POSTGRES_USER: {os.environ.get('POSTGRES_USER')}")
+print(f"POSTGRES_PASSWORD: {os.environ.get('POSTGRES_PASSWORD')}")
+print(f"POSTGRES_HOST: {os.environ.get('POSTGRES_HOST')}")
+print(f"POSTGRES_PORT: {os.environ.get('POSTGRES_PORT')}")
+
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
@@ -229,3 +239,6 @@ CELERY_BEAT_SCHEDULE = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@email.com"
 ADMINS = [("testuser", "test.user@email.com"), ]
+
+
+print("Database Configuration is here:", DATABASES)

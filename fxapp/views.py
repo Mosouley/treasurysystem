@@ -14,7 +14,7 @@ from django.db.models import Sum
 from django.core.exceptions import ValidationError
 from collections import defaultdict
 from typing import List, Dict, Tuple, Any
-
+from django_filters.rest_framework import DjangoFilterBackend
 class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
         lookup_field = 'id'
         exclude_fields = ['id']
@@ -29,12 +29,14 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
         def get_fields_mapping(self) -> Dict[str, Dict]:
             """Generate field mappings based on model fields and custom mappings."""
             model = self.serializer_class.Meta.model
+            
             fields = model._meta.get_fields()
+            
             mapping = {
                 field.name: self.map_field(field)
                 for field in fields if self.should_process_field(field.name)
             }
-  
+         
             return mapping
 
         def should_process_field(self, field_name: str) -> bool:
@@ -60,16 +62,18 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
                 'model': related_model,
                 'lookup_fields': lookup_fields
             }
-
+        
+        
         @transaction.atomic
         def create(self, request, *args, **kwargs):
             """Handle bulk creation with nested objects."""
-            
-            data = request.data if isinstance(request.data, list) else [request.data]
-            serialized_data, errors = self.serialize_data(data)
-            
-            if errors:
-                return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+            if request.method == 'POST':
+                data = request.data if isinstance(request.data, list) else [request.data]
+                # print(' Here my data ---==>', data)
+                serialized_data, errors = self.serialize_data(data)
+                if errors:
+                    print(errors)
+                    return Response({"errors review and restart:{errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
             return self.perform_bulk_create(serialized_data)
 
@@ -78,11 +82,15 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
             serialized_data = []
             errors = []
             for index, row in enumerate(data):
+                print('row ',index , row)
                 try:
                     processed_data = self.process_row(row)
                     serialized_data.append(processed_data)
                 except Exception as e:
-                    errors.append(f"Error processing row {index}: {str(e)}")
+                   
+                    # errors.append(f"Error processing row {index}: {str(e)}")
+                    errors.append(f"Error processing rows: {index} , Retry!: {str(e)}")
+                    # print(serialized_data)
             return serialized_data, errors
 
         def process_row(self, row: Dict) -> Dict[str, Any]:
@@ -110,7 +118,7 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
                 elif mapping['type'] == 'many_to_many':
                
                     m2m_data[field] = self.handle_many_to_many_field(mapping, value)
-
+            # print('process data ', processed_data)
             return processed_data, m2m_data
 
         def get_or_create_related_object(self, mapping: Dict[str, Any], value: Any) -> models.Model:
@@ -144,14 +152,6 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
             """Fetch or create an object based on the lookup field."""
             obj, created = model.objects.get_or_create(**{field: value})
             return obj
-        
-        # def check_for_duplicates(self, data: Dict) -> bool:
-        #     """Check if an object with unique fields already exists."""
-        #     model = self.serializer_class.Meta.model
-        #     unique_fields = ['cif', 'name']  # Adjust this for the unique fields of your model
-        #     filter_kwargs = {field: data[field] for field in unique_fields if field in data}
-
-        #     return model.objects.filter(**filter_kwargs).exists()
 
         def perform_bulk_create(self, serialized_data: List[Dict]) -> Response:
             """Perform bulk creation of instances."""
@@ -159,29 +159,52 @@ class AutoMappingBulkCreateViewSet(viewsets.ModelViewSet):
             instances = []
             m2m_data = defaultdict(list)
             errors =[]
-        
+            print(f"Series de donnnees  ==> :{serialized_data}")
             for index, item in enumerate(serialized_data) :
+                
                 regular_data = item['regular_data']
                 instance = model(**regular_data)
-                # print('Index is -', index , 'Item is --', item)
+                # print('Index is -', index , 'Item is ==>', item)
+                # Debug: Print number of digits for numeric fields
+                # print(f"Value for exchange_rate: {instance.exchange_rate}, Type: {type(instance.exchange_rate)}")
+
+                # for field, value in regular_data.items():
+                #     if isinstance(value, (int, float, Decimal)):  # Check if the value is numeric
+                #         if isinstance(value, Decimal):
+                #             num_digits = len(str(value).replace('.', '').replace('-', ''))  # Count digits excluding '.' and '-'
+                #             num_decimals = abs(value.as_tuple().exponent)  # Count decimal places
+                #         else:
+                #             num_digits = len(str(value).replace('.', '').replace('-', ''))
+                #             num_decimals = len(str(value).split('.')[1]) if '.' in str(value) else 0
+                        
+                #         print(
+                #             f"Field: {field}, Value: {value}, Total Digits: {num_digits}, Decimal Places: {num_decimals}"
+                #         )
+                #         print(f"Field: {field}, Raw Value: {repr(value)}, Total Digits: {num_digits}, Decimal Places: {num_decimals}")
+
                 try:
                     instance.full_clean()
                     instances.append(instance)
-
+                    # print(f"Index and Item ==> :{index} -- {instance}")
+                    # print(f"Item value number of digits==> :{index} - {instance}")
                 except ValidationError as e:
+                    # print(f"Enumerez error ==> :{str(e)} - {instance} ")
                     errors.append(f"Validation error for row {index}: {str(e)}")
-                    continue
+                    # continue
 
                 for field, values in item['m2m_data'].items():
                     m2m_data[field].append((instance, values))
 
             # Perform bulk creation only if there are valid instances
             if instances:
+                
                 created_instances = model.objects.bulk_create(instances)
                 self.handle_m2m_fields(m2m_data)
 
                 serializer = self.get_serializer(created_instances, many=True)
+             
                 headers = self.get_success_headers(serializer.data)
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
             if errors:
                 return Response({"errors": errors}, status=status.HTTP_417_EXPECTATION_FAILED)
@@ -212,7 +235,7 @@ class DealerViewSet(AutoMappingBulkCreateViewSet):
 class SegmentViewSet(viewsets.ModelViewSet):
     queryset = Segment.objects.all()
     serializer_class = SegmentSerializer
-
+   
 class CcyViewSet(viewsets.ModelViewSet):
     queryset = Ccy.objects.all()
     serializer_class = CcySerializer
@@ -220,74 +243,116 @@ class CcyViewSet(viewsets.ModelViewSet):
 class ProductViewSet(AutoMappingBulkCreateViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
- 
-class SystemDailyRatesViewSet(viewsets.ModelViewSet):
-    queryset = SystemDailyRates.objects.all().order_by('-last_updated')
+
+class SystemDailyRatesViewSet(AutoMappingBulkCreateViewSet):
+    queryset = SystemDailyRates.objects.all()
     serializer_class = SystemDailyRatesSerializer
-    lookup_field = 'ccy_code' 
-   # http_method_names = ['get', 'post','head']  # to include specific accepted methods––        
+    lookup_fields = {
+        'ccy': ['code', 'id'], 
+         # Lookup by username first, then id for the User model
+        # Lookup by name first, then id for the Segment model
+    }
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'date': ['exact', 'gte', 'lte'],                # Filter by date range
+        'ccy__code': ['exact', 'icontains'],            # Filter by currency code
+        'exchange_rate': ['exact', 'gte', 'lte'],       # Filter by exchange rate range
+        'last_updated': ['exact', 'gte', 'lte'],        # Filter by last updated
+    }
+    # def retrieve(self, request, *args, **kwargs):
+    #             lookup_value = kwargs.get(self.lookup_field)  # Get the value from the URL parameter
+    #             print(f"Lookup value: {lookup_value}")
+    #             queryset = self.filter_queryset(self.get_queryset())
 
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        if not isinstance(data, list):
-            data = [data]
-        serialized_data = []
-        errors =[]
-            # serialized_data = []
-        for row in data:
-            try:
-                if isinstance(row, list):
-                    if len(row) < 2:
-                        raise ValueError('Each row must contain at least currency code and rate')
-                    ccy_code, rate = row [0], row [1]
-                elif isinstance(row, dict):
-                    # Handle dict input
-                    ccy_code = row.get('ccy_code')
-                    rate = row.get('rateLcy')
-                    if not ccy_code or rate is None:
-                        raise ValueError("Missing ccy_code or rateLcy")
-                else:
-                    raise ValueError("Unsupported data format")
-                ccy, _ = Ccy.objects.get_or_create(code=ccy_code)
-                serialized_data.append({
-                    'ccy': ccy.id,
-                    'rateLcy': rate
-                })
+    #             if lookup_value is not None:
+    #                 # filtered_queryset = [
+    #                 #     obj for obj in queryset.order_by('-date', '-last_updated') if getattr(obj, self.lookup_field) == lookup_value
+    #                 # ]
+    #                 # instance = filtered_queryset[0] if filtered_queryset else None
+    #                 # else:
+    #                 # # If the lookup value is not provided, fall back to the default behavior (get by ID)
+    #                 # return super().retrieve(request, *args, **kwargs)
+    #                 queryset = self.filter_queryset(
+    #                     self.get_queryset().filter(**{self.lookup_field: lookup_value}).order_by('-date', '-last_updated')
+    #                 )
+    #                 instance = queryset.first()
+    #             else:
+    #                 # Fall back to default behavior if no lookup value is provided
+    #                 return super().retrieve(request, *args, **kwargs)
+                
+    #             if instance is None:
+    #                 return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    #             serializer = self.get_serializer(instance)
+    #             return Response(serializer.data)
+    
+# class SystemDailyRatesViewSet(viewsets.ModelViewSet):
+#     queryset = SystemDailyRates.objects.all().order_by('-last_updated')
+#     serializer_class = SystemDailyRatesSerializer
+#     lookup_field = 'ccy_code' 
+#    # http_method_names = ['get', 'post','head']  # to include specific accepted methods––        
+
+#     def create(self, request, *args, **kwargs):
+#         data = request.data
+#         if not isinstance(data, list):
+#             data = [data]
+#         serialized_data = []
+#         errors =[]
+#             # serialized_data = []
+#         for row in data:
+#             try:
+#                 if isinstance(row, list):
+#                     if len(row) < 2:
+#                         raise ValueError('Each row must contain at least currency code and rate')
+#                     ccy_code, rate = row [0], row [1]
+#                 elif isinstance(row, dict):
+#                     # Handle dict input
+#                     ccy_code = row.get('ccy_code')
+#                     rate = row.get('rateLcy')
+#                     if not ccy_code or rate is None:
+#                         raise ValueError("Missing ccy_code or rateLcy")
+#                 else:
+#                     raise ValueError("Unsupported data format")
+#                 ccy, _ = Ccy.objects.get_or_create(code=ccy_code)
+#                 serialized_data.append({
+#                     'ccy': ccy.id,
+#                     'rateLcy': rate
+#                 })
             
-            except Exception as e:
-                errors.append(f"Errorprocessing row {row}: {str(e)}")
-            serializer = self.get_serializer(data=serialized_data, many=True)
+#             except Exception as e:
+#                 errors.append(f"Errorprocessing row {row}: {str(e)}")
+#             serializer = self.get_serializer(data=serialized_data, many=True)
             
-        if errors:
-            return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+#         if errors:
+#             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(data=serialized_data, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+#         serializer = self.get_serializer(data=serialized_data, many=True)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_create(serializer)
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
    
    
-#    Overriding the get object to return objects based on different filters
-    def retrieve(self, request, *args, **kwargs):
-        lookup_value = kwargs.get(self.lookup_field)  # Get the value from the URL parameter
-        queryset = self.filter_queryset(self.get_queryset())
+# #    Overriding the get object to return objects based on different filters
+#     def retrieve(self, request, *args, **kwargs):
+#         lookup_value = kwargs.get(self.lookup_field)  # Get the value from the URL parameter
+#         queryset = self.filter_queryset(self.get_queryset())
 
-        if lookup_value is not None:
-            filtered_queryset = [
-                obj for obj in queryset.order_by('-date', '-last_updated') if getattr(obj, self.lookup_field) == lookup_value
-            ]
-            instance = filtered_queryset[0] if filtered_queryset else None
+#         if lookup_value is not None:
+#             filtered_queryset = [
+#                 obj for obj in queryset.order_by('-date', '-last_updated') if getattr(obj, self.lookup_field) == lookup_value
+#             ]
+#             instance = filtered_queryset[0] if filtered_queryset else None
   
-        else:
-            # If the lookup value is not provided, fall back to the default behavior (get by ID)
-            return super().retrieve(request, *args, **kwargs)
-        if instance is None:
-            return Response({'detail': 'Not found.'}, status=404)
+#         else:
+#             # If the lookup value is not provided, fall back to the default behavior (get by ID)
+#             return super().retrieve(request, *args, **kwargs)
+#         if instance is None:
+#             return Response({'detail': 'Not found.'}, status=404)
 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data)
     
 class TradeViewSet(viewsets.ModelViewSet):
     # queryset = Trade.objects.all()

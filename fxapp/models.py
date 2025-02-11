@@ -42,7 +42,7 @@ class Customer(models.Model):
 
 class Dealer(models.Model):
     full_name = models.CharField(max_length=100)
-    profile = models.CharField(max_length=100, unique=True)
+    profile = models.CharField(max_length=100, unique=True, default='profile')
     user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     active = models.BooleanField(default=True)
@@ -68,9 +68,8 @@ class Ccy(models.Model):
 class SystemDailyRates(models.Model):
     date            = models.DateTimeField(default=timezone.now)
     ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE, blank=False)
-    exchange_rate         = models.DecimalField(
-        max_digits=10, decimal_places=4, default=1.00, 
-        validators=[MinValueValidator(0.0)]
+    exchange_rate   = models.DecimalField(
+        max_digits=10, decimal_places=4, default=1.00
     )
     last_updated    = models.DateTimeField(blank=True, null=True, auto_now=True)
 
@@ -80,6 +79,7 @@ class SystemDailyRates(models.Model):
 
     class Meta:
         verbose_name_plural = 'Reevaluation Rates'
+        ordering = ['-last_updated']
         # constraints = [
         #     models.UniqueConstraint(fields=['date', 'ccy'], name='unique_rate_per_currency_per_date')
         # ]

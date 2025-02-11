@@ -1,11 +1,11 @@
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Trade
-from .serializers import TradeSerializer
+from .models import Position, Trade
+from .serializers import TradeSerializer, PositionSerializer
 from channels.db import database_sync_to_async
 import traceback
 import decimal
@@ -123,19 +123,21 @@ class TradeConsumer(AsyncWebsocketConsumer):
         self.close(close_code)
 
 
-class PositionConsumer(AsyncWebsocketConsumer):  
+class PositionConsumer(AsyncWebsocketConsumer):
+    @database_sync_to_async
+    def get_latest_positions(self):
+        today = timezone.now().date()
+        positions = Position.objects.filter(date=today).select_related('ccy')
+        return PositionSerializer(positions, many=True).data # Make sure this is async-safe
+      
     async def connect(self):  
         
         await self.accept()  
-
         await self.channel_layer.group_add("position_updates", self.channel_name)  
         # update position as well
          # Fetch positions asynchronously and send to the client
-        data = await get_positions()  # Async-safe call
-        await self.send(text_data=json.dumps({
-            'type': 'position_updates',
-            'data': data
-        }))
+        positions = await get_positions()  # Async-safe call
+        broadcast_data('position_updates','send_position_updates',positions)
 
     async def send_position_updates(self, event): 
         message = event['data']  

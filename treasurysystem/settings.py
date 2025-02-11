@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'fxapp',
     'contacts',
-    'money_market'
+    'money_market',
+    'django_filters'
 ]
 
 ASGI_APPLICATION = 'treasurysystem.asgi.application'
@@ -69,9 +70,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-   
-    
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
 ]
 
 ROOT_URLCONF = 'treasurysystem.urls'
@@ -111,13 +110,6 @@ TEMPLATES = [
 #     }
 # }
 
-print("Environment Variables:")
-print(f"POSTGRES_ENGINE: {os.environ.get('POSTGRES_ENGINE')}")
-print(f"POSTGRES_NAME: {os.environ.get('POSTGRES_NAME')}")
-print(f"POSTGRES_USER: {os.environ.get('POSTGRES_USER')}")
-print(f"POSTGRES_PASSWORD: {os.environ.get('POSTGRES_PASSWORD')}")
-print(f"POSTGRES_HOST: {os.environ.get('POSTGRES_HOST')}")
-print(f"POSTGRES_PORT: {os.environ.get('POSTGRES_PORT')}")
 
 DATABASES = {
     'default': {
@@ -241,4 +233,4 @@ DEFAULT_FROM_EMAIL = "noreply@email.com"
 ADMINS = [("testuser", "test.user@email.com"), ]
 
 
-print("Database Configuration is here:", DATABASES)
+# print("Database Configuration is here:", DATABASES)

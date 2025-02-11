@@ -3,7 +3,7 @@ from uuid import UUID
 from rest_framework import serializers
 from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position
 from rest_framework.fields import Field
-
+from decimal import Decimal
 
 
 
@@ -71,7 +71,11 @@ class ProductSerializer(serializers.ModelSerializer):
 class SystemDailyRatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemDailyRates
-        fields = ('date', 'last_updated', 'rateLcy', 'ccy', 'ccy_code')
+        fields = ('date', 'last_updated', 'exchange_rate', 'ccy_code')
+
+        # def validate_exchange_rate(self, value):
+        # # Ensure the value is rounded to 4 decimal places
+        #     return Decimal(value).quantize(Decimal('0.0001'))
         
 
 class TradeSerializer(serializers.ModelSerializer):

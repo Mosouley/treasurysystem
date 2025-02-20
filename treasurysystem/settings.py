@@ -100,15 +100,26 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('POSTGRES_ENGINE',),
-        'NAME': os.environ.get('POSTGRES_NAME', ),
-        'USER': os.environ.get('POSTGRES_USER',),
+        'ENGINE': os.environ.get('POSTGRES_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('POSTGRES_NAME',  'postgres'),
+        'USER': os.environ.get('POSTGRES_USER','supabase_admin'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD',),
-        'HOST': os.environ.get('POSTGRES_HOST', ),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+          'OPTIONS': {
+            'sslmode': 'require',
+            'connect_timeout': int(os.environ.get('POSTGRES_CONNECT_TIMEOUT', 30)),
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+        },
+        'CONN_MAX_AGE': 60,
     }
 }
-
+import logging
+logger = logging.getLogger(__name__)
+logger.info(f"Database host: {os.environ.get('POSTGRES_HOST')}")
 # Verify required environment variables are set
 required_env_vars = [
     'POSTGRES_NAME',
@@ -121,6 +132,8 @@ required_env_vars = [
 for var in required_env_vars:
     if not os.environ.get(var):
         raise ValueError(f'Required environment variable {var} is not set')
+    
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20

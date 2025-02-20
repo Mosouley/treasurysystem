@@ -1,11 +1,10 @@
-version: '3'
+version: '3.8'
 
-x-pod-name: &pod-name
-  treasurysystem-pod-v1  # Unique pod name
+x-pod-name: &pod-name pod_treasurysystem
 
 services:
-      #django backend
-  ficc-backend:
+  web:
+    container_name: treasury_web
     build: 
       context: .
     restart: always
@@ -15,63 +14,40 @@ services:
       python manage.py runserver 0.0.0.0:8000 --noreload"
     volumes:
       - ./:/treasurysystem:Z
-    depends_on:
-      - ficc_db
-      - redis
     ports:
       - 8000:8000
+    environment:
+      - PGSSLMODE=require
+      - PGCONNECT_TIMEOUT=30
+      - PYTHONUNBUFFERED=1
     env_file:
       - ./env.dev
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    network_mode: "host"
+    extra_hosts:
+      - "host.containers.internal:192.168.127.254"
     pod: *pod-name
+    depends_on:
+      - redis
 
-  ficc_db:
-    image: postgres:15
-    restart: always
-    volumes:
-      - ficc_postgres_data:/var/lib/postgresql/data
-
-    env_file:
-      - ./env.dev
-    # healthcheck:
-    # test: ["CMD-SHELL", "pg_isready -U postgres"]
-    # interval: 10s
-    # retries: 5
-    pod: *pod-name
-
-      # Redis Celery config
   redis:
+    container_name: treasury_redis
     image: redis:alpine
     restart: always
     pod: *pod-name
 
   celery:
-    restart: always
+    container_name: treasury_celery
     build: .
     user: celeryuser
     command: celery -A treasurysystem worker -l info
     volumes:
-      - .:/treasurysystem
+      - ./:/treasurysystem:Z
     env_file:
-      - env.dev
+      - ./env.dev
     pod: *pod-name
-
     depends_on:
       - redis
-
-  celery-beat:
-    build: .
-    restart: always
-    user: celeryuser
-    command: celery -A treasurysystem beat -l info
-    volumes:
-      - .:/treasurysystem
-    env_file:
-      - env.dev
-    pod: *pod-name
-
-    depends_on:
-      - redis
-
-volumes:
-    ficc_postgres_data:
 

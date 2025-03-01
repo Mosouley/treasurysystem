@@ -41,7 +41,7 @@ def unique_slug_generator(instance, new_slug=None):
     return slug
 
 
-def broadcast_data(group_name, event_type, data):
+async def broadcast_data(group_name, event_type, data):
     """
     Sends data to a specified WebSocket channel group.
     
@@ -55,7 +55,7 @@ def broadcast_data(group_name, event_type, data):
 
     if channel_layer:
         try:
-            async_to_sync(channel_layer.group_send)(
+            await channel_layer.group_send(
                 group_name,
                 {
                     'type': event_type,

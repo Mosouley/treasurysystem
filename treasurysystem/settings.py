@@ -203,23 +203,22 @@ CORS_ALLOW_METHODS = [
 ]
 ALLOWED_HOSTS =[
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    '0.0.0.0',
 ]
 
 
 # Connect Celery to Redis
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379")
 
-
-## settings.py
 CHANNEL_LAYERS = {
     'default': {
-  
-        # Method 2: Via local Redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-             "hosts": [('redis', 6379)],
+            "hosts": [('redis', 6379)],
+            'capacity': 1500,
+            'expiry': 10,
         },
     },
 }

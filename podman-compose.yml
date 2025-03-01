@@ -1,6 +1,10 @@
 version: '3.8'
 
-x-pod-name: &pod-name pod_treasurysystem
+x-pod:
+  &pod-name
+  metadata: 
+    labels: 
+      app: treasury-system
 
 services:
   web:
@@ -22,12 +26,8 @@ services:
       - PYTHONUNBUFFERED=1
     env_file:
       - ./env.dev
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-    network_mode: "host"
-    extra_hosts:
-      - "host.containers.internal:192.168.127.254"
+    ports:
+      - "8000:8000"
     pod: *pod-name
     depends_on:
       - redis

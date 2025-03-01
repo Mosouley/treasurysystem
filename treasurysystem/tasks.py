@@ -14,3 +14,8 @@ def send_email_report():
 @shared_task  
 def send_position_updates():  
     call_command('send_positions') 
+
+
+@shared_task
+def update_rates_task():
+    call_command('update_exchange_rates')

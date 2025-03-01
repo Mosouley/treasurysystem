@@ -4,10 +4,12 @@ from django.db import models
 from django.utils import timezone
 import uuid
 import random
+import pytz
 from django.core.validators import MinValueValidator
 # import shortuuid
 from django.conf import settings
 # Creating models for the treasury fxapp
+from django_countries.fields import CountryField
 
 
 User = settings.AUTH_USER_MODEL
@@ -65,6 +67,36 @@ class Ccy(models.Model):
     def __str__(self):
         return self.code
 
+
+class CountryConfig(models.Model):
+    country = CountryField(
+        unique=True,
+        verbose_name='Country',
+        help_text='Select your country of operations'
+    )
+    base_currency = models.ForeignKey(
+        'Ccy',
+        on_delete=models.PROTECT,
+        verbose_name='Base Currency'
+    )
+    timezone = models.CharField(
+        max_length=50,
+        default='UTC',
+        choices=[(tz, tz) for tz in pytz.all_timezones]
+    )
+    affiliate_name = models.CharField(max_length=100)
+    affiliate_code = models.CharField(max_length=10)
+    fiscal_year_start = models.DateField()
+
+    # Add other country-specific settings as needed
+
+    class Meta:
+        verbose_name = 'Country Configuration'
+        verbose_name_plural = 'Country Configurations'
+
+    def __str__(self):
+        return f"{self.country.name} Configuration"
+    
 class SystemDailyRates(models.Model):
     date            = models.DateTimeField(default=timezone.now)
     ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE, blank=False)
@@ -87,6 +119,32 @@ class SystemDailyRates(models.Model):
     def __str__(self):
         return f"{self.ccy.code} - {self.date}: {self.exchange_rate}"
 
+# models.py
+class ReevaluationRates(models.Model):
+    date = models.DateField(default=timezone.now)
+    base_ccy = models.ForeignKey(  # System-wide base currency
+        Ccy,
+        on_delete=models.CASCADE,
+        related_name='base_rates'
+    )
+    target_ccy = models.ForeignKey(
+        Ccy,
+        on_delete=models.CASCADE,
+        related_name='target_rates'
+    )
+    exchange_rate = models.DecimalField(
+        max_digits=10, 
+        decimal_places=4
+    )
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['date', 'base_ccy', 'target_ccy'],
+                name='unique_rate_combination'
+            )
+        ]
 
 class Product(models.Model):
     name = models.CharField(max_length=20, unique=True)

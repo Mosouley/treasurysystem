@@ -10,7 +10,7 @@ from django.db.models import OuterRef, Subquery
 from asgiref.sync import sync_to_async
 from decimal import Decimal
 
-from fxapp.models import Position
+from fxapp.models import Position, ReevaluationRates, Ccy
 from fxapp.serializers import PositionSerializer
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits ):
@@ -134,3 +134,37 @@ def calculate_interest(principal_amount, interest_rate, start_date, maturity_dat
     else:
         interest = Decimal('0.00')
     return interest
+
+
+
+
+
+def get_exchange_rates(user):
+    """
+    Returns rates relative to user's base currency
+    """
+    system_base = getattr(settings, 'SYSTEM_BASE_CURRENCY', 'USD')
+    user_base = user.base_currency.code if user.base_currency else system_base
+    
+    # Get latest rates in system base currency
+    latest_rates = ReevaluationRates.objects.filter(
+        date=timezone.now().date()
+    ).select_related('ccy')
+    
+    # Convert to dictionary
+    rates = {rate.ccy.code: rate.exchange_rate for rate in latest_rates}
+    
+    if user_base == system_base:
+        return rates
+    
+    # Calculate conversion rate between system base and user base
+    try:
+        base_rate = rates[user_base]
+    except KeyError:
+        raise ValueError(f"Rate not available for {user_base}")
+    
+    # Convert all rates to user's base currency
+    return {
+        currency: (rate / base_rate).quantize(Decimal('0.0001'))
+        for currency, rate in rates.items()
+    }

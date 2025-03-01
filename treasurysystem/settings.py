@@ -243,3 +243,6 @@ ADMINS = [("testuser", "test.user@email.com"), ]
 
 
 # print("Database Configuration is here:", DATABASES)
+# settings.py
+DEFAULT_COUNTRY = 'US'  # Fallback country code
+SYSTEM_BASE_CURRENCY = 'USD'  # For internal calculations

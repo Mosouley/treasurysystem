@@ -1,7 +1,8 @@
 import decimal
 from uuid import UUID
+from django_countries import countries
 from rest_framework import serializers
-from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position
+from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position, CountryConfig
 from rest_framework.fields import Field
 from decimal import Decimal
 
@@ -66,6 +67,21 @@ class ProductSerializer(serializers.ModelSerializer):
             'name': {
                 'validators': [],
             }
+        }
+
+class CountryConfigSerializer(serializers.ModelSerializer):
+    country = serializers.ChoiceField(choices=list(countries.countries.items()))
+    base_currency = serializers.SlugRelatedField(
+        slug_field='code',
+        queryset=Ccy.objects.all()
+    )
+    # print(countries.countries)
+    class Meta:
+        model = CountryConfig
+        fields = '__all__'
+        extra_kwargs = {
+
+            'fiscal_year_start': {'format': '%Y-%m-%d'}
         }
 
 class SystemDailyRatesSerializer(serializers.ModelSerializer):
@@ -180,3 +196,4 @@ class PositionSerializer(serializers.ModelSerializer):
     def get_close_pos(self, obj):
         # Access the close_pos property on the Position instance
         return obj.close_pos
+

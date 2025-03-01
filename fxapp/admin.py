@@ -30,3 +30,48 @@ class SystemDailyRatesAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.select_related('ccy')  # Optimize queries by prefetching related fields
+    
+from django.contrib import admin
+from django import forms
+import pytz
+
+class CountryConfigForm(forms.ModelForm):
+    # Custom validation example
+    def clean_affiliate_code(self):
+        code = self.cleaned_data['affiliate_code']
+        if len(code) < 3:
+            raise forms.ValidationError("Affiliate code must be at least 3 characters")
+        return code.upper()
+
+    class Meta:
+        model = CountryConfig
+        fields = '__all__'
+
+@admin.register(CountryConfig)
+class CountryConfigAdmin(admin.ModelAdmin):
+    form = CountryConfigForm
+    list_display = ('country', 'base_currency', 'affiliate_name', 'timezone')
+    search_fields = ('country__name', 'affiliate_name')
+    list_filter = ('base_currency', 'timezone')
+    autocomplete_fields = ['base_currency']
+    
+    # Group fields into sections
+    fieldsets = (
+        ('General', {
+            'fields': ('country', 'affiliate_name', 'affiliate_code')
+        }),
+        ('Localization', {
+            'fields': ('base_currency', 'timezone', 'fiscal_year_start')
+        }),
+        # ('Advanced', {
+        #     'classes': ('collapse',),           
+           
+        #     'fields': ('additional_field_1', 'additional_field_2')
+        # }),
+    )
+
+    # Add a custom widget for timezone selection
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'timezone':
+            kwargs['widget'] = forms.Select(choices=[(tz, tz) for tz in pytz.all_timezones])
+        return super().formfield_for_dbfield(db_field, **kwargs)

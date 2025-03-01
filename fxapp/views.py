@@ -444,6 +444,11 @@ class PositionViewSet(viewsets.ModelViewSet):
         serializer = PositionSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class CountryConfigViewSet(viewsets.ModelViewSet):
+    queryset = CountryConfig.objects.all()
+    serializer_class = CountryConfigSerializer
+    filterset_fields = ['country', 'base_currency']
+    search_fields = ['country__name', 'affiliate_name']
 
 @csrf_exempt
 def import_excel_data(request):

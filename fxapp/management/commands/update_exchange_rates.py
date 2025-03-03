@@ -10,26 +10,28 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Get all unique base currencies from country configs
-        base_currencies = CountryConfig.objects.values_list(
-            'base_currency__code', 
-            flat=True
-        ).distinct()
-        # BASE_CURRENCY = 'USD'
-        for base_ccy_code in base_currencies:
-            try:
-                base_ccy = Ccy.objects.get(code=base_ccy_code)
-            except Ccy.DoesNotExist:
-                self.stderr.write(f"Base currency {base_ccy_code} not found")
-                continue
+        # base_currencies = CountryConfig.objects.values_list(
+        #     'base_currency__code', 
+        #     flat=True
+        # ).first()
+        # # BASE_CURRENCY = 'USD'
+        # for base_ccy_code in base_currencies:
+        #     try:
+        #         base_ccy = Ccy.objects.get(code=base_ccy_code)
+        #     except Ccy.DoesNotExist:
+        #         self.stderr.write(f"Base currency {base_ccy_code} not found")
+        #         continue
+        base_ccy_code = CountryConfig.objects.all().first().base_currency.code
 
             # Fetch rates for this base currency
-            API_URL = f'https://api.frankfurter.app/latest?from={base_ccy_code}'
+        API_URL = f'https://api.frankfurter.app/latest?from={base_ccy_code}'
 
          # Fetch rates from API
         try:
             response = requests.get(API_URL)
             response.raise_for_status()
             data = response.json()
+            print(data)
         except requests.exceptions.RequestException as e:
             self.stderr.write(self.style.ERROR(f'API request failed: {e}'))
             return
@@ -54,8 +56,7 @@ class Command(BaseCommand):
         skipped = 0
         base_ccy = Ccy.objects.get(code=base_ccy)
         currencies = Ccy.objects.exclude(code=base_ccy)
-        print(currencies)
-        print(base_ccy)
+       
     
 
         # Create base currency rate (1.0)

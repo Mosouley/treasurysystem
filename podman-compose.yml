@@ -25,25 +25,35 @@ services:
       - PGCONNECT_TIMEOUT=30
       - PYTHONUNBUFFERED=1
       - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
+      - CHANNEL_LAYERS_REDIS_HOST=localhost
     env_file:
       - ./env.dev
     ports:
       - "8000:8000"
     pod: *pod-name
     depends_on:
+      - celery
       - redis
 
   redis:
     container_name: treasury_redis
     image: redis:alpine
     restart: always
+    command: redis-server --bind 0.0.0.0  # Allow external connections
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
     pod: *pod-name
 
   celery:
     container_name: treasury_celery
     build: .
     user: celeryuser
-    command: celery -A treasurysystem worker -l info
+    command: celery -A treasurysystem worker -l info --beat
+    environment:
+      - CELERY_BROKER_URL=redis://localhost:6379/0  # Hardcoded in compose
+      - CELERY_RESULT_BACKEND=redis://localhost:6379/0
     volumes:
       - ./:/treasurysystem:Z
     env_file:

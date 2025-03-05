@@ -52,8 +52,11 @@ services:
     user: celeryuser
     command: celery -A treasurysystem worker -l info --beat
     environment:
-      - CELERY_BROKER_URL=redis://localhost:6379/0  # Hardcoded in compose
-      - CELERY_RESULT_BACKEND=redis://localhost:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0  # Updated to use redis service name
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0  # Updated to use redis service name
+      - CELERY_TIMEZONE=UTC
+      - CELERY_accept_content=json
+      - CELERY_TASK_SERIALIZER=json
     volumes:
       - ./:/treasurysystem:Z
     env_file:
@@ -62,3 +65,5 @@ services:
     depends_on:
       - redis
 
+volumes:
+  redis_data:

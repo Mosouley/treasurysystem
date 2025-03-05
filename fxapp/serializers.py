@@ -2,7 +2,7 @@ import decimal
 from uuid import UUID
 from django_countries import countries
 from rest_framework import serializers
-from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position, CountryConfig
+from .models import Customer, Ccy, Segment, Product,Dealer,SystemDailyRates,Trade, Position, CountryConfig, ReevaluationRates
 from rest_framework.fields import Field
 from decimal import Decimal
 
@@ -92,7 +92,17 @@ class SystemDailyRatesSerializer(serializers.ModelSerializer):
         # def validate_exchange_rate(self, value):
         # # Ensure the value is rounded to 4 decimal places
         #     return Decimal(value).quantize(Decimal('0.0001'))
-        
+class ReevaluationRatesSerializer(serializers.ModelSerializer):
+    base_ccy = CcySerializer()
+    target_ccy = CcySerializer()
+    
+    class Meta:
+        model = ReevaluationRates
+        fields = ('date', 'last_updated', 'exchange_rate', 'base_ccy','target_ccy')
+
+        def validate_exchange_rate(self, value):
+        # Ensure the value is rounded to 4 decimal places
+            return Decimal(value).quantize(Decimal('0.0001'))        
 
 class TradeSerializer(serializers.ModelSerializer):
     try:

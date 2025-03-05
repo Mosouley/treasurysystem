@@ -249,8 +249,6 @@ class SystemDailyRatesViewSet(AutoMappingBulkCreateViewSet):
     serializer_class = SystemDailyRatesSerializer
     lookup_fields = {
         'ccy': ['code', 'id'], 
-         # Lookup by username first, then id for the User model
-        # Lookup by name first, then id for the Segment model
     }
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -285,7 +283,36 @@ class SystemDailyRatesViewSet(AutoMappingBulkCreateViewSet):
 
     #             serializer = self.get_serializer(instance)
     #             return Response(serializer.data)
+class ReevaluationRatesViewSet(AutoMappingBulkCreateViewSet):
+    queryset = ReevaluationRates.objects.all()
+    serializer_class = ReevaluationRatesSerializer
+    lookup_fields = {
+        'base_ccy': ['code', 'id'], 
+        'target_ccy': ['code', 'id'], 
+    }
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'date': ['exact', 'gte', 'lte'],                # Filter by date range
+        'base_ccy__code': ['exact', 'icontains'],            # Filter by currency code
+        'target_ccy__code': ['exact', 'icontains'],            # Filter by currency code
+        'exchange_rate': ['exact', 'gte', 'lte'],       # Filter by exchange rate range
+        'last_updated': ['exact', 'gte', 'lte'],        # Filter by last updated
+    }
+    # def filter_queryset(self, queryset):
+    #     # Convert date fields to datetime objects
+    #     for field in ['date', 'last_updated']:
+    #         if field in self.request.query_params:
+    #             date_str = self.request.query_params[field]
+    #             try:
+    #                 date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    #                 # Ensure the date_obj is a datetime object with time set to 00:00:00
+    #                 date_obj = datetime.combine(date_obj, datetime.min.time())
+    #                 queryset = queryset.filter(**{field: date_obj})
+    #             except ValueError:
+    #                 pass  # Handle invalid date format if necessary
+    #     return super().filter_queryset(queryset) 
     
+
 # class SystemDailyRatesViewSet(viewsets.ModelViewSet):
 #     queryset = SystemDailyRates.objects.all().order_by('-last_updated')
 #     serializer_class = SystemDailyRatesSerializer

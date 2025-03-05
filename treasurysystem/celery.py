@@ -18,4 +18,11 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 #         'schedule': crontab(minute='*/5'),  # Every 5 minutes  
 #     },  
 # }  
+
+# app.conf.beat_schedule = {
+#     'update-exchange-rates-every-5-minutes': {
+#         'task': 'fxapp.tasks.update_exchange_rates_task',
+#         'schedule': crontab(minute='*/5'),
+#     },
+# }
 app.autodiscover_tasks()

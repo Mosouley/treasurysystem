@@ -17,7 +17,10 @@ import treasurysystem.tasks
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'env.dev'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -228,12 +231,16 @@ CELERY_BEAT_SCHEDULE = {
  
     "send_email_report": {
         "task": "treasurysystem.tasks.send_email_report",
-        "schedule": crontab(minute="*/10"),
+        "schedule": crontab(hour="*/5"),
     },
     'send_positions': {  
         'task': 'treasurysystem.tasks.send_position_updates',  
-        'schedule': crontab(minute='*/1'),  # Every 5 minutes  
+        'schedule': crontab(minute='*/10'),  # Every 10 minutes  
     }, 
+     'update-exchange-rates-every-5-hours': {
+        'task': 'treasurysystem.tasks.update_rates_task',
+        'schedule': crontab(hour='*/5'),
+    },
 }
 
 
@@ -246,3 +253,6 @@ ADMINS = [("testuser", "test.user@email.com"), ]
 # settings.py
 DEFAULT_COUNTRY = 'US'  # Fallback country code
 SYSTEM_BASE_CURRENCY = 'USD'  # For internal calculations
+
+# Now you can access the API key using os.getenv
+API_LAYER_KEY = os.getenv('API_LAYER_KEY')

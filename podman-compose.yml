@@ -27,7 +27,7 @@ services:
       - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
       - CHANNEL_LAYERS_REDIS_HOST=localhost
     env_file:
-      - ./env.dev
+      - ./env.supabase
     ports:
       - "8000:8000"
     pod: *pod-name
@@ -60,7 +60,7 @@ services:
     volumes:
       - ./:/treasurysystem:Z
     env_file:
-      - ./env.dev
+      - ./env.supabase
     pod: *pod-name
     depends_on:
       - redis

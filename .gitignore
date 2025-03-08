@@ -7,6 +7,7 @@ __pycache__/
 # Environment
 .env
 env.dev
+env.supabase  # Corrected the file name based on edits
 
 # Django
 db.sqlite3

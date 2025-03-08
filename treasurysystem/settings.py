@@ -108,7 +108,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER','supabase_admin'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD',),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'PORT': os.environ.get('POSTGRES_PORT', '6543'),
           'OPTIONS': {
             'sslmode': 'require',
             'connect_timeout': int(os.environ.get('POSTGRES_CONNECT_TIMEOUT', 30)),

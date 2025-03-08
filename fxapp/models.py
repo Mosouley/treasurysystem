@@ -1,26 +1,22 @@
 from datetime import timedelta
 from decimal import Decimal
 from django.db import models
-from django.dispatch import receiver
 from django.utils import timezone
 import uuid
 import random
-from django.db.models import Sum
-from django.db.models.signals import post_save, post_delete
-
+import pytz
+from django.core.validators import MinValueValidator
 # import shortuuid
 from django.conf import settings
-from django.urls import reverse
-from treasurysystem.utils import random_string_generator
-from django.utils.text import slugify
 # Creating models for the treasury fxapp
+from django_countries.fields import CountryField
 
 
 User = settings.AUTH_USER_MODEL
 
 
 class Segment(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=20, unique=True, blank=False)
     desc = models.CharField(max_length=100)
 
     def __str__(self):
@@ -30,9 +26,9 @@ class Segment(models.Model):
         verbose_name = 'Segment'
 
 class Customer(models.Model):
-    cif = models.CharField(max_length=100)
-    name = models.CharField(max_length=200)
-    user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
+    cif = models.CharField(max_length=20,unique=True, blank=False)
+    name = models.CharField(max_length=200,unique=True, blank=False)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     segment = models.ForeignKey(Segment, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
@@ -47,8 +43,8 @@ class Customer(models.Model):
 
 
 class Dealer(models.Model):
-    desc = models.CharField(max_length=100)
-    name = models.CharField(max_length=200, unique=True)
+    full_name = models.CharField(max_length=100)
+    profile = models.CharField(max_length=100, unique=True, default='profile')
     user = models.OneToOneField(User, unique=True, null=True, blank=True, on_delete=models.CASCADE)
     email = models.EmailField()
     active = models.BooleanField(default=True)
@@ -56,25 +52,57 @@ class Dealer(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.profile
     
     class Meta:
         verbose_name = 'Trader'
 
 class Ccy(models.Model):
-    code = models.CharField(max_length=20, unique=True)
+    code = models.CharField(max_length=3, unique=True)
 
     class Meta:
-        verbose_name = 'Ccy'
-        verbose_name_plural = "Ccy"
+        verbose_name = 'Currency'
+        verbose_name_plural = "Currencies"
 
     def __str__(self):
         return self.code
 
+
+class CountryConfig(models.Model):
+    country = CountryField(
+        unique=True,
+        verbose_name='Country',
+        help_text='Select your country of operations'
+    )
+    base_currency = models.ForeignKey(
+        'Ccy',
+        on_delete=models.PROTECT,
+        verbose_name='Base Currency'
+    )
+    timezone = models.CharField(
+        max_length=50,
+        default='UTC',
+        choices=[(tz, tz) for tz in pytz.all_timezones]
+    )
+    affiliate_name = models.CharField(max_length=100)
+    affiliate_code = models.CharField(max_length=10)
+    fiscal_year_start = models.DateField()
+
+    # Add other country-specific settings as needed
+
+    class Meta:
+        verbose_name = 'Country Configuration'
+        verbose_name_plural = 'Country Configurations'
+
+    def __str__(self):
+        return f"{self.country.name} Configuration"
+    
 class SystemDailyRates(models.Model):
-    date            = models.DateTimeField(auto_now=True, blank=False)
+    date            = models.DateTimeField(default=timezone.now)
     ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE, blank=False)
-    rateLcy         = models.FloatField(default=1.00)
+    exchange_rate   = models.DecimalField(
+        max_digits=10, decimal_places=4, default=1.00
+    )
     last_updated    = models.DateTimeField(blank=True, null=True, auto_now=True)
 
     @property
@@ -82,14 +110,45 @@ class SystemDailyRates(models.Model):
         return self.ccy.code 
 
     class Meta:
-        verbose_name_plural = 'SystemRates'
+        verbose_name_plural = 'Reevaluation Rates'
+        ordering = ['-last_updated']
+        # constraints = [
+        #     models.UniqueConstraint(fields=['date', 'ccy'], name='unique_rate_per_currency_per_date')
+        # ]
 
     def __str__(self):
-        return self.ccy.code 
+        return f"{self.ccy.code} - {self.date}: {self.exchange_rate}"
 
+# models.py
+class ReevaluationRates(models.Model):
+    date = models.DateField(default=timezone.now)
+    base_ccy = models.ForeignKey(  # System-wide base currency
+        Ccy,
+        on_delete=models.CASCADE,
+        related_name='base_rates'
+    )
+    target_ccy = models.ForeignKey(
+        Ccy,
+        on_delete=models.CASCADE,
+        related_name='target_rates'
+    )
+    exchange_rate = models.DecimalField(
+        max_digits=10, 
+        decimal_places=4
+    )
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['date', 'base_ccy', 'target_ccy'],
+                name='unique_rate_combination'
+            )
+        ]
 
 class Product(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=20, unique=True)
+    description = models.TextField(default='Product description')
 
     def __str__(self):
         return self.name
@@ -112,8 +171,6 @@ class Trade(models.Model):
         ('amend', 'AMEND'),
     ]
 
-  
-    
     trade_id            = models.UUIDField(max_length=36, unique=True, default=uuid.uuid4)
     tx_date             = models.DateField(auto_now=True)
     val_date            = models.DateTimeField( blank=False, null=False, auto_now=False)
@@ -145,17 +202,11 @@ class Trade(models.Model):
         counter = int(timezone.now(timezone(timedelta(hours=3)))) 
         random_part = random.randint(1, 99999)
         # f'{random_part:04d}{counter:03d}'
-        print(f'{random_part}{counter:05d}')
         return f'{random_part}{counter:05d}'
     
     @property
     def equivalent_lcy(self):
         return Decimal(self.amount1) * self.ccy1_rate
-    
-    # @staticmethod
-    # def calculate_pnl(ccy1_amount, deal_rate, syst_rate, ccy2_rate):
-    #     pnl = -ccy1_amount * (deal_rate - syst_rate) * ccy2_rate
-    #     return pnl
     
     @staticmethod
     def calculate_pnl(trade_instance):
@@ -177,66 +228,37 @@ class Trade(models.Model):
         verbose_name = 'Trade'
 
 class Position(models.Model):
-    date            = models.DateField( blank=False, null=False, auto_now=False)
-    ccy             = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
-    position        = models.FloatField()
+    date                = models.DateField( blank=False, null=False, auto_now=False)
+    ccy                 = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
+    intraday_pos        = models.FloatField()
+
+
+    # _calculated_net_open_pos = None  # Internal property to cache the calculated value
 
     def __str__(self):
-        return f"{self.ccy.code} - {self.position}"
+        return f"{self.ccy.code} - {self.intraday_pos}"
     
+    def get_open_pos(self):
+        """
+        Retrieves the most recent `net_open_pos` from before the current Position's date.
+        """
+        prev_pos = Position.objects.filter(
+            date__lt=self.date,
+            ccy=self.ccy
+        ).order_by('-date').first()
+        return prev_pos.intraday_pos if prev_pos else 0
 
-    # @staticmethod
-    # def calculate_position(ccy_instance, date):
-    #     # Aggregate the sum of amount1 for the given currency and date
-    #     pos_long = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell='buy' ).aggregate(ccy_position=Sum('amount1'))
-    #     pos_short = Trade.objects.filter(ccy=ccy_instance, tx_date=date.date(),    buy_sell ='sell').aggregate(ccy_position=Sum('amount1'))
-    #     pos_ccy = pos_long['ccy_position'] + pos_short['ccy_position']
-    #     return pos_ccy or 0
+    @property
+    def open_pos(self):
+        """
+        Property that calculates the aggregate net_open_pos for the current Position instance.
+        """
+        return self.get_open_pos()
     
-    # @property
-    # def ccy_position(self):
-    #     # Calculate the position for this instance's currency and date
-    #     return self.calculate_position(self.ccy, self.tx_date)
+    @property
+    def close_pos(self):
+        """
+        Property that calculates the aggregate net_open_pos for the current Position instance.
+        """
+        return float(self.open_pos) + float(self.intraday_pos)
     
-    # def save(self, *args, **kwargs):
-    #     # Ensure a unique trade_id is generated
-    #     # Generate the slug when saving the model
-    #     if not self.slug:
-    #         base_slug = slugify(self.trade_id)
-    #         unique_slug = base_slug
-    #         counter = 1
-    #         while Trade.objects.filter(slug=unique_slug).exists():
-    #             unique_slug = f"{base_slug}-{counter}"
-    #             counter += 1
-    #         self.slug = unique_slug
-    #     super().save(*args, **kwargs)
-
-    # def __init__(self, *args, **kwargs):
-    #     """
-    #     Override the __init__ method to set the choices for the ccy_pair field when initializing the model.
-    #     """
-    #     super(Trade, self).__init__(*args, **kwargs)
-    #     self._meta.get_field('trade_id').default = uuid4()
-    #     self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
-    
-
-
-    # def get_absolute_url(self):
-    #     return reverse('trade-detail', kwargs={'slug': self.slug})
-
-
-    # def save(self, *args, **kwargs):
-    #     if self.date_created is None:
-    #         self.date_created = timezone.localtime(timezone.now())
-    #     if self.trade_id is None:
-    #         new_ref = random_string_generator(10)
-    #         self.trade_id = new_ref.join(str(uuid4()).split('-')[4])
-    #         print(self.trade_id)
-    #         self.slug = slugify('{}{}'.format( self.trade_id))
-    #     if not self.trade_id:
-    #         self.trade_id = str(uuid4())[:8]
-
-    #     self.slug = slugify('{}'.format( self.trade_id))
-    #     self.last_updated = timezone.localtime(timezone.now())
-    #     # self._meta.get_field('ccy_pair').choices = self.get_ccy_pair_choices()
-    #     super(Trade, self).save(*args, **kwargs)

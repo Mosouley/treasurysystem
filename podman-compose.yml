@@ -1,0 +1,69 @@
+version: '3.8'
+
+x-pod:
+  &pod-name
+  metadata: 
+    labels: 
+      app: treasury-system
+
+services:
+  web:
+    container_name: treasury_web
+    build: 
+      context: .
+    restart: always
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/treasurysystem:Z
+    ports:
+      - 8000:8000
+    environment:
+      - PGSSLMODE=require
+      - PGCONNECT_TIMEOUT=30
+      - PYTHONUNBUFFERED=1
+      - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
+      - CHANNEL_LAYERS_REDIS_HOST=localhost
+    env_file:
+      - ./env.supabase
+    ports:
+      - "8000:8000"
+    pod: *pod-name
+    depends_on:
+      - celery
+      - redis
+
+  redis:
+    container_name: treasury_redis
+    image: redis:alpine
+    restart: always
+    command: redis-server --bind 0.0.0.0  # Allow external connections
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    pod: *pod-name
+
+  celery:
+    container_name: treasury_celery
+    build: .
+    user: celeryuser
+    command: celery -A treasurysystem worker -l info --beat
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0  # Updated to use redis service name
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0  # Updated to use redis service name
+      - CELERY_TIMEZONE=UTC
+      - CELERY_accept_content=json
+      - CELERY_TASK_SERIALIZER=json
+    volumes:
+      - ./:/treasurysystem:Z
+    env_file:
+      - ./env.supabase
+    pod: *pod-name
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:

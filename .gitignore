@@ -1,5 +1,6 @@
 # created by virtualenv automatically
 backend/
+
 # filepath: .gitignore
 
 # Python
@@ -51,6 +52,7 @@ Thumbs.db
 .env
 .env.dev
 .env.prod
+.env.supabase
 
 # Docker
 .docker/
@@ -62,3 +64,61 @@ htmlcov/
 .coverage.*
 coverage.xml
 *.cover
+=======
+# Python
+*.pyc
+__pycache__/
+
+# Environment
+.env
+env.dev
+env.supabase  # Corrected the file name based on edits
+
+# Django
+db.sqlite3
+/static/
+media/
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.*
+data_only.sql
+backup_ficc.sql
+dummy-data.json
+products.json
+
+# Other
+*.log
+
+
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+backup_ficc.sql
+data_only.sql
+# System files
+.DS_Store
+Thumbs.db
+=======
+/web/node_modules/
+# /web/.angular

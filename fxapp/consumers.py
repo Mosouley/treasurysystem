@@ -1,19 +1,18 @@
 
-import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-
-from django.db.models.signals import post_save, post_delete
+from django.utils import timezone
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Trade
-from .serializers import TradeSerializer
+from .models import Position, Trade
+from .serializers import TradeSerializer, PositionSerializer
 from channels.db import database_sync_to_async
 import traceback
 import decimal
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.utils import timezone
 from datetime import date
+from treasurysystem.utils import get_positions, broadcast_data
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -27,7 +26,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
             await self.accept()
-            
             # trades = await self.all_trades_day()
             await self.send_trade_list()
             await self.channel_layer.group_add(self.trade_update_group, self.channel_name)
@@ -44,7 +42,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
         trades_data = trade_serializer.data
         return trades_data
   
-
     async def trade_updated(self, trade_data):
         trades = await self.all_trades()
         await self.send_trade_list(trades)
@@ -65,22 +62,23 @@ class TradeConsumer(AsyncWebsocketConsumer):
                 'data':trade_data
             }, cls=DecimalEncoder))
         except Exception as e:
-            print(f"Error sending trade list: {e}")
+            # print(f"Error sending trade list: {e}")
             print(traceback.format_exc())  # Print the traceback
 
-    # @database_sync_to_async
-    # def broadcast_trade_update(self, trade_data):
-    #     """Send trade update to the group."""
-    #     channel_layer = get_channel_layer()
-    #     async_to_sync(channel_layer.group_send)(
-    #         self.trade_update_group, {"type": "send_trade_list", "data": trade_data}
-    #     )
     async def send_trades_of_day(self, event):
         # Fetch the trades data of the day
         trades = await self.all_trades_day()
         await self.send(text_data=json.dumps({
             'type': 'all_trades_day',
             'data': trades
+        }, cls=DecimalEncoder))
+    
+    async def send_new_trades(self, event):
+        # Fetch the new trades data
+        new_trades = event['data']
+        await self.send(text_data=json.dumps({
+            'type': 'new_trades',
+            'data': new_trades
         }, cls=DecimalEncoder))
     
 
@@ -93,7 +91,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_trade_to_database(self, data):
-        # print(data)
         try:
             serializer = TradeSerializer(data=data)
             if serializer.is_valid():
@@ -101,28 +98,56 @@ class TradeConsumer(AsyncWebsocketConsumer):
             else:
                 print( serializer.errors)
         except Exception as e:
-            print(f"Error saving trade to database: {e}")
+            # print(f"Error saving trade to database: {e}")
             traceback.print_exc()  # Print the traceback
 
     @receiver(post_save, sender=Trade)
     def broadcast_trades(sender, instance, created, **kwargs):
         if created:
             channel_layer = get_channel_layer()
-            trades = Trade.objects.filter(date_created__gte=date.today()).order_by('-date_created')
-        
-            trade_serializer = TradeSerializer(trades, many=True)
+            trade_serializer = TradeSerializer(instance)
             trades_data = trade_serializer.data
             async_to_sync(channel_layer.group_send)(
                 "fx_tradeflow", 
-                {"type": "send_trades_of_day", 
+                {"type": "send_new_trades", 
                 "data": trades_data,
                 }
             )
 
-        async def disconnect(self, close_code):
-            # await self.channel_layer.group_discard(self.trade_update_group, self.channel_name)
-            self.close(close_code)
+            # update position as well
+            data =  get_positions()
+           
+            broadcast_data('position_updates','send_position_updates',data)
+
+    async def disconnect(self, close_code):
+        self.close(close_code)
 
 
-                
+class PositionConsumer(AsyncWebsocketConsumer):
+    @database_sync_to_async
+    def get_latest_positions(self):
+        today = timezone.now().date()
+        positions = Position.objects.filter(date=today).select_related('ccy')
+        return PositionSerializer(positions, many=True).data # Make sure this is async-safe
+      
+    async def connect(self):  
+        
+        await self.accept()  
+        await self.channel_layer.group_add("position_updates", self.channel_name)  
+        # update position as well
+         # Fetch positions asynchronously and send to the client
+        positions = await get_positions()  # Async-safe call
+        broadcast_data('position_updates','send_position_updates',positions)
+
+    async def send_position_updates(self, event): 
+        message = event['data']  
+        
+        await self.send(text_data=json.dumps({
+            'type': 'position_updates',
+            'data': message
+        }, cls=DecimalEncoder))      
+
+    async def disconnect(self, close_code):  
+        await self.channel_layer.group_discard("position_updates", self.channel_name)  
+        
       

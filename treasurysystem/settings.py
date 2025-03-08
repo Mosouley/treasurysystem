@@ -11,11 +11,16 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+from celery import Celery
+from celery.schedules import crontab
+import treasurysystem.tasks
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'env.dev'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -31,7 +36,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ##### docker set up config elements #################################
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: '
@@ -54,6 +59,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'fxapp',
     'contacts',
+    'money_market',
+    'django_filters'
 ]
 
 ASGI_APPLICATION = 'treasurysystem.asgi.application'
@@ -66,9 +73,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-   
-    
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
 ]
 
 ROOT_URLCONF = 'treasurysystem.urls'
@@ -95,30 +100,42 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         # 'ENGINE': 'django.db.backends.sqlite3',
-#         # 'NAME': BASE_DIR / 'db.sqlite3',
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'treasury_system',
-#         'USER': 'postgres',
-#         'PASSWORD': 'papaHaddy@?123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': os.environ.get('POSTGRES_ENGINE',),
-        'NAME': os.environ.get('POSTGRES_NAME', ),
-        'USER': os.environ.get('POSTGRES_USER',),
+        'ENGINE': os.environ.get('POSTGRES_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('POSTGRES_NAME',  'postgres'),
+        'USER': os.environ.get('POSTGRES_USER','supabase_admin'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD',),
-        'HOST': os.environ.get('POSTGRES_HOST', ),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT', '6543'),
+          'OPTIONS': {
+            'sslmode': 'require',
+            'connect_timeout': int(os.environ.get('POSTGRES_CONNECT_TIMEOUT', 30)),
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+        },
+        'CONN_MAX_AGE': 60,
     }
 }
+import logging
+logger = logging.getLogger(__name__)
+logger.info(f"Database host: {os.environ.get('POSTGRES_HOST')}")
+# Verify required environment variables are set
+required_env_vars = [
+    'POSTGRES_NAME',
+    'POSTGRES_USER',
+    'POSTGRES_PASSWORD',
+    'POSTGRES_HOST',
+    'POSTGRES_PORT',
+]
+
+for var in required_env_vars:
+    if not os.environ.get(var):
+        raise ValueError(f'Required environment variable {var} is not set')
+    
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -166,25 +183,18 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_ROOT = (os.path.join(BASE_DIR, 'staticfiles'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 
 # CORS_ORIGIN_ALLOW_ALL = True
 # For local dev, localhost was not working but 127. was
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
     "http://localhost:4200",
-      "http://localhost:4700",
+  
 ]
-# CORS_ORIGIN_WHITELIST = (
-#     'http://localhost:8000',
-#     'http://localhost:4200',
-# )
-
-# ACCESS_CONTROL_ALLOW_ORIGIN = [
-#     'http://localhost:4200',
-# ]
 
 CORS_ALLOW_METHODS = [
     'GET',
@@ -194,33 +204,55 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS'
 ]
-# ALLOWED_HOSTS =[
-#     'localhost:4200',
-#     'localhost'
-# ]
+ALLOWED_HOSTS =[
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+]
 
 
-## settings.py
+# Connect Celery to Redis
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379")
+
 CHANNEL_LAYERS = {
     'default': {
-        ### Method 1: Via redis lab
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #     "hosts": [
-        #       'redis://h:<password>;@<redis Endpoint>:<port>' 
-        #     ],
-        # },
-
-        ### Method 2: Via local Redis
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #      "hosts": [('127.0.0.1', 6379)],
-        # },
-
-        ### Method 3: Via In-memory channel layer
-        ## Using this method.
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+            'capacity': 1500,
+            'expiry': 10,
+        },
     },
 }
 
 # PVZKPPNf2FmqHagUcU0JJVG5NIEDuxY0 API KEY APILAYER
+CELERY_BEAT_SCHEDULE = {
+ 
+    "send_email_report": {
+        "task": "treasurysystem.tasks.send_email_report",
+        "schedule": crontab(hour="*/5"),
+    },
+    'send_positions': {  
+        'task': 'treasurysystem.tasks.send_position_updates',  
+        'schedule': crontab(minute='*/10'),  # Every 10 minutes  
+    }, 
+     'update-exchange-rates-every-5-hours': {
+        'task': 'treasurysystem.tasks.update_rates_task',
+        'schedule': crontab(hour='*/5'),
+    },
+}
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@email.com"
+ADMINS = [("testuser", "test.user@email.com"), ]
+
+
+# print("Database Configuration is here:", DATABASES)
+# settings.py
+DEFAULT_COUNTRY = 'US'  # Fallback country code
+SYSTEM_BASE_CURRENCY = 'USD'  # For internal calculations
+
+# Now you can access the API key using os.getenv
+API_LAYER_KEY = os.getenv('API_LAYER_KEY')

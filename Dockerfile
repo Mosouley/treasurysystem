@@ -1,32 +1,38 @@
 # Dockerfile
 
 # pull official base image
-FROM python:3
+FROM python:3.12.5-alpine 
 
-# set work directory
+# Create a non-privileged user
+RUN adduser --system --group celeryuser
+
+# Use a specific and slim base image for smaller size and consistency
+FROM python:3.11-slim
+
+# Create a non-privileged user and install dependencies
+RUN adduser --system --group celeryuser && \
+    pip install --upgrade pip && \
+    mkdir -p /treasurysystem/static
+
+# Set work directory
 WORKDIR /treasurysystem
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# install dependencies
-RUN pip install --upgrade pip
+# Install dependencies (leveraging Docker cache)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy entrypoint.sh
-# COPY entrypoint.sh .
-# RUN sed -i 's/\r$//g' /treasurysystem/entrypoint.sh
-# RUN chmod +x /treasurysystem/entrypoint.sh
-# Mounts the application code to the image
-# copy project
-COPY . .
+# Copy project files
+COPY . /treasurysystem/
 
-# run entrypoint.sh
-# ENTRYPOINT ["/treasurysystem/entrypoint.sh"]
-# EXPOSE 8000
+# Set permissions
+RUN chown -R celeryuser:celeryuser /treasurysystem
 
-# runs the production server
-# ENTRYPOINT ["python", "treasurysystem/manage.py"]
-# CMD ["runserver", "0.0.0.0:8000"]
+# Set the non-privileged user to run subsequent commands
+USER celeryuser
+
+# Default command to run (can be overridden in docker-compose)
+CMD ["celery", "-A", "treasurysystem", "worker", "-l", "info"]

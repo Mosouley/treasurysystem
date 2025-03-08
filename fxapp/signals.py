@@ -17,15 +17,17 @@ def update_position_on_save(sender, instance, **kwargs):
     ccy2 = instance.ccy2
     amount1 = instance.amount1 if instance.buy_sell == 'buy' else -instance.amount1
     amount2 = instance.amount2 if instance.buy_sell == 'sell' else -instance.amount2
-    # print('la date', date, 'la devise ', ccy.code, 'pos ', amount)
+
 
     #Function to update position
     def update_position(date, ccy, amount):
+
         try:
             with transaction.atomic():
-                position, created = Position.objects.get_or_create(date=date, ccy=ccy,defaults={'position': 0})
-                position.position += amount
+                position, created = Position.objects.get_or_create(date=date, ccy=ccy,defaults={'intraday_pos': 0})
+                position.intraday_pos += amount
                 position.save()
+
         except Exception as e:
                 logger.error(f"Error updating the position: {e}")
 
@@ -40,32 +42,6 @@ def update_position_on_save(sender, instance, **kwargs):
         if cur != ccy1 and cur != ccy2:
             update_position(date, cur, 0)
    
-    #     try:
-    #         with transaction.atomic():
-    #             position, created = Position.objects.get_or_create(date=date, ccy=ccy,defaults={'position': 0})
-    #             position.position += amount
-    #             position.save()
-    #     except Exception as e:
-    #             logger.error(f"Error updating the position: {e}")
-    
-    # for cur in Ccy.objects.all():
-    #     if cur == instance.ccy1 or cur == instance.ccy2:
-    #         # print(cur, 'I am here --', instance.ccy1,' --2', instance.ccy2)  
-    #         try:
-    #             with transaction.atomic():
-    #                 position, created = Position.objects.get_or_create(date=date, ccy=ccy,defaults={'position': 0})
-    #                 position.position += amount
-    #                 position.save()
-    #         except Exception as e:
-    #                 logger.error(f"Error updating the position: {e}")
-    #     else: 
-    #         try:
-    #             with transaction.atomic():
-    #                 position, created = Position.objects.get_or_create(date=date, ccy=cur,defaults={'position': 0})
-    #                 position.position += 0
-    #                 position.save()
-    #         except Exception as e:
-    #                 logger.error(f"Error updating the position for new currency: {e}")
 
 @receiver(post_delete, sender=Trade)
 def update_position_on_delete(sender, instance, **kwargs):
@@ -75,7 +51,7 @@ def update_position_on_delete(sender, instance, **kwargs):
     try:
         with transaction.atomic():
             position = Position.objects.get(date=date, ccy=ccy)
-            position.position -= amount
+            position.intraday_pos -= amount
             position.save()
     except Position.DoesNotExist:
         logger.warning(f"Position does not exist for date {date} and currency {ccy}.")

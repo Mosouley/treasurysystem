@@ -26,6 +26,7 @@ services:
       - PYTHONUNBUFFERED=1
       - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
       - CHANNEL_LAYERS_REDIS_HOST=localhost
+      - DJANGO_SETTINGS_MODULE=treasurysystem.settings_supabase 
     env_file:
       - ./env.supabase
     ports:

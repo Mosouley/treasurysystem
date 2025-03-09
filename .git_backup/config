@@ -8,6 +8,16 @@
 [remote "origin"]
 	url = https://github.com/Mosouley/treasurysystem.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
+<<<<<<< HEAD
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+	vscode-merge-base = origin/main
+[pull]
+	rebase = false
+[branch "supabase-integration"]
+	vscode-merge-base = origin/main
+=======
 [branch "dev"]
 	remote = origin
 	merge = refs/heads/dev
@@ -15,3 +25,4 @@
 	remote = origin
 	merge = refs/heads/main
 	vscode-merge-base = origin/dev
+>>>>>>> 4c3d91ba8ca59e74d36f053d4d00449398a292eb

@@ -8,7 +8,7 @@ x-pod:
 
 services:
   web:
-    container_name: treasury_web
+    container_name: treasury_web_dev
     build: 
       context: .
     restart: always
@@ -21,23 +21,28 @@ services:
     ports:
       - 8000:8000
     environment:
-      - PGSSLMODE=require
-      - PGCONNECT_TIMEOUT=30
-      - PYTHONUNBUFFERED=1
-      - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
-      - CHANNEL_LAYERS_REDIS_HOST=localhost
+      - DJANGO_SETTINGS_MODULE=treasurysystem.settings_dev 
     env_file:
-      - ./env.supabase
+      - ./env.dev
+
     ports:
       - "8000:8000"
     pod: *pod-name
     depends_on:
       - celery
       - redis
+      - db
 
-  
+  db:
+      container_name: ficc_db
+      image: postgres:15
+      restart: always
+      env_file:
+        - ./env.dev
+      ports:
+        - "5432:5432"
   redis:
-    container_name: treasury_redis
+    container_name: treasury_redis_dev
     image: redis:alpine
     restart: always
     command: redis-server --bind 0.0.0.0  # Allow external connections
@@ -48,7 +53,7 @@ services:
     pod: *pod-name
 
   celery:
-    container_name: treasury_celery
+    container_name: treasury_celery_dev
     build: .
     user: celeryuser
     command: celery -A treasurysystem worker -l info --beat
@@ -61,7 +66,7 @@ services:
     volumes:
       - ./:/treasurysystem:Z
     env_file:
-      - ./env.supabase
+      - ./env.dev
     pod: *pod-name
     depends_on:
       - redis

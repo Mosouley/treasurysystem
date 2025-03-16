@@ -27,7 +27,7 @@ class Command(BaseCommand):
             response = requests.get(API_URL, headers=headers)
             response.raise_for_status()
             data = response.json()
-            print(data)
+            # print(data)
         except requests.exceptions.RequestException as e:
             self.stderr.write(self.style.ERROR(f'API request failed: {e}'))
             return
@@ -52,9 +52,9 @@ class Command(BaseCommand):
         skipped = 0
        
         base_ccy = Ccy.objects.get(code=base_ccy_code)
-        print('the base is ', base_ccy)
+        # print('the base is ', base_ccy)
         currencies = Ccy.objects.exclude(code=base_ccy_code)
-        print('the currencies are ', currencies.values_list('code', flat=True))
+        # print('the currencies are ', currencies.values_list('code', flat=True))
     
 
         # Create base currency rate (1.0)
@@ -70,7 +70,7 @@ class Command(BaseCommand):
         # Process other currencies
         for ccy in currencies:
             rate = rates.get(ccy.code)
-            print('the rate is of ',ccy.code ,' is ', rate)
+            # print('the rate is of ',ccy.code ,' is ', rate)
             if not rate:
                 self.stdout.write(self.style.WARNING(f'Rate not available for {ccy.code}'))
                 skipped += 1

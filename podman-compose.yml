@@ -25,7 +25,7 @@ services:
       - PGCONNECT_TIMEOUT=30
       - PYTHONUNBUFFERED=1
       - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
-      - CHANNEL_LAYERS_REDIS_HOST=localhost
+      - CHANNEL_LAYERS_REDIS_HOST=redis
       - DJANGO_SETTINGS_MODULE=treasurysystem.settings_supabase 
     env_file:
       - ./env.supabase
@@ -35,15 +35,24 @@ services:
     depends_on:
       - celery
       - redis
-
+  db:
+      container_name: ficc_db
+      image: postgres:15
+      restart: always
+      env_file:
+        - ./env.dev
+      volumes:
+      - postgres_data:/var/lib/postgresql/data
+      ports:
+        - "5432:5432"
   
   redis:
     container_name: treasury_redis
     image: redis:alpine
     restart: always
     command: redis-server --bind 0.0.0.0  # Allow external connections
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
     volumes:
       - redis_data:/data
     pod: *pod-name
@@ -59,6 +68,7 @@ services:
       - CELERY_TIMEZONE=UTC
       - CELERY_accept_content=json
       - CELERY_TASK_SERIALIZER=json
+      - DJANGO_SETTINGS_MODULE=treasurysystem.settings_supabase 
     volumes:
       - ./:/treasurysystem:Z
     env_file:
@@ -69,3 +79,4 @@ services:
 
 volumes:
   redis_data:
+  postgres_data:

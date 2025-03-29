@@ -1,4 +1,3 @@
-
 from .settings import *
 
 DEBUG = True
@@ -14,7 +13,7 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
         'OPTIONS': {
-            'sslmode': os.getenv('PGSSLMODE', 'disable'),
+            'sslmode': 'disable',  # Changed from 'disable' to 'prefer'
         },
     }
 }

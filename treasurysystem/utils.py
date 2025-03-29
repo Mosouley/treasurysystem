@@ -3,6 +3,7 @@ import string
 import traceback
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.utils import timezone
 from channels.db import database_sync_to_async
 from django.utils.text import slugify
@@ -41,49 +42,31 @@ def unique_slug_generator(instance, new_slug=None):
     return slug
 
 
-async def broadcast_data(group_name, event_type, data):
-    """
-    Sends data to a specified WebSocket channel group.
-    
-    Args:
-        group_name (str): The name of the channel group.
-        event_type (str): The type of event to send (matches consumer method).
-        data (dict): The data payload to broadcast.
-    """
-    channel_layer = get_channel_layer()
-    # print(f"Broadcasting to {group_name}, data: {data}")  # 
-
-    if channel_layer:
-        try:
-            await channel_layer.group_send(
-                group_name,
-                {
-                    'type': event_type,
-                    'data': data
-                }
-            )
-            # print(f"Successfully broadcast to {group_name}")  # Debug log
-        except Exception as e:
-            print(f"Error broadcasting to {group_name}: {e}")
-            traceback.print_exc()
-    else:
-        print("Error: Channel layer not found.")
-
-# @database_sync_to_async
-@sync_to_async
 def get_positions():
-    """
-    Fetch the latest open position for each currency, regardless of the date.
-    """
-    latest_date_subquery = Position.objects.filter(
-        ccy=OuterRef('ccy')
-    ).order_by('-date').values('date')[:1]
+    today = timezone.now().date()
+    positions = Position.objects.filter(date=today).select_related('ccy')
+    return PositionSerializer(positions, many=True).data
 
-    queryset = Position.objects.filter(date=Subquery(latest_date_subquery))
-    serializer = PositionSerializer(queryset, many=True)
-    data = serializer.data
-   
-    return data
+
+def broadcast_data_sync(group_name, message_type, data):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        group_name,
+        {
+            "type": message_type,
+            "data": data
+        }
+    )
+
+async def broadcast_data_async(group_name, message_type, data):
+    channel_layer = get_channel_layer()
+    await channel_layer.group_send(
+        group_name,
+        {
+            "type": message_type,
+            "data": data
+        }
+    )
 
 
 def get_pivot():

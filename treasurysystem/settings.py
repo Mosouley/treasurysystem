@@ -13,11 +13,13 @@ import os
 from pathlib import Path
 from celery import Celery
 from celery.schedules import crontab
+from dotenv import load_dotenv
 import treasurysystem.tasks
+from .settings_loader import load_settings
+
+ENV_MODE = load_settings()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'env.dev'))
@@ -68,12 +70,13 @@ ASGI_APPLICATION = 'treasurysystem.asgi.application'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-     'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',  # Fixed this line
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'treasurysystem.middleware.DatabaseHealthMiddleware',   
 ]
 
 ROOT_URLCONF = 'treasurysystem.urls'
@@ -113,6 +116,9 @@ required_env_vars = [
     'POSTGRES_HOST',
     'POSTGRES_PORT',
 ]
+
+if ENV_MODE == 'production':
+    required_env_vars.extend(['SUPABASE_DB_NAME', 'SUPABASE_DB_USER', 'SUPABASE_DB_PASSWORD', 'SUPABASE_DB_HOST'])
 
 for var in required_env_vars:
     if not os.environ.get(var):
@@ -221,7 +227,7 @@ CELERY_BEAT_SCHEDULE = {
     }, 
      'update-exchange-rates-every-5-hours': {
         'task': 'treasurysystem.tasks.update_rates_task',
-        'schedule': crontab(hour='*/5'),
+        'schedule': crontab(hour='*/10'),
     },
 }
 
@@ -235,6 +241,58 @@ ADMINS = [("testuser", "test.user@email.com"), ]
 # settings.py
 DEFAULT_COUNTRY = 'US'  # Fallback country code
 SYSTEM_BASE_CURRENCY = 'USD'  # For internal calculations
+DEFAULT_BASE_CURRENCY = 'KES' 
 
 # Now you can access the API key using os.getenv
 API_LAYER_KEY = os.getenv('API_LAYER_KEY')
+
+DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'treasury_system'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'disable',
+        },
+    },
+    'supabase': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('SUPABASE_DB_NAME'),
+        'USER': os.getenv('SUPABASE_DB_USER'),
+        'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
+        'HOST': os.getenv('SUPABASE_DB_HOST'),
+        'PORT': os.getenv('SUPABASE_DB_PORT', '6543'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
+    }
+}
+
+# Add database connection health monitoring middleware
+MIDDLEWARE += [
+    'treasurysystem.middleware.DatabaseHealthMiddleware',
+]
+
+# API Rate Limiting Settings
+API_RATE_LIMIT = {
+    'CALLS_PER_MINUTE': 25,
+    'MAX_RETRIES': 3,
+    'RETRY_DELAY': 2  # Base delay for exponential backoff
+}
+
+# API Configuration
+API_SETTINGS = {
+    'ENDPOINTS': {
+        'EXCHANGERATES_DATA': 'https://api.apilayer.com/exchangerates_data',
+        'FIXER': 'https://api.apilayer.com/fixer',
+        'CURRENCY_DATA': 'https://api.apilayer.com/currency_data'
+    },
+    'TIMEOUT': 10,
+    'MAX_RETRIES': 3,
+    'RETRY_DELAY': 2
+}

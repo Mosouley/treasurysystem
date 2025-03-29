@@ -1,4 +1,3 @@
-
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from django.utils import timezone
@@ -12,7 +11,7 @@ import decimal
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from datetime import date
-from treasurysystem.utils import get_positions, broadcast_data
+from treasurysystem.utils import get_positions, broadcast_data_sync
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -104,20 +103,21 @@ class TradeConsumer(AsyncWebsocketConsumer):
     @receiver(post_save, sender=Trade)
     def broadcast_trades(sender, instance, created, **kwargs):
         if created:
+            # Broadcast new trade
             channel_layer = get_channel_layer()
             trade_serializer = TradeSerializer(instance)
             trades_data = trade_serializer.data
             async_to_sync(channel_layer.group_send)(
                 "fx_tradeflow", 
-                {"type": "send_new_trades", 
-                "data": trades_data,
+                {
+                    "type": "send_new_trades", 
+                    "data": trades_data,
                 }
             )
 
-            # update position as well
-            data =  get_positions()
-           
-            broadcast_data('position_updates','send_position_updates',data)
+            # Update positions
+            positions_data = get_positions()
+            broadcast_data_sync('position_updates', 'send_position_updates', positions_data)
 
     async def disconnect(self, close_code):
         self.close(close_code)
@@ -148,6 +148,21 @@ class PositionConsumer(AsyncWebsocketConsumer):
         }, cls=DecimalEncoder))      
 
     async def disconnect(self, close_code):  
-        await self.channel_layer.group_discard("position_updates", self.channel_name)  
-        
-      
+        await self.channel_layer.group_discard("position_updates", self.channel_name)
+
+
+class FXConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+
+        await self.send(text_data=json.dumps({
+            'message': message
+        }))
+

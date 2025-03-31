@@ -56,7 +56,7 @@ services:
     container_name: treasury_celery_dev
     build: .
     user: celeryuser
-    command: celery -A treasurysystem worker -l info --beat
+    command: sh -c "celery -A treasurysystem worker -l info --beat"
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0  # Updated to use redis service name
       - CELERY_RESULT_BACKEND=redis://redis:6379/0  # Updated to use redis service name

@@ -261,4 +261,11 @@ class Position(models.Model):
         Property that calculates the aggregate net_open_pos for the current Position instance.
         """
         return float(self.open_pos) + float(self.intraday_pos)
-    
+
+class RatesUpdateLog(models.Model):
+    last_update = models.DateTimeField(auto_now=True)
+    success = models.BooleanField(default=False)
+    endpoint_used = models.CharField(max_length=50, null=True)
+
+    class Meta:
+        get_latest_by = 'last_update'

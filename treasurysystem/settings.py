@@ -14,15 +14,17 @@ from pathlib import Path
 from celery import Celery
 from celery.schedules import crontab
 from dotenv import load_dotenv
-import treasurysystem.tasks
 from .settings_loader import load_settings
+from .settings_base import *
 
 ENV_MODE = load_settings()
+
+# Now import any models or Django-dependent utilities
+from treasurysystem import tasks
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env file
-load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'env.dev'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -106,8 +108,8 @@ TEMPLATES = [
 
 
 import logging
-logger = logging.getLogger(__name__)
-logger.info(f"Database host: {os.environ.get('POSTGRES_HOST')}")
+
+
 # Verify required environment variables are set
 required_env_vars = [
     'POSTGRES_NAME',
@@ -117,13 +119,49 @@ required_env_vars = [
     'POSTGRES_PORT',
 ]
 
-if ENV_MODE == 'production':
-    required_env_vars.extend(['SUPABASE_DB_NAME', 'SUPABASE_DB_USER', 'SUPABASE_DB_PASSWORD', 'SUPABASE_DB_HOST'])
 
 for var in required_env_vars:
     if not os.environ.get(var):
         raise ValueError(f'Required environment variable {var} is not set')
-    
+
+connection_params = {
+    'ENGINE': os.environ.get('POSTGRES_ENGINE'),
+    'NAME': os.environ.get('POSTGRES_NAME'),
+    'USER': os.environ.get('POSTGRES_USER'),
+    'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+    'HOST': os.environ.get('POSTGRES_HOST'),
+    'PORT': os.environ.get('POSTGRES_PORT'),
+}
+
+DATABASES = {
+    'default': {
+        **connection_params,
+        'OPTIONS': {
+            'sslmode': 'require' if ENV_MODE == 'production' else 'disable',
+            'client_encoding': 'UTF8',
+            'connect_timeout': 30,
+            'options': '-c statement_timeout=30000ms',
+        },
+        'CONN_MAX_AGE': 0 if ENV_MODE == 'production' else 60,
+        'CONN_HEALTH_CHECKS': True,
+    },
+    'local': {
+        **connection_params,
+        'OPTIONS': {
+            'sslmode': 'disable',
+            'client_encoding': 'UTF8',
+            'connect_timeout': 10,
+        },
+    }
+}
+
+# if ENV_MODE == 'development':
+#     DATABASES['default']['OPTIONS']['sslmode'] = 'disable'
+#     DATABASES['default']['CONN_MAX_AGE'] = 60
+
+# Database fallback settings
+DATABASE_FALLBACK_ENABLED = True
+DATABASE_ONLINE_RETRY_INTERVAL = 300  # 5 minutes
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -225,9 +263,9 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'treasurysystem.tasks.send_position_updates',  
         'schedule': crontab(minute='*/10'),  # Every 10 minutes  
     }, 
-     'update-exchange-rates-every-5-hours': {
+    'check-and-update-exchange-rates': {
         'task': 'treasurysystem.tasks.update_rates_task',
-        'schedule': crontab(hour='*/10'),
+        'schedule': crontab(minute='*/30'),  # Check every 30 minutes
     },
 }
 
@@ -247,31 +285,6 @@ DEFAULT_BASE_CURRENCY = 'KES'
 API_LAYER_KEY = os.getenv('API_LAYER_KEY')
 
 DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'treasury_system'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
-        'OPTIONS': {
-            'sslmode': 'disable',
-        },
-    },
-    'supabase': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('SUPABASE_DB_NAME'),
-        'USER': os.getenv('SUPABASE_DB_USER'),
-        'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
-        'HOST': os.getenv('SUPABASE_DB_HOST'),
-        'PORT': os.getenv('SUPABASE_DB_PORT', '6543'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
-    }
-}
 
 # Add database connection health monitoring middleware
 MIDDLEWARE += [
@@ -294,5 +307,6 @@ API_SETTINGS = {
     },
     'TIMEOUT': 10,
     'MAX_RETRIES': 3,
-    'RETRY_DELAY': 2
+    'RETRY_DELAY': 2,
+    'DAILY_UPDATE_HOUR': 0,  # Midnight UTC
 }

@@ -2,32 +2,75 @@ import requests
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from fxapp.models import Ccy, CountryConfig, ReevaluationRates 
+from fxapp.models import Ccy, CountryConfig, ReevaluationRates, RatesUpdateLog
 import os
 from django.conf import settings
+from treasurysystem.utils import broadcast_data_sync, get_positions
+import logging
+import time
+
+logger = logging.getLogger(__name__)
 
 class ExchangeRatesAPI:
     def __init__(self):
-        self.api_key = os.getenv('API_LAYER_KEY')
-        self.base_url = 'https://api.apilayer.com/exchangerates_data/timeseries'
+        self.api_key = settings.API_LAYER_KEY
+        self.endpoints = settings.API_SETTINGS['ENDPOINTS']
+        self.timeout = settings.API_SETTINGS['TIMEOUT']
+        self.max_retries = settings.API_SETTINGS['MAX_RETRIES']
 
     def get_historical_rates(self, start_date, end_date, base_ccy_code):
-        url = f'{self.base_url}?start_date={start_date}&end_date={end_date}&base={base_ccy_code}'
-        headers = {
-            'apikey': self.api_key
-        }
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            print(f'API request failed: {e}')
-            return None
+        for endpoint_name, base_url in self.endpoints.items():
+            url = f'{base_url}/timeseries'
+            params = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'base': base_ccy_code
+            }
+            headers = {'apikey': self.api_key}
+
+            for attempt in range(self.max_retries):
+                try:
+                    logger.info(f"Trying endpoint: {endpoint_name}, attempt {attempt + 1}")
+                    response = requests.get(
+                        url, 
+                        params=params,
+                        headers=headers,
+                        timeout=self.timeout
+                    )
+                    response.raise_for_status()
+                    data = response.json()
+                    if data and 'rates' in data:
+                        logger.info(f"Successfully retrieved rates from {endpoint_name}")
+                        self.last_successful_endpoint = endpoint_name
+                        return data
+                except requests.exceptions.RequestException as e:
+                    logger.warning(f"Failed to fetch from {endpoint_name}: {e}")
+                    if attempt == self.max_retries - 1:
+                        continue  # Try next endpoint
+                    time.sleep(2 ** attempt)  # Exponential backoff
+            
+        logger.error("All endpoints failed")
+        return None
 
 class Command(BaseCommand):
-    help = 'Fetch exchange rates for all country base currencies'
+    help = 'Fetch exchange rates once per day when online'
+
+    def should_update(self):
+        # Get last successful update
+        last_update = RatesUpdateLog.objects.filter(success=True).last()
+        
+        if not last_update:
+            return True
+
+        # Check if last update was before today
+        today = timezone.now().date()
+        return last_update.last_update.date() < today
 
     def handle(self, *args, **options):
+        if not self.should_update():
+            self.stdout.write('Rates already updated today, skipping...')
+            return
+
         # Get the base currency code from the first country config
         country_config = CountryConfig.objects.all().first()
         if country_config is None:
@@ -50,9 +93,21 @@ class Command(BaseCommand):
             data = api_client.get_historical_rates(start_date, end_date, base_ccy_code)
 
             if not data:
-                self.stderr.write(self.style.ERROR('No data received from any API endpoint'))
+                RatesUpdateLog.objects.create(success=False)
+                self.stderr.write(self.style.ERROR('Failed to fetch rates from all endpoints'))
                 return
+            
+            # Log successful update
+            RatesUpdateLog.objects.create(
+                success=True,
+                endpoint_used=api_client.last_successful_endpoint
+            )
+            
+            # Log successful fetch
+            self.stdout.write(self.style.SUCCESS('Successfully fetched rates from API'))
+            
         except Exception as e:
+            RatesUpdateLog.objects.create(success=False)
             self.stderr.write(self.style.ERROR(f'Failed to fetch rates: {e}'))
             return
 

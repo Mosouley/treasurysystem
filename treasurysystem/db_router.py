@@ -1,21 +1,22 @@
-import socket
 from django.conf import settings
-from .db_health import DatabaseHealthChecker
+from .settings_loader import is_online
+import time
+import logging
 
-# This is the only router class we need
+logger = logging.getLogger(__name__)
+
 class AutoSwitchRouter:
-    def __init__(self):
-        self.health_checker = DatabaseHealthChecker.get_instance()
-
-    def _get_db(self):
-        with self.health_checker.database_context() as db:
-            return db
-
     def db_for_read(self, model, **hints):
-        return self._get_db()
+        if is_online():
+            return 'default'  # Using Supabase
+        logger.warning("System is offline, using local database")
+        return 'local'  # Using local PostgreSQL
 
     def db_for_write(self, model, **hints):
-        return self._get_db()
+        if is_online():
+            return 'default'  # Using Supabase
+        logger.warning("System is offline, using local database")
+        return 'local'  # Using local PostgreSQL
 
     def allow_relation(self, obj1, obj2, **hints):
         return True

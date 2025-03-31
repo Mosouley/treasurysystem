@@ -27,7 +27,7 @@ class DatabaseHealthChecker:
             return self._supabase_available
 
         try:
-            with connections['supabase'].cursor() as cursor:
+            with connections['default'].cursor() as cursor:
                 cursor.execute('SELECT 1')
                 self._supabase_available = True
         except OperationalError:
@@ -41,9 +41,11 @@ class DatabaseHealthChecker:
         """Context manager that determines which database to use"""
         try:
             if self.check_supabase_connection():
-                print('Using Supabase')
-                yield 'supabase'
-            else:
+                # print('Using Supabase')
                 yield 'default'
+            else:
+                print('Using default')
+                yield 'local'
         except Exception:
-            yield 'default'
+            # print('Error occurred, using local')
+            yield 'local'

@@ -10,6 +10,7 @@ from django.utils.text import slugify
 from django.db.models import OuterRef, Subquery
 from asgiref.sync import sync_to_async
 from decimal import Decimal
+import socket
 
 from fxapp.models import Position, ReevaluationRates, Ccy
 from fxapp.serializers import PositionSerializer
@@ -119,7 +120,13 @@ def calculate_interest(principal_amount, interest_rate, start_date, maturity_dat
     return interest
 
 
-
+def check_internet_connection():
+    try:
+        # Try to connect to a reliable host
+        socket.create_connection(("8.8.8.8", 53), timeout=3)
+        return True
+    except OSError:
+        return False
 
 
 def get_exchange_rates(user):

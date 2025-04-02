@@ -1,0 +1,41 @@
+# version: '3.8'
+
+services:
+#Angular front-end
+  ficc-front:
+    build: 
+      context: ./frontend/ficc_front
+    ports:
+      - 4700:4200
+    depends_on:
+      - ficc-backend
+    volumes:
+      - ./frontend/ficc_front:/ficc_front/app
+      - /ficc_front/app/node_modules
+    command: npm start
+
+      #django backend
+  ficc-backend:
+    build: 
+      context: .
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/treasurysystem
+    depends_on:
+      - ficc_db
+    ports:
+      - 8000:8000
+    env_file:
+      - ./env.dev
+
+  ficc_db:
+    image: postgres:15
+    restart: always
+    volumes:
+      - ficc_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./env.dev
+
+volumes:
+    ficc_postgres_data:

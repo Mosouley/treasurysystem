@@ -1,5 +1,8 @@
 from .settings import *
+from .settings_loader import load_settings
 
+
+ENV_MODE = load_settings()
 DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]

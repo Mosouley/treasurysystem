@@ -5,6 +5,7 @@ from django.conf import settings
 from contextlib import contextmanager
 from django.db import connections
 from django.db.utils import OperationalError
+from .settings_loader import EnvironmentManager
 
 class DatabaseHealthChecker:
     _instance = None
@@ -26,10 +27,25 @@ class DatabaseHealthChecker:
         if current_time - self._last_check < self.CHECK_INTERVAL:
             return self._supabase_available
 
+        # First check if we're online using the EnvironmentManager
+        env_manager = EnvironmentManager.get_instance()
+        if not env_manager.check_connectivity():
+            self._supabase_available = False
+            self._last_check = current_time
+            return False
+
+        # If we're online, check the actual database connection
         try:
-            with connections['default'].cursor() as cursor:
-                cursor.execute('SELECT 1')
-                self._supabase_available = True
+            # Check if 'supabase' is in connections
+            if 'supabase' in connections:
+                with connections['supabase'].cursor() as cursor:
+                    cursor.execute('SELECT 1')
+                    self._supabase_available = True
+            else:
+                # Fall back to default if supabase connection is not configured
+                with connections['default'].cursor() as cursor:
+                    cursor.execute('SELECT 1')
+                    self._supabase_available = True
         except OperationalError:
             self._supabase_available = False
         
@@ -42,10 +58,10 @@ class DatabaseHealthChecker:
         try:
             if self.check_supabase_connection():
                 # print('Using Supabase')
-                yield 'default'
+                yield 'supabase'
             else:
-                print('Using default')
-                yield 'local'
+                print('Using default (local)')
+                yield 'default'
         except Exception:
             # print('Error occurred, using local')
-            yield 'local'
+            yield 'default'

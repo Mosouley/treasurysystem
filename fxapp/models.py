@@ -10,6 +10,7 @@ from django.core.validators import MinValueValidator
 from django.conf import settings
 # Creating models for the treasury fxapp
 from django_countries.fields import CountryField
+from treasurysystem.mixins import SearchableMixin
 
 
 User = settings.AUTH_USER_MODEL
@@ -57,8 +58,10 @@ class Dealer(models.Model):
     class Meta:
         verbose_name = 'Trader'
 
-class Ccy(models.Model):
+class Ccy(models.Model, SearchableMixin):
     code = models.CharField(max_length=3, unique=True)
+
+    search_fields = ['code', 'name', 'description']
 
     class Meta:
         verbose_name = 'Currency'
@@ -68,7 +71,7 @@ class Ccy(models.Model):
         return self.code
 
 
-class CountryConfig(models.Model):
+class CountryConfig(models.Model, SearchableMixin):
     country = CountryField(
         unique=True,
         verbose_name='Country',
@@ -87,6 +90,8 @@ class CountryConfig(models.Model):
     affiliate_name = models.CharField(max_length=100)
     affiliate_code = models.CharField(max_length=10)
     fiscal_year_start = models.DateField()
+
+    search_fields = ['country', 'base_currency__code']
 
     # Add other country-specific settings as needed
 
@@ -120,7 +125,7 @@ class SystemDailyRates(models.Model):
         return f"{self.ccy.code} - {self.date}: {self.exchange_rate}"
 
 # models.py
-class ReevaluationRates(models.Model):
+class ReevaluationRates(models.Model, SearchableMixin):
     date = models.DateField(default=timezone.now)
     base_ccy = models.ForeignKey(  # System-wide base currency
         Ccy,
@@ -137,6 +142,8 @@ class ReevaluationRates(models.Model):
         decimal_places=4
     )
     last_updated = models.DateTimeField(auto_now=True)
+
+    search_fields = ['base_ccy__code', 'target_ccy__code', 'date']
 
     class Meta:
         constraints = [
@@ -156,7 +163,7 @@ class Product(models.Model):
 class ExcelModel(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-class Trade(models.Model):
+class Trade(models.Model, SearchableMixin):
 
 
     BUYSELL = [
@@ -195,6 +202,8 @@ class Trade(models.Model):
     date_created        = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     last_updated        = models.DateTimeField(blank=True, null=True, auto_now=True)
  
+    search_fields = ['trade_id', 'customer__name', 'ccy1__code', 'ccy2__code']
+
     @staticmethod
     def generate_unique_trade_id():
     # Use a random 4-digit number combined with a 3-digit counter
@@ -227,11 +236,12 @@ class Trade(models.Model):
     class Meta:
         verbose_name = 'Trade'
 
-class Position(models.Model):
+class Position(models.Model, SearchableMixin):
     date                = models.DateField( blank=False, null=False, auto_now=False)
     ccy                 = models.ForeignKey(Ccy, on_delete=models.CASCADE,blank=False,null=False)
     intraday_pos        = models.FloatField()
 
+    search_fields = ['ccy__code', 'date']
 
     # _calculated_net_open_pos = None  # Internal property to cache the calculated value
 

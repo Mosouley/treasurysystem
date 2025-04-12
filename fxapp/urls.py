@@ -11,21 +11,16 @@ router.register(r'currencies', views.CcyViewSet, basename='ccy')
 router.register(r'products', views.ProductViewSet, basename='product')
 router.register(r'daily-rates', views.SystemDailyRatesViewSet,basename='system-rates')
 router.register(r'reeval-rates', views.ReevaluationRatesViewSet, basename='reeval-rate')
-router.register(r'trades', views.TradeViewSet, basename='trade')
+router.register(r'trades', TradeViewSet, basename='trades')
 router.register(r'dealers', views.DealerViewSet, basename='dealer')
-router.register(r'positions', views.PositionViewSet, basename='position')
+
 router.register(r'country-configs', views.CountryConfigViewSet, basename='country-config')
 # router.register(r'positions-summary', PositionSummaryViewSet, basename='position-summary')
 # router.register(r'daily-rates', views.my_endpoint, basename='fxapp')
+
 urlpatterns = [
+    path('', include(router.urls)),
     path('batch-destroy/',TradeViewSet.batch_destroy, name='batch_destroy'),
     # path('daily-rates-loading/', views.my_endpoint, name='daily-rates-loading'),
 ]
-urlpatterns += [
-    # path('daily-rates-loading/', views.my_endpoint, name='daily-rates-loading'),
-    # re_path(r'(?P<path>.*)', views.my_endpoint, name='home')
-]
 
-
-
-urlpatterns += router.urls

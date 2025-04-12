@@ -44,6 +44,11 @@ def unique_slug_generator(instance, new_slug=None):
 
 
 def get_positions():
+    # Import here to avoid circular dependency
+    from django.utils import timezone
+    from fxapp.models import Position
+    from fxapp.serializers import PositionSerializer
+    
     today = timezone.now().date()
     positions = Position.objects.filter(date=today).select_related('ccy')
     return PositionSerializer(positions, many=True).data
@@ -119,14 +124,6 @@ def calculate_interest(principal_amount, interest_rate, start_date, maturity_dat
         interest = Decimal('0.00')
     return interest
 
-
-def check_internet_connection():
-    try:
-        # Try to connect to a reliable host
-        socket.create_connection(("8.8.8.8", 53), timeout=3)
-        return True
-    except OSError:
-        return False
 
 
 def get_exchange_rates(user):

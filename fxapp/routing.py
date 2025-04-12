@@ -1,6 +1,8 @@
-from django.urls import re_path
-from . import consumers
+from django.urls import path, re_path
+from .consumers import TradeConsumer,PositionConsumer
+
 
 websocket_urlpatterns = [
-    re_path(r'ws/fx/$', consumers.FXConsumer.as_asgi()),
+    path('ws/api/fx/trade_update/', TradeConsumer.as_asgi()),
+    path('ws/api/fx/positions/', PositionConsumer.as_asgi()),
 ]

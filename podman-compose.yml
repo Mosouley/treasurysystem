@@ -19,87 +19,66 @@ services:
     volumes:
       - ./:/treasurysystem:Z
     ports:
-      - "8000:8000"  # Removed duplicate port mapping
+      - 8000:8000
     environment:
-      - PGSSLMODE=require
+      - PGSSLMODE=prefer
       - PGCONNECT_TIMEOUT=30
       - PYTHONUNBUFFERED=1
-      - DJANGO_WATCHPOLL=POLLING
+      - DJANGO_WATCHPOLL=POLLING  # Optional for filesystem polling
       - CHANNEL_LAYERS_REDIS_HOST=redis
-      - DJANGO_SETTINGS_MODULE=treasurysystem.settings_supabase
-      - FALLBACK_TO_LOCAL_DB=true  # Add this line
+      - DJANGO_SETTINGS_MODULE=treasurysystem.settings
+      - ENV_MODE=${ENV_MODE}
     env_file:
-      - ./env.supabase
+      - ${ENV_FILE}
+    ports:
+      - "8000:8000"
     pod: *pod-name
     depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      celery:
-        condition: service_started
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
+      - celery
+      - redis
   db:
-    container_name: ficc_db
-    image: postgres:15
-    restart: always
-    env_file:
-      - ./env.dev
-    volumes:
+      container_name: ficc_db
+      image: postgres:15
+      restart: always
+      env_file:
+        - ./env.dev
+      volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      ports:
+        - "5432:5432"
   
   redis:
     container_name: treasury_redis
     image: redis:alpine
     restart: always
-    command: redis-server --bind 0.0.0.0
+    command: redis-server --bind 0.0.0.0  # Allow external connections
+    # ports:
+    #   - "6379:6379"
     volumes:
       - redis_data:/data
     pod: *pod-name
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   celery:
     container_name: treasury_celery
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    user: root  # Change this temporarily to debug permission issues
-    command: >
-      sh -c "
-      celery -A treasurysystem worker -l info --beat"
+    build: .
+    user: celeryuser
+    command: celery -A treasurysystem worker -l info --beat
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0  # Updated to use redis service name
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0  # Updated to use redis service name
       - CELERY_TIMEZONE=UTC
       - CELERY_accept_content=json
       - CELERY_TASK_SERIALIZER=json
-      - DJANGO_SETTINGS_MODULE=treasurysystem.settings_supabase
+      - DJANGO_SETTINGS_MODULE=treasurysystem.settings
+      - ENV_MODE=${ENV_MODE:-development}
     volumes:
       - ./:/treasurysystem:Z
-      - ./treasuryvenv:/treasurysystem/treasuryvenv:ro
     env_file:
-      - ./env.supabase
+      - ${ENV_FILE}
     pod: *pod-name
     depends_on:
-      redis:
-        condition: service_healthy
+      - redis
+
 volumes:
   redis_data:
   postgres_data:

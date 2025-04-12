@@ -1,7 +1,8 @@
-
 import json
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.db.models import Q
 from .models import *
 from .serializers import *
 from .models import ExcelModel
@@ -406,6 +407,13 @@ class TradeViewSet(viewsets.ModelViewSet):
         self.queryset.filter(id__in=ids).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        query = request.query_params.get('q', '')
+        queryset = Trade.search(query)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 def upload_excel(request):
     if request.method == 'POST':
         data = request.POST.get('data')
@@ -471,6 +479,13 @@ class PositionViewSet(viewsets.ModelViewSet):
         serializer = PositionSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        query = request.query_params.get('q', '')
+        queryset = Position.search(query)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 class CountryConfigViewSet(viewsets.ModelViewSet):
     queryset = CountryConfig.objects.all()
     serializer_class = CountryConfigSerializer
@@ -484,7 +499,7 @@ def import_excel_data(request):
             data = json.loads(request.body.decode('utf-8'))
             fields, relationships = extract_fields_and_relationships(data)
             create_model_with_relationships('ImportedModel', fields, relationships)
-            run_migrations()
+            # run_migrations()
             return JsonResponse({'status': 'success', 'message': 'Model created successfully.'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

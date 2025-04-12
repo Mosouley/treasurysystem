@@ -3,12 +3,15 @@ from .settings import *
 from .settings_loader import load_settings
 
 
+
+
+DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
 ENV_MODE = load_settings()
-DEBUG = False
+
 
 # Add this debugging section
 db_params = {
-    'ENGINE': os.environ.get('POSTGRES_ENGINE'),
+    'ENGINE': os.getenv('POSTGRES_ENGINE'),
     'NAME': os.getenv('POSTGRES_DB', ),
     'USER': os.getenv('POSTGRES_USER',),
     'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
@@ -16,8 +19,6 @@ db_params = {
     'PORT': os.getenv('POSTGRES_PORT', ),
 }
 
-
-DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
 
 DATABASES = {
     'default': {
@@ -33,12 +34,7 @@ DATABASES = {
         },
     },
     'local': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'treasury_system'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'papaHaddy@?123'),
-        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        **db_params,
         'OPTIONS': {
             'sslmode': 'disable',
             'connect_timeout': 30,

@@ -14,16 +14,18 @@ from pathlib import Path
 from celery import Celery
 from celery.schedules import crontab
 from dotenv import load_dotenv
-from .settings_loader import load_settings
-from .settings_base import *
+from .settings_loader import load_env_file, EnvironmentManager
 
-ENV_MODE = load_settings()
+# Initialize the environment manager and load the appropriate env file
+env_manager = EnvironmentManager.get_instance()
+ENV_MODE = env_manager.load_env_file()
 
-# Now import any models or Django-dependent utilities
-from treasurysystem import tasks
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Now continue with the rest of the settings
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Import tasks after Django is configured
+from treasurysystem import tasks
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -31,14 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # For loading locally the dajngo and serving app from localhost
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-$4u@l48c^n9!hqd1%l$=!7(wg+*19uxnn%%*+8b51lz-_twr45'
-
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-##### docker set up config elements #################################
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
@@ -78,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'treasurysystem.middleware.EnvironmentSwitchMiddleware',  # Add this to check and switch environments
     'treasurysystem.middleware.DatabaseHealthMiddleware',   
 ]
 
@@ -105,59 +101,55 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+from .settings_loader import load_settings
+
+DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
+ENV_MODE = env_manager.load_env_file()
 
 
-import logging
-
-
-# Verify required environment variables are set
-required_env_vars = [
-    'POSTGRES_NAME',
-    'POSTGRES_USER',
-    'POSTGRES_PASSWORD',
-    'POSTGRES_HOST',
-    'POSTGRES_PORT',
-]
-
-
-for var in required_env_vars:
-    if not os.environ.get(var):
-        raise ValueError(f'Required environment variable {var} is not set')
-
-connection_params = {
-    'ENGINE': os.environ.get('POSTGRES_ENGINE'),
-    'NAME': os.environ.get('POSTGRES_NAME'),
-    'USER': os.environ.get('POSTGRES_USER'),
-    'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-    'HOST': os.environ.get('POSTGRES_HOST'),
-    'PORT': os.environ.get('POSTGRES_PORT'),
+# Add this debugging section
+db_params = {
+    'ENGINE': os.getenv('POSTGRES_ENGINE'),
+    'NAME': os.getenv('POSTGRES_DB' ),
+    'USER': os.getenv('POSTGRES_USER'),
+    'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+    'HOST': os.getenv('POSTGRES_HOST' ),
+    'PORT': os.getenv('POSTGRES_PORT' )
 }
+
 
 DATABASES = {
     'default': {
-        **connection_params,
-        'OPTIONS': {
-            'sslmode': 'require' if ENV_MODE == 'production' else 'disable',
-            'client_encoding': 'UTF8',
-            'connect_timeout': 30,
-            'options': '-c statement_timeout=30000ms',
-        },
-        'CONN_MAX_AGE': 0 if ENV_MODE == 'production' else 60,
-        'CONN_HEALTH_CHECKS': True,
-    },
-    'local': {
-        **connection_params,
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'treasury_system'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
         'OPTIONS': {
             'sslmode': 'disable',
-            'client_encoding': 'UTF8',
-            'connect_timeout': 10,
         },
     }
 }
 
-# if ENV_MODE == 'development':
-#     DATABASES['default']['OPTIONS']['sslmode'] = 'disable'
-#     DATABASES['default']['CONN_MAX_AGE'] = 60
+if ENV_MODE == 'production':
+    DATABASES['supabase'] = {
+           'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',
+                        'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+            'client_encoding': 'UTF8',
+            'use_tcp': True,  # Force TCP connection
+        },
+    }
 
 # Database fallback settings
 DATABASE_FALLBACK_ENABLED = True
@@ -283,13 +275,6 @@ DEFAULT_BASE_CURRENCY = 'KES'
 
 # Now you can access the API key using os.getenv
 API_LAYER_KEY = os.getenv('API_LAYER_KEY')
-
-DATABASE_ROUTERS = ['treasurysystem.db_router.AutoSwitchRouter']
-
-# Add database connection health monitoring middleware
-MIDDLEWARE += [
-    'treasurysystem.middleware.DatabaseHealthMiddleware',
-]
 
 # API Rate Limiting Settings
 API_RATE_LIMIT = {

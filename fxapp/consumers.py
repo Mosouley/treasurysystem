@@ -137,7 +137,7 @@ class PositionConsumer(AsyncWebsocketConsumer):
         # update position as well
          # Fetch positions asynchronously and send to the client
         positions = await get_positions()  # Async-safe call
-        broadcast_data('position_updates','send_position_updates',positions)
+        broadcast_data_sync('position_updates','send_position_updates',positions)
 
     async def send_position_updates(self, event): 
         message = event['data']  
